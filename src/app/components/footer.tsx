@@ -27,7 +27,7 @@ export default function Footer() {
             </a>
           </Button>
           <Button variant="ghost" size="icon" asChild>
-            <a href="#" aria-label="Instagram">
+            <a href="https://www.instagram.com/boldnetdigital/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
               <Instagram className="h-5 w-5" />
             </a>
           </Button>
