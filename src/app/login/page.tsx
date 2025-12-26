@@ -35,10 +35,26 @@ function LoginForm() {
   }, [user, isUserLoading, router]);
 
   const handleSignIn = () => {
+    if (!email || !password) {
+      toast({
+        variant: 'destructive',
+        title: 'Missing Information',
+        description: 'Please enter both email and password.',
+      });
+      return;
+    }
     initiateEmailSignIn(auth, email, password);
   };
 
   const handleSignUp = () => {
+    if (!email || !password) {
+      toast({
+        variant: 'destructive',
+        title: 'Missing Information',
+        description: 'Please enter both email and password.',
+      });
+      return;
+    }
     if (secretCode !== 'SUPERADMIN') {
       toast({
         variant: 'destructive',
