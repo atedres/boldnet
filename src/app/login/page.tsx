@@ -18,6 +18,7 @@ import {
 } from '@/firebase/non-blocking-login';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
+import { FirebaseError } from 'firebase/app';
 
 function AuthForm() {
   const [formMode, setFormMode] = useState<'signin' | 'signup'>('signin');
@@ -34,6 +35,36 @@ function AuthForm() {
       router.push('/admin');
     }
   }, [user, isUserLoading, router]);
+  
+  const handleAuthError = (error: FirebaseError) => {
+    let title = 'An error occurred';
+    let description = error.message;
+
+    switch (error.code) {
+      case 'auth/invalid-email':
+        title = 'Invalid Email';
+        description = 'Please enter a valid email address.';
+        break;
+      case 'auth/user-not-found':
+      case 'auth/wrong-password':
+      case 'auth/invalid-credential':
+        title = 'Login Failed';
+        description = 'Incorrect email or password. Please try again.';
+        break;
+      case 'auth/email-already-in-use':
+        title = 'Email In Use';
+        description = 'This email is already registered. Please sign in.';
+        break;
+       default:
+        console.error("Authentication error:", error);
+    }
+
+    toast({
+        variant: 'destructive',
+        title: title,
+        description: description,
+    });
+  }
 
   const handleSignIn = () => {
     if (!email || !password) {
@@ -44,7 +75,7 @@ function AuthForm() {
       });
       return;
     }
-    initiateEmailSignIn(auth, email, password);
+    initiateEmailSignIn(auth, email, password, handleAuthError);
   };
 
   const handleSignUp = () => {
@@ -64,7 +95,7 @@ function AuthForm() {
       });
       return;
     }
-    initiateEmailSignUp(auth, email, password);
+    initiateEmailSignUp(auth, email, password, handleAuthError);
   };
   
   if (isUserLoading || (!isUserLoading && user)) {
