@@ -1,5 +1,5 @@
 'use client';
-import { useAuth, useMemoFirebase, FirebaseClientProvider } from '@/firebase';
+import { useUser, useMemoFirebase, FirebaseClientProvider } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { collection, query, where } from 'firebase/firestore';
@@ -92,7 +92,7 @@ function ClientUploader() {
 }
 
 function AdminPage() {
-  const { user, isUserLoading } = useAuth();
+  const { user, isUserLoading } = useUser();
   const router = useRouter();
 
   const firestore = useFirestore();

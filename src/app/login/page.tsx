@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { FirebaseClientProvider, useAuth } from '@/firebase';
+import { FirebaseClientProvider, useAuth, useUser } from '@/firebase';
 import {
   initiateEmailSignIn,
   initiateEmailSignUp,
@@ -25,7 +25,7 @@ function AuthForm() {
   const [password, setPassword] = useState('');
   const [secretCode, setSecretCode] = useState('');
   const auth = useAuth();
-  const { user, isUserLoading } = useAuth();
+  const { user, isUserLoading } = useUser();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -67,7 +67,7 @@ function AuthForm() {
     initiateEmailSignUp(auth, email, password);
   };
   
-  if (isUserLoading || user) {
+  if (isUserLoading || (!isUserLoading && user)) {
     return <div>Loading...</div>;
   }
 
