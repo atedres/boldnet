@@ -1,5 +1,5 @@
 'use client';
-
+import React from 'react';
 import {
   Carousel,
   CarouselContent,
@@ -7,15 +7,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import {
-  Building,
-  Factory,
-  Globe,
-  Network,
-  Ship,
-  Store,
-} from 'lucide-react';
+import { Building, Factory, Globe, Network, Ship, Store } from 'lucide-react';
 import { useLanguage } from '@/app/context/language-context';
+import Autoplay from 'embla-carousel-autoplay';
 
 const clients = [
   { name: 'QuantumCore', icon: Building },
@@ -30,19 +24,28 @@ const clients = [
 
 export default function ClientShowcase() {
   const { t } = useLanguage();
+  const plugin = React.useRef(
+    Autoplay({ delay: 2000, stopOnInteraction: true })
+  );
+
   return (
     <section className="w-full bg-card py-12 md:py-24">
       <div className="container mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-2 font-headline">{t('trustedBy')}</h2>
+        <h2 className="text-3xl font-bold text-center mb-2 font-headline">
+          {t('trustedBy')}
+        </h2>
         <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
           {t('clientShowcaseDescription')}
         </p>
         <Carousel
+          plugins={[plugin.current]}
           opts={{
             align: 'start',
             loop: true,
           }}
           className="w-full max-w-5xl mx-auto"
+          onMouseEnter={plugin.current.stop}
+          onMouseLeave={plugin.current.reset}
         >
           <CarouselContent>
             {clients.map((client, index) => (
