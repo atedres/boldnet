@@ -55,6 +55,10 @@ function AuthForm() {
         title = 'Email In Use';
         description = 'This email is already registered. Please sign in.';
         break;
+      case 'auth/too-many-requests':
+        title = 'Too Many Attempts';
+        description = 'Access to this account has been temporarily disabled due to many failed login attempts. You can try again later.';
+        break;
        default:
         console.error("Authentication error:", error);
     }
