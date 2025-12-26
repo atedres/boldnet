@@ -14,26 +14,28 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Loader2, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: 'Name must be at least 2 characters.',
-  }),
-  email: z.string().email({
-    message: 'Please enter a valid email address.',
-  }),
-  message: z.string().min(10, {
-    message: 'Message must be at least 10 characters.',
-  }),
-});
+import { useLanguage } from '@/app/context/language-context';
 
 export default function ContactSection() {
+  const { t } = useLanguage();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  const formSchema = useMemo(() => z.object({
+    name: z.string().min(2, {
+      message: t('nameMinLength'),
+    }),
+    email: z.string().email({
+      message: t('invalidEmail'),
+    }),
+    message: z.string().min(10, {
+      message: t('messageMinLength'),
+    }),
+  }), [t]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,8 +62,8 @@ export default function ContactSection() {
     } else {
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "There was a problem with your request. Please try again.",
+        title: t('submissionErrorTitle'),
+        description: t('submissionErrorMessage'),
       });
     }
   }
@@ -73,10 +75,10 @@ export default function ContactSection() {
             <div className="mx-auto max-w-md space-y-4">
               <Send className="mx-auto h-16 w-16 text-primary" />
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl font-headline">
-                Thank You!
+                {t('submissionSuccessTitle')}
               </h2>
               <p className="text-muted-foreground">
-                Your message has been sent. We'll get back to you as soon as possible.
+                {t('submissionSuccessMessage')}
               </p>
             </div>
         </div>
@@ -89,10 +91,10 @@ export default function ContactSection() {
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
         <div className="space-y-3">
           <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight font-headline">
-            Let's Build Something Bold
+            {t('letsBuildSomethingBold')}
           </h2>
           <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-            Have a project in mind? We'd love to hear about it. Fill out the form below and we'll get back to you.
+            {t('contactFormDescription')}
           </p>
         </div>
         <div className="mx-auto w-full max-w-sm lg:max-w-lg space-y-4">
@@ -103,9 +105,9 @@ export default function ContactSection() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>{t('name')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your Name" {...field} />
+                      <Input placeholder={t('yourName')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -116,9 +118,9 @@ export default function ContactSection() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{t('email')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="your.email@example.com" {...field} />
+                      <Input placeholder={t('yourEmail')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -129,9 +131,9 @@ export default function ContactSection() {
                 name="message"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Message</FormLabel>
+                    <FormLabel>{t('message')}</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Tell us about your project..." {...field} />
+                      <Textarea placeholder={t('tellUsAboutProject')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -141,10 +143,10 @@ export default function ContactSection() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Sending...
+                    {t('sending')}
                   </>
                 ) : (
-                  'Send Message'
+                  t('sendMessage')
                 )}
               </Button>
             </form>

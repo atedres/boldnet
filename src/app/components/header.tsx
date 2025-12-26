@@ -1,6 +1,7 @@
 import { Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import LanguageSwitcher from '@/app/components/language-switcher';
 
 export default function Header() {
   return (
@@ -13,6 +14,7 @@ export default function Header() {
           </span>
         </Link>
         <div className="flex flex-1 items-center justify-end space-x-2">
+          <LanguageSwitcher />
           <Button asChild>
             <Link href="#contact">Contact Us</Link>
           </Button>

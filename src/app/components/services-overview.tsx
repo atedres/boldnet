@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Card,
   CardContent,
@@ -11,45 +13,43 @@ import {
   Megaphone,
   PenTool,
 } from 'lucide-react';
+import { useLanguage } from '@/app/context/language-context';
 
-const services = [
-  {
-    icon: Clapperboard,
-    title: 'UGC Videos',
-    description:
-      'Harness the power of authentic user-generated content to build trust and drive engagement. We create video campaigns that resonate.',
-  },
-  {
-    icon: LayoutTemplate,
-    title: 'Website & Landing Pages',
-    description:
-      'From stunning websites to high-converting landing pages, we build digital storefronts that are fast, responsive, and optimized for sales.',
-  },
-  {
-    icon: PenTool,
-    title: 'Professional Post Design',
-    description:
-      'Elevate your social media presence with professionally designed posts. We create eye-catching visuals that stop the scroll and tell your brand’s story.',
-  },
-  {
-    icon: Megaphone,
-    title: 'Ads & Advertising',
-    description:
-      'Reach your target audience with precision-targeted ad campaigns. We manage your ad spend effectively across all major platforms for maximum ROI.',
-  },
-];
 
 export default function ServicesOverview() {
+  const { t } = useLanguage();
+  const services = [
+    {
+      icon: Clapperboard,
+      title: t('ugcVideos'),
+      description: t('ugcVideosDescription'),
+    },
+    {
+      icon: LayoutTemplate,
+      title: t('websiteLandingPages'),
+      description: t('websiteLandingPagesDescription'),
+    },
+    {
+      icon: PenTool,
+      title: t('professionalPostDesign'),
+      description: t('professionalPostDesignDescription'),
+    },
+    {
+      icon: Megaphone,
+      title: t('adsAdvertising'),
+      description: t('adsAdvertisingDescription'),
+    },
+  ];
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">
-              Our Services
+              {t('ourServices')}
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              We offer a comprehensive suite of digital marketing services designed to elevate your brand and accelerate your growth.
+              {t('servicesDescription')}
             </p>
           </div>
         </div>

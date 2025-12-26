@@ -15,6 +15,7 @@ import {
   Ship,
   Store,
 } from 'lucide-react';
+import { useLanguage } from '@/app/context/language-context';
 
 const clients = [
   { name: 'QuantumCore', icon: Building },
@@ -28,12 +29,13 @@ const clients = [
 ];
 
 export default function ClientShowcase() {
+  const { t } = useLanguage();
   return (
     <section className="w-full bg-card py-12 md:py-24">
       <div className="container mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-2 font-headline">Trusted by Industry Leaders</h2>
+        <h2 className="text-3xl font-bold text-center mb-2 font-headline">{t('trustedBy')}</h2>
         <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-          We partner with ambitious brands to create digital experiences that command attention and drive results.
+          {t('clientShowcaseDescription')}
         </p>
         <Carousel
           opts={{

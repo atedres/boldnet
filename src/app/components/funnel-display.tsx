@@ -1,48 +1,52 @@
+'use client';
+
 import {
   Globe,
   MousePointerClick,
   PlayCircle,
   TrendingUp,
 } from 'lucide-react';
-
-const funnelSteps = [
-  {
-    icon: Globe,
-    title: 'Online Presence',
-    description:
-      'We establish a strong and cohesive online identity for your brand, making you discoverable and memorable to your target audience.',
-  },
-  {
-    icon: PlayCircle,
-    title: 'Engaging Videos',
-    description:
-      'Through compelling video content, we capture attention, tell your story, and create an emotional connection with viewers.',
-  },
-  {
-    icon: TrendingUp,
-    title: 'Strategic Advertising',
-    description:
-      'We drive targeted traffic and generate leads with data-driven advertising campaigns that deliver measurable results and high ROI.',
-  },
-  {
-    icon: MousePointerClick,
-    title: 'Conversion-Focused Web',
-    description:
-      'Your website and landing pages are optimized to convert visitors into loyal customers, completing the journey from prospect to sale.',
-  },
-];
+import { useLanguage } from '@/app/context/language-context';
 
 export default function FunnelDisplay() {
+  const { t } = useLanguage();
+  const funnelSteps = [
+    {
+      icon: Globe,
+      title: t('onlinePresence'),
+      description:
+        t('onlinePresenceDescription'),
+    },
+    {
+      icon: PlayCircle,
+      title: t('engagingVideos'),
+      description:
+        t('engagingVideosDescription'),
+    },
+    {
+      icon: TrendingUp,
+      title: t('strategicAdvertising'),
+      description:
+        t('strategicAdvertisingDescription'),
+    },
+    {
+      icon: MousePointerClick,
+      title: t('conversionFocusedWeb'),
+      description:
+        t('conversionFocusedWebDescription'),
+    },
+  ];
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 bg-card">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">
-              Our High-Performance Funnel
+              {t('highPerformanceFunnel')}
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Our proven four-step process transforms passive browsers into active buyers, guiding them seamlessly through the customer journey.
+              {t('funnelDescription')}
             </p>
           </div>
         </div>
