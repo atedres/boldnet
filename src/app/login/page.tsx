@@ -17,13 +17,16 @@ import {
 } from '@/firebase/non-blocking-login';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [secretCode, setSecretCode] = useState('');
   const auth = useAuth();
   const { user, isUserLoading } = useAuth();
   const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!isUserLoading && user) {
@@ -35,9 +38,15 @@ function LoginForm() {
     initiateEmailSignIn(auth, email, password);
   };
 
-  // This is a simplified sign-up for the first admin.
-  // In a real app, you'd likely have a separate, more secure registration flow.
   const handleSignUp = () => {
+    if (secretCode !== 'SUPERADMIN') {
+      toast({
+        variant: 'destructive',
+        title: 'Invalid Secret Code',
+        description: 'The secret code you entered is incorrect.',
+      });
+      return;
+    }
     initiateEmailSignUp(auth, email, password);
   };
 
@@ -51,7 +60,8 @@ function LoginForm() {
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account.
+            Enter your email below to login to your account. To sign up, you
+            must also enter the secret code.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
@@ -76,13 +86,23 @@ function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          <div className="grid gap-2">
+            <Label htmlFor="secretCode">Secret Code (for sign-up)</Label>
+            <Input
+              id="secretCode"
+              type="password"
+              placeholder="Enter secret code"
+              value={secretCode}
+              onChange={(e) => setSecretCode(e.target.value)}
+            />
+          </div>
         </CardContent>
         <CardContent className="grid gap-2">
           <Button className="w-full" onClick={handleSignIn}>
             Sign in
           </Button>
           <Button variant="outline" className="w-full" onClick={handleSignUp}>
-            Sign up (First time only)
+            Sign up
           </Button>
         </CardContent>
       </Card>
