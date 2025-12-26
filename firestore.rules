@@ -1,0 +1,124 @@
+/**
+ * Core Philosophy:
+ * This ruleset is designed for a public-facing portfolio or marketing website.
+ * The primary goal is to make informational content (like clients, services, and
+ * process steps) publicly readable by anyone, while strictly locking down all
+ * write operations to prevent unauthorized modification. A dedicated collection for
+ * contact form submissions is configured to be write-only, allowing any visitor
+ * to submit a message without being able to read, update, or delete other submissions.
+ *
+ * Data Structure:
+ * The data is organized into four distinct, top-level collections:
+ * - /clients/{clientId}: Publicly viewable client information.
+ * - /services/{serviceId}: Publicly viewable service offerings.
+ * - /funnel_steps/{funnelStepId}: Publicly viewable funnel/process steps.
+ * - /contact_form_submissions/{submissionId}: Private, write-only submissions.
+ *
+ * Key Security Decisions:
+ * - Public Read, Admin Write: All informational collections (/clients, /services,
+ *   /funnel_steps) are publicly readable. Write access is currently disabled
+ *   as an explicit administrative role is not yet defined. A placeholder isAdmin()
+ *   function is provided to be implemented later.
+ * - Write-Only Ingress: The /contact_form_submissions collection is intentionally
+ *   configured to allow anyone to create a document but denies all read, update,
+ *   and delete operations. This protects the privacy of submitted user data (PII)
+ *   while providing a secure endpoint for data collection.
+ * - Default Secure: The default security posture is to deny all access unless
+ *   explicitly granted. There are no user-specific roles or ownership rules
+ *   in this iteration.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ----------------------------------------------------------------------
+    // Helper Functions
+    // ----------------------------------------------------------------------
+
+    /**
+     * Checks if a user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Placeholder for administrative role checks.
+     * TODO: Implement admin logic, e.g., by checking for a custom claim:
+     * `return request.auth.token.isAdmin == true;`
+     */
+    function isAdmin() {
+      return false; // Secure default: no one is an admin yet.
+    }
+
+    // ----------------------------------------------------------------------
+    // Collection Rules
+    // ----------------------------------------------------------------------
+
+    /**
+     * @description Manages public information about company clients.
+     * Anyone can read this data, but only an administrator can modify it.
+     * @path /clients/{clientId}
+     * @allow (get) Any user, signed in or not, can read a client document.
+     * @deny (create) A non-admin user attempts to add a new client.
+     * @principle Public read for marketing content, with writes restricted to admins.
+     */
+    match /clients/{clientId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * @description Manages public information about company services.
+     * Anyone can read this data, but only an administrator can modify it.
+     * @path /services/{serviceId}
+     * @allow (list) Any user, signed in or not, can list all services.
+     * @deny (update) A non-admin user attempts to modify a service description.
+     * @principle Public read for marketing content, with writes restricted to admins.
+     */
+    match /services/{serviceId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * @description Manages public information about the company's process/funnel.
+     * Anyone can read this data, but only an administrator can modify it.
+     * @path /funnel_steps/{funnelStepId}
+     * @allow (get) Any user, signed in or not, can read a specific funnel step.
+     * @deny (delete) A non-admin user attempts to remove a funnel step.
+     * @principle Public read for marketing content, with writes restricted to admins.
+     */
+    match /funnel_steps/{funnelStepId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * @description A write-only collection for receiving contact form messages.
+     * Any user (including anonymous visitors) can create a submission, but no one
+     * can read, update, or delete any data to protect user privacy.
+     * @path /contact_form_submissions/{contactFormSubmissionId}
+     * @allow (create) An anonymous website visitor submits the contact form.
+     * @deny (get) Any user attempts to read a submitted message.
+     * @deny (list) Any user attempts to list all submitted messages.
+     * @principle Enforces a secure data ingress pattern for public forms, protecting PII.
+     */
+    match /contact_form_submissions/{contactFormSubmissionId} {
+      allow get: if false;
+      allow list: if false;
+      allow create: if true;
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}
