@@ -18,12 +18,20 @@ import { useState, useMemo } from 'react';
 import { Loader2, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/app/context/language-context';
+import { useFirestore, addDocumentNonBlocking, useMemoFirebase } from '@/firebase';
+import { collection, serverTimestamp } from 'firebase/firestore';
 
 export default function ContactSection() {
   const { t } = useLanguage();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const firestore = useFirestore();
+
+  const contactFormSubmissionsCollection = useMemoFirebase(
+    () => collection(firestore, 'contact_form_submissions'),
+    [firestore]
+  );
 
   const formSchema = useMemo(() => z.object({
     name: z.string().min(2, {
@@ -48,23 +56,21 @@ export default function ContactSection() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log(values);
-    
-    // Simulate success/error
-    const isSuccess = Math.random() > 0.2; // 80% success rate
-    
-    setIsSubmitting(false);
-
-    if (isSuccess) {
+    try {
+      await addDocumentNonBlocking(contactFormSubmissionsCollection, {
+        ...values,
+        submittedAt: serverTimestamp(),
+      });
       setIsSubmitted(true);
-    } else {
+    } catch (error) {
+      console.error("Error submitting form:", error);
       toast({
         variant: "destructive",
         title: t('submissionErrorTitle'),
         description: t('submissionErrorMessage'),
       });
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
