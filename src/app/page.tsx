@@ -14,8 +14,8 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
-        <ClientShowcase />
         <ServicesOverview />
+        <ClientShowcase />
         <FunnelDisplay />
         <ContactSection />
       </main>

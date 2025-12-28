@@ -1,44 +1,30 @@
 'use client';
 
-import {
-  Globe,
-  MousePointerClick,
-  PlayCircle,
-  TrendingUp,
-} from 'lucide-react';
 import { useLanguage } from '@/app/context/language-context';
 
 export default function FunnelDisplay() {
   const { t } = useLanguage();
   const funnelSteps = [
     {
-      icon: Globe,
       title: t('onlinePresence'),
-      description:
-        t('onlinePresenceDescription'),
+      description: t('onlinePresenceDescription'),
     },
     {
-      icon: PlayCircle,
       title: t('engagingVideos'),
-      description:
-        t('engagingVideosDescription'),
+      description: t('engagingVideosDescription'),
     },
     {
-      icon: TrendingUp,
       title: t('strategicAdvertising'),
-      description:
-        t('strategicAdvertisingDescription'),
+      description: t('strategicAdvertisingDescription'),
     },
     {
-      icon: MousePointerClick,
       title: t('conversionFocusedWeb'),
-      description:
-        t('conversionFocusedWebDescription'),
+      description: t('conversionFocusedWebDescription'),
     },
   ];
 
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32 bg-card">
+    <section id="funnel" className="w-full py-12 md:py-24 lg:py-32 bg-card border-y border-border/60">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
@@ -50,18 +36,14 @@ export default function FunnelDisplay() {
             </p>
           </div>
         </div>
-        <div className="relative mt-12 max-w-3xl mx-auto">
-          <div className="absolute left-1/2 -translate-x-1/2 md:left-9 top-0 h-full w-0.5 bg-border -z-10" aria-hidden="true"></div>
-          {funnelSteps.map((step, index) => (
-            <div
-              key={index}
-              className="flex items-start gap-6 md:gap-8 mb-12 flex-col md:flex-row text-center md:text-left"
-            >
-              <div className="flex-shrink-0 w-20 h-20 rounded-full bg-card border-4 border-primary flex items-center justify-center mx-auto md:mx-0">
-                <step.icon className="w-10 h-10 text-primary" />
+        <div className="relative mt-12 grid max-w-5xl mx-auto gap-8 md:grid-cols-2">
+           {funnelSteps.map((step, index) => (
+            <div key={index} className="flex items-start gap-6 p-6 rounded-lg border border-border/60 bg-background/50">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 border-2 border-primary/50 flex items-center justify-center">
+                 <span className="text-xl font-bold text-primary">{index + 1}</span>
               </div>
               <div>
-                <h3 className="text-2xl font-bold font-headline">{step.title}</h3>
+                <h3 className="text-xl font-bold font-headline">{step.title}</h3>
                 <p className="text-muted-foreground mt-2">{step.description}</p>
               </div>
             </div>

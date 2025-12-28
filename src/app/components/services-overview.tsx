@@ -7,41 +7,30 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  Clapperboard,
-  LayoutTemplate,
-  Megaphone,
-  PenTool,
-} from 'lucide-react';
 import { useLanguage } from '@/app/context/language-context';
-
 
 export default function ServicesOverview() {
   const { t } = useLanguage();
   const services = [
     {
-      icon: Clapperboard,
       title: t('ugcVideos'),
       description: t('ugcVideosDescription'),
     },
     {
-      icon: LayoutTemplate,
       title: t('websiteLandingPages'),
       description: t('websiteLandingPagesDescription'),
     },
     {
-      icon: PenTool,
       title: t('professionalPostDesign'),
       description: t('professionalPostDesignDescription'),
     },
     {
-      icon: Megaphone,
       title: t('adsAdvertising'),
       description: t('adsAdvertisingDescription'),
     },
   ];
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32">
+    <section id="services" className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
@@ -53,18 +42,16 @@ export default function ServicesOverview() {
             </p>
           </div>
         </div>
-        <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-4 mt-12">
+        <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-2 mt-12">
           {services.map((service, index) => (
-            <Card key={index} className="h-full">
-              <CardHeader className="items-center text-center">
-                <div className="bg-primary/10 p-3 rounded-full">
-                  <service.icon className="h-8 w-8 text-primary" />
+            <Card key={index} className="h-full bg-card border-border/60 hover:border-primary/50 transition-colors">
+              <CardHeader className="flex flex-row items-start gap-4">
+                 <div className="text-4xl font-bold text-primary">0{index + 1}</div>
+                <div>
+                    <CardTitle className="mt-0">{service.title}</CardTitle>
+                    <CardDescription className="mt-2">{service.description}</CardDescription>
                 </div>
-                <CardTitle className="mt-4">{service.title}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center">{service.description}</CardDescription>
-              </CardContent>
             </Card>
           ))}
         </div>
