@@ -9,7 +9,7 @@ export default function Hero() {
   return (
     <section className="container grid items-center justify-center gap-6 pb-8 pt-6 md:py-24 text-center">
       <div className="mx-auto max-w-4xl">
-        <h1 className="text-4xl font-extrabold leading-tight tracking-tighter md:text-7xl font-headline">
+        <h1 className="text-4xl font-extrabold leading-tight tracking-tight md:text-7xl font-headline">
           {t('amplifyYourBrand')}
           <br />
           <span className="text-primary">{t('dominateTheMarket')}</span>
