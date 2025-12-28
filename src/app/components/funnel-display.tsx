@@ -1,50 +1,48 @@
 'use client';
 
 import { useLanguage } from '@/app/context/language-context';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
 
 export default function FunnelDisplay() {
   const { t } = useLanguage();
-  const funnelSteps = [
-    {
-      title: t('onlinePresence'),
-      description: t('onlinePresenceDescription'),
-    },
-    {
-      title: t('engagingVideos'),
-      description: t('engagingVideosDescription'),
-    },
-    {
-      title: t('strategicAdvertising'),
-      description: t('strategicAdvertisingDescription'),
-    },
-    {
-      title: t('conversionFocusedWeb'),
-      description: t('conversionFocusedWebDescription'),
-    },
-  ];
+  const firestore = useFirestore();
+  const funnelStepsCollection = useMemoFirebase(
+    () => collection(firestore, 'funnel_steps'),
+    [firestore]
+  );
+  const { data: funnelSteps, isLoading } = useCollection(funnelStepsCollection);
+  
+  const sortedSteps = funnelSteps?.sort((a, b) => a.order - b.order);
 
   return (
     <section id="funnel" className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline text-foreground">
               {t('highPerformanceFunnel')}
             </h2>
-            <p className="max-w-[900px] text-primary-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               {t('funnelDescription')}
             </p>
           </div>
         </div>
         <div className="relative mt-12 grid max-w-5xl mx-auto gap-8 md:grid-cols-2">
-           {funnelSteps.map((step, index) => (
-            <div key={index} className="flex items-start gap-6 p-6 rounded-lg border border-primary-foreground/20 bg-primary-foreground/10">
-              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary-foreground/10 border-2 border-primary-foreground/50 flex items-center justify-center">
-                 <span className="text-xl font-bold text-primary-foreground">{index + 1}</span>
+            {isLoading && (
+              <>
+                <div className="p-6 rounded-lg border">Loading...</div>
+                <div className="p-6 rounded-lg border">Loading...</div>
+              </>
+            )}
+           {sortedSteps?.map((step, index) => (
+            <div key={step.id} className="flex items-start gap-6 p-6 rounded-lg border border-border bg-card text-card-foreground">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-muted border-2 border-border flex items-center justify-center">
+                 <span className="text-xl font-bold text-muted-foreground">{index + 1}</span>
               </div>
               <div>
-                <h3 className="text-xl font-bold font-headline">{step.title}</h3>
-                <p className="text-primary-foreground/80 mt-2">{step.description}</p>
+                <h3 className="text-xl font-bold font-headline">{step.name}</h3>
+                <p className="text-muted-foreground mt-2">{step.description}</p>
               </div>
             </div>
           ))}
