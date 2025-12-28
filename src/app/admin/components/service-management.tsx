@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { collection } from 'firebase/firestore';
+import { collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { useCollection } from '@/firebase/firestore/use-collection';
 import { useFirestore, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
 
@@ -17,35 +17,62 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Edit, Trash2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-function ServiceUploader() {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [iconUrl, setIconUrl] = useState('');
+function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, onComplete: () => void }) {
+  const [name, setName] = useState(serviceToEdit?.name || '');
+  const [description, setDescription] = useState(serviceToEdit?.description || '');
+  const [iconUrl, setIconUrl] = useState(serviceToEdit?.iconUrl || '');
   const firestore = useFirestore();
+  const { toast } = useToast();
 
   const servicesCollection = useMemoFirebase(
     () => collection(firestore, 'services'),
     [firestore]
   );
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (!name || !description) {
-      alert('Please provide a name and a description.');
+      toast({
+        variant: 'destructive',
+        title: 'Missing Information',
+        description: 'Please provide a name and a description.',
+      });
       return;
     }
-    addDocumentNonBlocking(servicesCollection, { name, description, iconUrl });
+
+    const serviceData = { name, description, iconUrl };
+
+    if (serviceToEdit) {
+      const docRef = doc(firestore, 'services', serviceToEdit.id);
+      await updateDoc(docRef, serviceData);
+      toast({ title: 'Service Updated', description: `${name} has been successfully updated.` });
+    } else {
+      await addDocumentNonBlocking(servicesCollection, serviceData);
+      toast({ title: 'Service Added', description: `${name} has been successfully added.` });
+    }
+
     setName('');
     setDescription('');
     setIconUrl('');
+    onComplete();
   };
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full">
       <CardHeader>
-        <CardTitle>Add New Service</CardTitle>
+        <CardTitle>{serviceToEdit ? 'Edit Service' : 'Add New Service'}</CardTitle>
         <CardDescription>
-          Add a new service offered by your agency.
+          {serviceToEdit ? `Editing the service: ${serviceToEdit.name}` : 'Add a new service offered by your agency.'}
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
@@ -77,9 +104,10 @@ function ServiceUploader() {
           />
         </div>
       </CardContent>
-      <CardFooter>
-        <Button className="w-full" onClick={handleUpload}>
-          Add Service
+      <CardFooter className="flex justify-end gap-2">
+        <Button variant="outline" onClick={onComplete}>Cancel</Button>
+        <Button onClick={handleUpload}>
+          {serviceToEdit ? 'Update Service' : 'Add Service'}
         </Button>
       </CardFooter>
     </Card>
@@ -87,40 +115,96 @@ function ServiceUploader() {
 }
 
 export default function ServiceManagement() {
-    const firestore = useFirestore();
-    const servicesCollection = useMemoFirebase(
-        () => collection(firestore, 'services'),
-        [firestore]
-    );
+  const firestore = useFirestore();
+  const { toast } = useToast();
+  const [editingService, setEditingService] = useState<any | null>(null);
+  const [isFormVisible, setIsFormVisible] = useState(false);
 
-    const { data: services, isLoading: isLoadingServices } = useCollection(servicesCollection);
+  const servicesCollection = useMemoFirebase(
+    () => collection(firestore, 'services'),
+    [firestore]
+  );
 
-    return (
-        <div className="w-full max-w-4xl mx-auto flex flex-col items-center gap-8">
-            <ServiceUploader />
-             <div className="w-full">
-                <h2 className="text-xl font-bold mt-8 mb-4 text-center">Current Services</h2>
-                {isLoadingServices && <p className="text-center">Loading services...</p>}
-                 {!isLoadingServices && services && services.length === 0 && <p className="text-center text-muted-foreground">No services added yet.</p>}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {services?.map((service) => (
-                        <Card key={service.id}>
-                            <CardHeader>
-                                {service.iconUrl && (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img src={service.iconUrl} alt={service.name} className="h-10 w-10 mx-auto mb-2" />
-                                )}
-                                <CardTitle className="text-center">{service.name}</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-sm text-muted-foreground text-center">
-                                    {service.description}
-                                </p>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
+  const { data: services, isLoading: isLoadingServices } = useCollection(servicesCollection);
+
+  const handleDelete = async (serviceId: string, serviceName: string) => {
+    if (window.confirm(`Are you sure you want to delete the service "${serviceName}"?`)) {
+      try {
+        await deleteDoc(doc(firestore, 'services', serviceId));
+        toast({ title: 'Service Deleted', description: `"${serviceName}" has been removed.` });
+      } catch (error) {
+        toast({ variant: 'destructive', title: 'Error', description: 'Could not delete the service.' });
+        console.error("Error deleting service:", error);
+      }
+    }
+  };
+
+  const handleEdit = (service: any) => {
+    setEditingService(service);
+    setIsFormVisible(true);
+  };
+  
+  const handleAddNew = () => {
+    setEditingService(null);
+    setIsFormVisible(true);
+  }
+
+  const handleFormComplete = () => {
+    setEditingService(null);
+    setIsFormVisible(false);
+  };
+
+  return (
+    <div className="w-full max-w-4xl mx-auto flex flex-col items-center gap-8">
+      {isFormVisible ? (
+        <ServiceUploader serviceToEdit={editingService} onComplete={handleFormComplete} />
+      ) : (
+        <Card className="w-full">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Manage Services</CardTitle>
+              <CardDescription>
+                Add, edit, or delete the services your agency offers.
+              </CardDescription>
             </div>
-        </div>
-    );
+            <Button onClick={handleAddNew}>Add New Service</Button>
+          </CardHeader>
+          <CardContent>
+            {isLoadingServices && <p className="text-center">Loading services...</p>}
+            {!isLoadingServices && services && services.length === 0 && <p className="text-center text-muted-foreground">No services added yet.</p>}
+            
+            {!isLoadingServices && services && services.length > 0 && (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {services.map((service) => (
+                    <TableRow key={service.id}>
+                      <TableCell className="font-medium">{service.name}</TableCell>
+                      <TableCell className="text-muted-foreground max-w-sm truncate">{service.description}</TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="icon" onClick={() => handleEdit(service)}>
+                          <Edit className="h-4 w-4" />
+                          <span className="sr-only">Edit</span>
+                        </Button>
+                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDelete(service.id, service.name)}>
+                          <Trash2 className="h-4 w-4" />
+                          <span className="sr-only">Delete</span>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
 }
