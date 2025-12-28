@@ -1,212 +1,152 @@
 'use client';
-import { useUser, useMemoFirebase, FirebaseClientProvider, useAuth } from '@/firebase';
+import { useUser, FirebaseClientProvider, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { collection } from 'firebase/firestore';
-import { useCollection } from '@/firebase/firestore/use-collection';
-import { useFirestore } from '@/firebase';
-import { LogOut } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Briefcase, Workflow } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { addDocumentNonBlocking } from '@/firebase';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+  SidebarProvider,
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarFooter,
+  SidebarInset,
+  SidebarTrigger,
+  SidebarMenuBadge,
+} from '@/components/ui/sidebar';
+import ClientManagement from '@/app/admin/components/client-management';
+import ServiceManagement from '@/app/admin/components/service-management';
+import FunnelStepManagement from '@/app/admin/components/funnel-step-management';
 
-function ClientUploader() {
-  const [name, setName] = useState('');
-  const [logoUrl, setLogoUrl] = useState('');
-  const [websiteUrl, setWebsiteUrl] = useState('');
-  const firestore = useFirestore();
+type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel';
 
-  const clientsCollection = useMemoFirebase(
-    () => collection(firestore, 'clients'),
-    [firestore]
-  );
-
-  const handleUpload = () => {
-    if (!name || !logoUrl) {
-      alert('Please provide a name and a logo URL.');
-      return;
-    }
-    addDocumentNonBlocking(clientsCollection, {
-      name,
-      logoUrl,
-      websiteUrl,
-    });
-    setName('');
-    setLogoUrl('');
-    setWebsiteUrl('');
-  };
-
-  return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Add New Client</CardTitle>
-        <CardDescription>
-          Upload a new client's logo and information.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-4">
-        <div className="grid gap-2">
-          <Label htmlFor="name">Client Name</Label>
-          <Input
-            id="name"
-            placeholder="Acme Inc."
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="logoUrl">Logo URL</Label>
-          <Input
-            id="logoUrl"
-            placeholder="https://example.com/logo.png"
-            value={logoUrl}
-            onChange={(e) => setLogoUrl(e.target.value)}
-          />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="websiteUrl">Website URL (optional)</Label>
-          <Input
-            id="websiteUrl"
-            placeholder="https://acmeinc.com"
-            value={websiteUrl}
-            onChange={(e) => setWebsiteUrl(e.target.value)}
-          />
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button className="w-full" onClick={handleUpload}>
-          Add Client
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-}
-
-function ImageUploader() {
-    return (
-        <Card className="w-full max-w-md">
-            <CardHeader>
-                <CardTitle>Add Site Image</CardTitle>
-                <CardDescription>
-                    Add a new image to be used on the site.
-                </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-               <div className="grid gap-2">
-                 <Label htmlFor="imageUrl">Image URL</Label>
-                 <Input id="imageUrl" placeholder="https://example.com/image.png" />
-               </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="imageDescription">Description</Label>
-                    <Input id="imageDescription" placeholder="A descriptive name for the image" />
-                </div>
-            </CardContent>
-            <CardFooter>
-                <Button className="w-full" disabled>Add Image (Coming Soon)</Button>
-            </CardFooter>
-        </Card>
-    );
-}
-
-function AdminPage() {
+function AdminDashboard() {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
   const auth = useAuth();
-
-  const firestore = useFirestore();
-  const clientsCollection = useMemoFirebase(
-    () => collection(firestore, 'clients'),
-    [firestore]
-  );
-
-  const { data: clients, isLoading: isLoadingClients } =
-    useCollection(clientsCollection);
+  const [activeSection, setActiveSection] = useState<AdminSection>('dashboard');
 
   useEffect(() => {
     if (!isUserLoading && !user) {
       router.push('/login');
     }
   }, [user, isUserLoading, router]);
-  
+
   const handleLogout = () => {
-    if(auth) {
+    if (auth) {
       auth.signOut();
     }
-  }
+  };
 
   if (isUserLoading || !user) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'clients':
+        return <ClientManagement />;
+      case 'services':
+        return <ServiceManagement />;
+      case 'funnel':
+        return <FunnelStepManagement />;
+      case 'dashboard':
+      default:
+        return (
+            <div className="text-center">
+                <h1 className="text-3xl font-bold">Welcome to your Dashboard</h1>
+                <p className="text-muted-foreground mt-2">Select a section from the sidebar to start managing your site content.</p>
+            </div>
+        );
+    }
+  };
+
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <div className="flex flex-col sm:gap-4 sm:py-4">
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-            <Button variant="outline" size="icon" onClick={handleLogout}>
-                <LogOut className="h-5 w-5" />
-                <span className="sr-only">Logout</span>
-            </Button>
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarHeader>
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold">Admin Panel</h2>
+            <SidebarMenuBadge>Beta</SidebarMenuBadge>
+          </div>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={() => setActiveSection('dashboard')}
+                isActive={activeSection === 'dashboard'}
+              >
+                <LayoutDashboard />
+                Dashboard
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={() => setActiveSection('clients')}
+                isActive={activeSection === 'clients'}
+              >
+                <Users />
+                Clients
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+                <SidebarMenuButton 
+                    onClick={() => setActiveSection('services')}
+                    isActive={activeSection === 'services'}>
+                    <Briefcase />
+                    Services
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+                <SidebarMenuButton 
+                    onClick={() => setActiveSection('funnel')}
+                    isActive={activeSection === 'funnel'}>
+                    <Workflow />
+                    Funnel Steps
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarContent>
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton onClick={handleLogout}>
+                <LogOut />
+                Logout
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      </Sidebar>
+      <SidebarInset>
+        <header className="flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:px-6">
+            <SidebarTrigger className="md:hidden" />
+            <h1 className="text-xl font-semibold capitalize">{activeSection}</h1>
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 items-center">
-            <Tabs defaultValue="clients" className="w-full max-w-4xl">
-                <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="clients">Our Clients</TabsTrigger>
-                    <TabsTrigger value="images">Site Images</TabsTrigger>
-                </TabsList>
-                <TabsContent value="clients">
-                    <div className="flex flex-col items-center gap-8 mt-4">
-                        <ClientUploader />
-                        <div className="w-full">
-                            <h2 className="text-xl font-bold mt-8 mb-4 text-center">Current Clients</h2>
-                            {isLoadingClients && <p className="text-center">Loading clients...</p>}
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                            {clients?.map((client) => (
-                                <Card key={client.id}>
-                                <CardContent className="p-4 flex flex-col items-center justify-center">
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                    src={client.logoUrl}
-                                    alt={client.name}
-                                    className="h-16 w-16 object-contain mb-2"
-                                    />
-                                    <p className="text-sm font-medium text-center">
-                                    {client.name}
-                                    </p>
-                                </CardContent>
-                                </Card>
-                            ))}
-                            </div>
-                        </div>
-                    </div>
-                </TabsContent>
-                <TabsContent value="images">
-                     <div className="flex flex-col items-center gap-8 mt-4">
-                        <ImageUploader />
-                    </div>
-                </TabsContent>
-            </Tabs>
+        <main className="flex-1 overflow-auto p-4 sm:p-6">
+          <div className="flex items-center justify-center">
+            {renderContent()}
+          </div>
         </main>
-      </div>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
+
 
 export default function Admin() {
   return (
     <FirebaseClientProvider>
-      <AdminPage />
+      <AdminDashboard />
     </FirebaseClientProvider>
   );
 }
