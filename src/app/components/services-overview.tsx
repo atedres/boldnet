@@ -44,14 +44,16 @@ export default function ServicesOverview() {
         </div>
         <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-2 mt-12">
           {services.map((service, index) => (
-            <Card key={index} className="h-full bg-primary-foreground/10 text-primary-foreground border-primary-foreground/20 hover:border-primary-foreground/50 transition-colors">
-              <CardHeader className="flex flex-row items-start gap-4">
-                 <div className="text-4xl font-bold text-primary-foreground/50">0{index + 1}</div>
-                <div>
-                    <CardTitle className="mt-0">{service.title}</CardTitle>
-                    <CardDescription className="mt-2 text-primary-foreground/80">{service.description}</CardDescription>
+            <Card key={index} className="h-full bg-primary-foreground/10 text-primary-foreground border-primary-foreground/20 hover:border-primary-foreground/50 transition-colors relative overflow-hidden group">
+              <CardHeader>
+                <div className="flex flex-col">
+                  <CardTitle className="text-xl font-bold font-headline">{service.title}</CardTitle>
+                  <CardDescription className="mt-2 text-primary-foreground/80">{service.description}</CardDescription>
                 </div>
               </CardHeader>
+              <div className="absolute -bottom-4 -right-4 text-8xl font-bold text-primary-foreground/10 group-hover:text-primary-foreground/20 transition-colors">
+                0{index + 1}
+              </div>
             </Card>
           ))}
         </div>
