@@ -91,53 +91,44 @@ export default function ServicesOverview() {
     <section 
         ref={sectionRef}
         id="services" 
-        className={cn(
-            "w-full py-12 md:py-24 lg:py-32 transition-colors duration-700 ease-in-out",
-            isInView ? 'bg-primary text-primary-foreground' : 'bg-background text-foreground'
-        )}
+        className="w-full py-12 md:py-24 lg:py-32 bg-background text-foreground"
     >
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className={cn(
-                "text-3xl font-bold tracking-tighter sm:text-5xl font-headline transition-colors duration-700 ease-in-out",
-                 isInView ? 'text-primary-foreground' : 'text-foreground'
-            )}>
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline text-foreground">
               {t('ourServices')}
             </h2>
-            <p className={cn(
-                "max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed transition-colors duration-700 ease-in-out",
-                isInView ? 'text-primary-foreground/80' : 'text-muted-foreground'
-            )}>
+            <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-muted-foreground">
               {t('servicesDescription')}
             </p>
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-3 mt-12">
             {serviceData.map((service, index) => (
-                 <Card key={index} className="bg-card text-card-foreground flex flex-col h-full shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                 <Card key={index} className="bg-card text-card-foreground flex flex-col h-full shadow-lg hover:shadow-2xl transition-all duration-300 group hover:bg-primary hover:text-primary-foreground">
                     <CardHeader className="items-start gap-4">
-                        <div className="bg-gray-900 text-white p-3 rounded-lg">
+                        <div className="bg-gray-900 text-white p-3 rounded-lg group-hover:bg-white group-hover:text-primary transition-colors">
                             {service.icon}
                         </div>
                         <CardTitle className="text-xl font-bold font-headline">{service.title}</CardTitle>
-                        <CardDescription className="text-muted-foreground">{service.description}</CardDescription>
+                        <CardDescription className="text-muted-foreground group-hover:text-primary-foreground/80">{service.description}</CardDescription>
                     </CardHeader>
                     <CardContent className="flex-grow">
-                        <ul className="space-y-2 text-sm text-muted-foreground">
+                        <ul className="space-y-2 text-sm text-muted-foreground group-hover:text-primary-foreground/80">
                             {service.features.map((feature, fIndex) => (
                                 <li key={fIndex} className="flex items-center gap-2">
-                                    <span className="h-1.5 w-1.5 rounded-full bg-primary/50"></span>
+                                    <span className="h-1.5 w-1.5 rounded-full bg-primary/50 group-hover:bg-primary-foreground"></span>
                                     {feature}
                                 </li>
                             ))}
                         </ul>
                     </CardContent>
                     <CardFooter className="flex-col items-stretch gap-4 mt-auto pt-6">
-                        <Button className="w-full bg-gray-900 text-white hover:bg-gray-800">
+                        <Button className="w-full bg-gray-900 text-white hover:bg-gray-800 group-hover:bg-white group-hover:text-primary transition-colors">
                             <ArrowRight className="mr-2 h-4 w-4" /> Demander un devis
                         </Button>
-                        <Button variant="link" className="text-muted-foreground hover:text-primary" asChild>
+                        <Button variant="link" className="text-muted-foreground hover:text-primary group-hover:text-primary-foreground/80 group-hover:hover:text-primary-foreground" asChild>
                             <Link href="#">
                                 En savoir plus <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
