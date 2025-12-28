@@ -4,9 +4,41 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useLanguage } from '@/app/context/language-context';
 import { Zap } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
+import { cn } from '@/lib/utils';
+
 
 export default function Hero() {
   const { t } = useLanguage();
+  const firestore = useFirestore();
+  const servicesCollection = useMemoFirebase(
+    () => collection(firestore, 'services'),
+    [firestore]
+  );
+  const { data: services } = useCollection(servicesCollection);
+
+  const [currentServiceIndex, setCurrentServiceIndex] = useState(0);
+  const [isFading, setIsFading] = useState(false);
+
+  useEffect(() => {
+    if (services && services.length > 0) {
+      const interval = setInterval(() => {
+        setIsFading(true);
+        setTimeout(() => {
+          setCurrentServiceIndex((prevIndex) => (prevIndex + 1) % services.length);
+          setIsFading(false);
+        }, 500); // fade-out duration
+      }, 2500); // 2s display + 0.5s fade
+
+      return () => clearInterval(interval);
+    }
+  }, [services]);
+
+  const displayedService = services && services.length > 0 ? services[currentServiceIndex].name : t('heroSubtitle');
+
+
   return (
     <section className="container flex flex-col items-center justify-center gap-6 pb-12 pt-16 md:py-24 text-center">
       <div className="flex items-center gap-2 bg-muted px-4 py-1.5 rounded-full text-sm font-medium">
@@ -19,9 +51,12 @@ export default function Hero() {
           <br />
           {t('heroTitleLine2')}
         </h1>
-        <div className="mt-6 inline-block">
-            <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white font-semibold rounded-full px-8 py-3 text-2xl -rotate-3">
-                {t('heroSubtitle')}
+        <div className="mt-6 inline-block h-16">
+            <div className={cn(
+                "bg-gradient-to-r from-orange-400 to-red-500 text-white font-semibold rounded-full px-8 py-3 text-2xl -rotate-3 transition-opacity duration-500",
+                isFading ? "opacity-0" : "opacity-100"
+              )}>
+                {displayedService}
             </div>
         </div>
         <p className="leading-7 [&:not(:first-child)]:mt-6 text-lg text-muted-foreground max-w-2xl mx-auto">
