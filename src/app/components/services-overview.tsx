@@ -61,35 +61,9 @@ const serviceData = [
 
 export default function ServicesOverview() {
   const { t } = useLanguage();
-  const [isInView, setIsInView] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1, // Trigger when 10% of the section is visible
-      }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
-
+  
   return (
     <section 
-        ref={sectionRef}
         id="services" 
         className="w-full py-12 md:py-24 lg:py-32 bg-background text-foreground"
     >
