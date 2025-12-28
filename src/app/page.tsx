@@ -14,13 +14,9 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
-        <div className="bg-primary text-primary-foreground">
-            <ServicesOverview />
-        </div>
+        <ServicesOverview />
         <ClientShowcase />
-        <div className="bg-primary text-primary-foreground">
-            <FunnelDisplay />
-        </div>
+        <FunnelDisplay />
         <ContactSection />
       </main>
       <Footer />
