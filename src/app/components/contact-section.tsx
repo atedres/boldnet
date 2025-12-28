@@ -76,7 +76,7 @@ export default function ContactSection() {
 
   if (isSubmitted) {
     return (
-      <section id="contact" className="w-full py-12 md:py-24 lg:py-32">
+      <section id="contact" className="w-full py-12 md:py-24 lg:py-32 bg-background">
         <div className="container text-center">
             <div className="mx-auto max-w-md space-y-4">
               <Send className="mx-auto h-16 w-16 text-primary" />
@@ -93,7 +93,7 @@ export default function ContactSection() {
   }
 
   return (
-    <section id="contact" className="w-full py-12 md:py-24 lg:py-32">
+    <section id="contact" className="w-full py-12 md:py-24 lg:py-32 bg-background">
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
         <div className="space-y-3">
           <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight font-headline">

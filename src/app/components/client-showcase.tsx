@@ -18,7 +18,7 @@ export default function ClientShowcase() {
   const duplicatedClients = useMemo(() => {
     if (!clients) return [];
     // Duplicate the clients to ensure a seamless loop
-    return [...clients, ...clients];
+    return [...clients, ...clients, ...clients, ...clients];
   }, [clients]);
 
   return (

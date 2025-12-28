@@ -37,19 +37,19 @@ export default function ServicesOverview() {
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">
               {t('ourServices')}
             </h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            <p className="max-w-[900px] text-primary-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               {t('servicesDescription')}
             </p>
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-2 mt-12">
           {services.map((service, index) => (
-            <Card key={index} className="h-full bg-card border-border/60 hover:border-primary/50 transition-colors">
+            <Card key={index} className="h-full bg-primary-foreground/10 text-primary-foreground border-primary-foreground/20 hover:border-primary-foreground/50 transition-colors">
               <CardHeader className="flex flex-row items-start gap-4">
-                 <div className="text-4xl font-bold text-primary">0{index + 1}</div>
+                 <div className="text-4xl font-bold text-primary-foreground/50">0{index + 1}</div>
                 <div>
                     <CardTitle className="mt-0">{service.title}</CardTitle>
-                    <CardDescription className="mt-2">{service.description}</CardDescription>
+                    <CardDescription className="mt-2 text-primary-foreground/80">{service.description}</CardDescription>
                 </div>
               </CardHeader>
             </Card>
