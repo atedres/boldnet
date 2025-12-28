@@ -7,6 +7,16 @@ import { useFirestore, useMemoFirebase, addDocumentNonBlocking } from '@/firebas
 
 import { Button } from '@/components/ui/button';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
   Card,
   CardContent,
   CardDescription,
@@ -119,6 +129,7 @@ export default function ServiceManagement() {
   const { toast } = useToast();
   const [editingService, setEditingService] = useState<any | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [serviceToDelete, setServiceToDelete] = useState<{id: string; name: string} | null>(null);
 
   const servicesCollection = useMemoFirebase(
     () => collection(firestore, 'services'),
@@ -127,15 +138,16 @@ export default function ServiceManagement() {
 
   const { data: services, isLoading: isLoadingServices } = useCollection(servicesCollection);
 
-  const handleDelete = async (serviceId: string, serviceName: string) => {
-    if (window.confirm(`Are you sure you want to delete the service "${serviceName}"?`)) {
-      try {
-        await deleteDoc(doc(firestore, 'services', serviceId));
-        toast({ title: 'Service Deleted', description: `"${serviceName}" has been removed.` });
-      } catch (error) {
-        toast({ variant: 'destructive', title: 'Error', description: 'Could not delete the service.' });
-        console.error("Error deleting service:", error);
-      }
+  const confirmDelete = async () => {
+    if (!serviceToDelete) return;
+    try {
+      await deleteDoc(doc(firestore, 'services', serviceToDelete.id));
+      toast({ title: 'Service Deleted', description: `"${serviceToDelete.name}" has been removed.` });
+    } catch (error) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Could not delete the service.' });
+      console.error("Error deleting service:", error);
+    } finally {
+      setServiceToDelete(null);
     }
   };
 
@@ -155,6 +167,7 @@ export default function ServiceManagement() {
   };
 
   return (
+    <>
     <div className="w-full max-w-4xl mx-auto flex flex-col items-center gap-8">
       {isFormVisible ? (
         <ServiceUploader serviceToEdit={editingService} onComplete={handleFormComplete} />
@@ -192,7 +205,7 @@ export default function ServiceManagement() {
                           <Edit className="h-4 w-4" />
                           <span className="sr-only">Edit</span>
                         </Button>
-                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDelete(service.id, service.name)}>
+                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => setServiceToDelete({id: service.id, name: service.name})}>
                           <Trash2 className="h-4 w-4" />
                           <span className="sr-only">Delete</span>
                         </Button>
@@ -206,5 +219,25 @@ export default function ServiceManagement() {
         </Card>
       )}
     </div>
+
+    <AlertDialog open={!!serviceToDelete} onOpenChange={(isOpen) => !isOpen && setServiceToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              <span className="font-semibold"> {serviceToDelete?.name} </span> 
+              service.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
