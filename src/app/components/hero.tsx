@@ -53,7 +53,7 @@ export default function Hero() {
         </h1>
         <div className="mt-6 inline-block h-16">
             <div className={cn(
-                "bg-gradient-to-r from-orange-400 to-red-500 text-white font-semibold rounded-full px-8 py-3 text-2xl -rotate-3 transition-opacity duration-500",
+                "bg-gradient-to-r from-orange-400 to-red-500 text-white font-semibold rounded-full px-8 py-3 text-2xl transition-opacity duration-500",
                 isFading ? "opacity-0" : "opacity-100"
               )}>
                 {displayedService}
