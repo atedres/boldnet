@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ImageUpload } from '@/components/ui/image-upload';
 
 function ClientUploader() {
   const [name, setName] = useState('');
@@ -30,7 +31,7 @@ function ClientUploader() {
 
   const handleUpload = () => {
     if (!name || !logoUrl) {
-      alert('Please provide a name and a logo URL.');
+      alert('Please provide a name and a logo.');
       return;
     }
     addDocumentNonBlocking(clientsCollection, {
@@ -61,15 +62,11 @@ function ClientUploader() {
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div className="grid gap-2">
-          <Label htmlFor="logoUrl">Logo URL</Label>
-          <Input
-            id="logoUrl"
-            placeholder="https://example.com/logo.png"
+        <ImageUpload 
+            label="Client Logo"
             value={logoUrl}
-            onChange={(e) => setLogoUrl(e.target.value)}
-          />
-        </div>
+            onChange={setLogoUrl}
+        />
         <div className="grid gap-2">
           <Label htmlFor="websiteUrl">Website URL (optional)</Label>
           <Input

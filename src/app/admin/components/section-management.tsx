@@ -10,8 +10,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Layers, Trash2, Edit, Award, Zap, Target, Image as ImageIcon, MessageSquare, GripVertical, Briefcase, Users, Workflow, EyeOff, Eye } from 'lucide-react';
+import { Layers, Trash2, Edit, Award, Zap, Target, ImageIcon, MessageSquare, GripVertical, Briefcase, Users, Workflow, EyeOff, Eye } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { ImageUpload } from '@/components/ui/image-upload';
 import {
   DndContext,
   closestCenter,
@@ -194,10 +195,11 @@ function SectionForm({ section, onComplete }: { section?: any; onComplete: () =>
               <Label htmlFor="text">Text</Label>
               <Textarea id="text" value={content.text} onChange={(e) => handleContentChange('text', e.target.value)} />
             </div>
-             <div className="grid gap-2">
-              <Label htmlFor="imageUrl">Image URL</Label>
-              <Input id="imageUrl" value={content.imageUrl} onChange={(e) => handleContentChange('imageUrl', e.target.value)} />
-            </div>
+             <ImageUpload
+                label="Image"
+                value={content.imageUrl}
+                onChange={(url) => handleContentChange('imageUrl', url)}
+             />
             <div className="grid gap-2">
               <Label htmlFor="imageHint">Image AI Hint</Label>
               <Input id="imageHint" placeholder="e.g. abstract tech" value={content.imageHint} onChange={(e) => handleContentChange('imageHint', e.target.value)} />

@@ -17,6 +17,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { ImageUpload } from '@/components/ui/image-upload';
 
 function FunnelStepUploader() {
   const [name, setName] = useState('');
@@ -69,15 +70,11 @@ function FunnelStepUploader() {
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
-        <div className="grid gap-2">
-          <Label htmlFor="iconUrl">Icon URL (optional)</Label>
-          <Input
-            id="iconUrl"
-            placeholder="https://example.com/icon.png"
+        <ImageUpload 
+            label="Icon"
             value={iconUrl}
-            onChange={(e) => setIconUrl(e.target.value)}
-          />
-        </div>
+            onChange={setIconUrl}
+        />
         <div className="grid gap-2">
           <Label htmlFor="order">Order</Label>
           <Input

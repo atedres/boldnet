@@ -37,6 +37,7 @@ import {
 } from '@/components/ui/table';
 import { Edit, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { ImageUpload } from '@/components/ui/image-upload';
 
 function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, onComplete: () => void }) {
   const [name, setName] = useState(serviceToEdit?.name || '');
@@ -104,15 +105,11 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
-        <div className="grid gap-2">
-          <Label htmlFor="iconUrl">Icon URL (optional)</Label>
-          <Input
-            id="iconUrl"
-            placeholder="https://example.com/icon.png"
+        <ImageUpload 
+            label="Icon"
             value={iconUrl}
-            onChange={(e) => setIconUrl(e.target.value)}
-          />
-        </div>
+            onChange={setIconUrl}
+        />
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
         <Button variant="outline" onClick={onComplete}>Cancel</Button>
