@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { collection, doc, deleteDoc, setDoc } from 'firebase/firestore';
+import { collection, doc, deleteDoc, setDoc, writeBatch } from 'firebase/firestore';
 import { useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,23 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Layers, Trash2, Edit, Award, Zap, Target, Image as ImageIcon, MessageSquare, GripVertical } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const sectionTemplates = [
   {
@@ -209,6 +226,44 @@ function SectionForm({ section, onComplete }: { section?: any; onComplete: () =>
   )
 }
 
+function SortableSectionItem({ section, onEdit, onDelete }: { section: any; onEdit: () => void; onDelete: () => void; }) {
+    const template = sectionTemplates.find(t => t.type === section.type);
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+    } = useSortable({id: section.id});
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
+
+    return (
+        <Card ref={setNodeRef} style={style} className="flex items-center gap-4 p-4 touch-none">
+            <button {...attributes} {...listeners} className="cursor-grab">
+              <GripVertical className="h-5 w-5 text-muted-foreground" />
+            </button>
+            {template?.icon}
+            <div className="flex-1">
+                <p className="font-semibold">{template?.name || 'Unknown Section'}</p>
+                <p className="text-sm text-muted-foreground">Order: {section.order}</p>
+            </div>
+            <div className="flex items-center gap-2">
+                 <Button variant="ghost" size="icon" onClick={onEdit}>
+                    <Edit className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                </Button>
+                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={onDelete}>
+                    <Trash2 className="h-4 w-4" />
+                    <span className="sr-only">Delete</span>
+                </Button>
+            </div>
+        </Card>
+    );
+}
 
 export default function SectionManagement() {
   const firestore = useFirestore();
@@ -219,6 +274,15 @@ export default function SectionManagement() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingSection, setEditingSection] = useState<any | null>(null);
   const [deletingSection, setDeletingSection] = useState<any | null>(null);
+  
+  const sortedSections = sections?.sort((a, b) => a.order - b.order);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const handleAddSection = async (template: typeof sectionTemplates[0]) => {
     try {
@@ -248,7 +312,30 @@ export default function SectionManagement() {
     }
   }
 
-  const sortedSections = sections?.sort((a, b) => a.order - b.order);
+  async function handleDragEnd(event: DragEndEvent) {
+    const {active, over} = event;
+    
+    if (active.id !== over?.id && sortedSections) {
+      const oldIndex = sortedSections.findIndex(s => s.id === active.id);
+      const newIndex = sortedSections.findIndex(s => s.id === over?.id);
+      
+      const newSortedSections = arrayMove(sortedSections, oldIndex, newIndex);
+      
+      const batch = writeBatch(firestore);
+      newSortedSections.forEach((section, index) => {
+        const docRef = doc(firestore, "sections", section.id);
+        batch.update(docRef, { order: index + 1 });
+      });
+      
+      try {
+        await batch.commit();
+        toast({ title: "Sections reordered successfully." });
+      } catch (error) {
+        console.error(error);
+        toast({ variant: 'destructive', title: 'Error', description: 'Could not reorder the sections.' });
+      }
+    }
+  }
 
   return (
     <>
@@ -288,31 +375,27 @@ export default function SectionManagement() {
           {!isLoading && (!sortedSections || sortedSections.length === 0) && (
             <p className="text-center text-muted-foreground py-8">No dynamic sections added yet.</p>
           )}
-          <div className="space-y-4">
-            {sortedSections?.map(section => {
-               const template = sectionTemplates.find(t => t.type === section.type);
-                return (
-                    <Card key={section.id} className="flex items-center gap-4 p-4">
-                        <GripVertical className="h-5 w-5 text-muted-foreground cursor-grab" />
-                        {template?.icon}
-                        <div className="flex-1">
-                            <p className="font-semibold">{template?.name || 'Unknown Section'}</p>
-                            <p className="text-sm text-muted-foreground">Order: {section.order}</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                             <Button variant="ghost" size="icon" onClick={() => setEditingSection(section)}>
-                                <Edit className="h-4 w-4" />
-                                <span className="sr-only">Edit</span>
-                            </Button>
-                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => setDeletingSection(section)}>
-                                <Trash2 className="h-4 w-4" />
-                                <span className="sr-only">Delete</span>
-                            </Button>
-                        </div>
-                    </Card>
-                )
-            })}
-          </div>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={sortedSections?.map(s => s.id) || []}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="space-y-4">
+                {sortedSections?.map(section => (
+                   <SortableSectionItem 
+                        key={section.id} 
+                        section={section}
+                        onEdit={() => setEditingSection(section)}
+                        onDelete={() => setDeletingSection(section)}
+                    />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
         </CardContent>
       </Card>
       
