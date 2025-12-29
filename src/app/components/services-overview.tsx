@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import {
   Card,
   CardContent,
@@ -8,57 +9,103 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 import { useLanguage } from '@/app/context/language-context';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Code2, Bot } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-
-const AdIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-        <path d="M16.63,5.87C17.53,4.97 19.03,4.97 19.93,5.87C20.83,6.77 20.83,8.27 19.93,9.17L18.5,10.6L13.4,5.5L14.83,4.07C15.73,3.17 17.23,3.17 18.13,4.07L16.63,5.87M2.25,18.53L4.18,20.45L12.72,11.9L10.8,9.98L2.25,18.53M9.4,11.4L12,14L6.03,20H4V17.97L9.4,11.4Z" />
-    </svg>
-);
-
-const serviceData = [
-  {
-    icon: <Code2 />,
-    titleKey: 'websiteLandingPages',
-    descriptionKey: 'websiteLandingPagesDescription',
-    featuresKeys: [
-      'featureWeb1',
-      'featureWeb2',
-      'featureWeb3',
-      'featureWeb4',
-    ],
-  },
-  {
-    icon: <AdIcon />,
-    titleKey: 'adsAdvertising',
-    descriptionKey: 'adsAdvertisingDescription',
-    featuresKeys: [
-      'featureAds1',
-      'featureAds2',
-      'featureAds3',
-      'featureAds4',
-    ],
-  },
-  {
-    icon: <Bot />,
-    titleKey: 'automationAI',
-    descriptionKey: 'automationAIDescription',
-    featuresKeys: [
-        'featureAuto1',
-        'featureAuto2',
-        'featureAuto3',
-        'featureAuto4',
-        'featureAuto5'
-    ]
-  },
-];
-
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
+import Autoplay from "embla-carousel-autoplay"
+import Image from 'next/image';
 
 export default function ServicesOverview() {
   const { t } = useLanguage();
+  const firestore = useFirestore();
+  
+  const servicesCollection = useMemoFirebase(
+    () => collection(firestore, 'services'),
+    [firestore]
+  );
+  const { data: services, isLoading: isLoadingServices } = useCollection(servicesCollection);
+
+  const plugin = React.useRef(
+    Autoplay({ delay: 3000, stopOnInteraction: true })
+  )
+
+  const renderServiceCard = (service: any) => (
+    <Card key={service.id} className="bg-card text-card-foreground flex flex-col h-full shadow-lg hover:shadow-2xl transition-all duration-300 group hover:bg-primary hover:text-primary-foreground rounded-xl sm:rounded-2xl md:rounded-3xl">
+        <CardHeader className="items-start gap-4">
+            {service.iconUrl ? (
+                 <div className="bg-gray-900 text-white p-3 rounded-lg group-hover:bg-white group-hover:text-primary transition-colors">
+                    <Image src={service.iconUrl} alt={service.name} width={24} height={24} className="group-hover:brightness-0"/>
+                 </div>
+            ): (
+                 <div className="bg-gray-900 text-white p-3 rounded-lg group-hover:bg-white group-hover:text-primary transition-colors h-10 w-10" />
+            )}
+            <CardTitle className="text-xl font-bold font-headline">{service.name}</CardTitle>
+            <CardDescription className="text-muted-foreground group-hover:text-primary-foreground/80">{service.description}</CardDescription>
+        </CardHeader>
+        <CardFooter className="flex-col items-stretch gap-4 mt-auto pt-6">
+            <Button className="w-full bg-gray-900 text-white hover:bg-gray-800 group-hover:bg-white group-hover:text-primary transition-colors">
+                <ArrowRight className="mr-2 h-4 w-4" /> Demander un devis
+            </Button>
+            <Button variant="link" className="text-muted-foreground hover:text-primary group-hover:text-primary-foreground/80 group-hover:hover:text-primary-foreground" asChild>
+                <Link href="#">
+                    En savoir plus <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+            </Button>
+        </CardFooter>
+    </Card>
+  );
+
+  const renderContent = () => {
+    if (isLoadingServices) {
+        return <p className="text-center">Loading services...</p>
+    }
+
+    if (!services || services.length === 0) {
+        return <p className="text-center text-muted-foreground">No services available.</p>
+    }
+
+    if (services.length > 3) {
+        return (
+             <Carousel 
+                opts={{
+                    align: "start",
+                    loop: true,
+                }}
+                plugins={[plugin.current]}
+                onMouseEnter={plugin.current.stop}
+                onMouseLeave={plugin.current.reset}
+                className="w-full max-w-sm md:max-w-xl lg:max-w-4xl xl:max-w-6xl mx-auto">
+                <CarouselContent>
+                    {services.map((service) => (
+                        <CarouselItem key={service.id} className="md:basis-1/2 lg:basis-1/3">
+                            <div className="p-1 h-full">
+                                {renderServiceCard(service)}
+                            </div>
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+                <CarouselPrevious className="hidden lg:flex" />
+                <CarouselNext className="hidden lg:flex" />
+            </Carousel>
+        )
+    }
+
+    return (
+        <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-3 mt-12">
+            {services.map(service => renderServiceCard(service))}
+        </div>
+    )
+  }
   
   return (
     <section 
@@ -76,38 +123,8 @@ export default function ServicesOverview() {
             </p>
           </div>
         </div>
-        <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-3 mt-12">
-            {serviceData.map((service, index) => (
-                 <Card key={index} className="bg-card text-card-foreground flex flex-col h-full shadow-lg hover:shadow-2xl transition-all duration-300 group hover:bg-primary hover:text-primary-foreground rounded-xl sm:rounded-2xl md:rounded-3xl">
-                    <CardHeader className="items-start gap-4">
-                        <div className="bg-gray-900 text-white p-3 rounded-lg group-hover:bg-white group-hover:text-primary transition-colors">
-                            {service.icon}
-                        </div>
-                        <CardTitle className="text-xl font-bold font-headline">{t(service.titleKey)}</CardTitle>
-                        <CardDescription className="text-muted-foreground group-hover:text-primary-foreground/80">{t(service.descriptionKey)}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex-grow">
-                        <ul className="space-y-2 text-sm text-muted-foreground group-hover:text-primary-foreground/80">
-                            {service.featuresKeys.map((featureKey, fIndex) => (
-                                <li key={fIndex} className="flex items-center gap-2">
-                                    <span className="h-1.5 w-1.5 rounded-full bg-primary/50 group-hover:bg-primary-foreground"></span>
-                                    {t(featureKey)}
-                                </li>
-                            ))}
-                        </ul>
-                    </CardContent>
-                    <CardFooter className="flex-col items-stretch gap-4 mt-auto pt-6">
-                        <Button className="w-full bg-gray-900 text-white hover:bg-gray-800 group-hover:bg-white group-hover:text-primary transition-colors">
-                            <ArrowRight className="mr-2 h-4 w-4" /> Demander un devis
-                        </Button>
-                        <Button variant="link" className="text-muted-foreground hover:text-primary group-hover:text-primary-foreground/80 group-hover:hover:text-primary-foreground" asChild>
-                            <Link href="#">
-                                En savoir plus <ArrowRight className="ml-2 h-4 w-4" />
-                            </Link>
-                        </Button>
-                    </CardFooter>
-                </Card>
-            ))}
+        <div className="mt-12">
+            {renderContent()}
         </div>
       </div>
     </section>
