@@ -37,8 +37,38 @@ import {
 import { Edit, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { ImageUpload } from '@/components/ui/image-upload';
-import { Textarea } from '@/components/ui/textarea';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
+
+function DescriptionEditorModal({ value, onChange, onOpenChange }: { value: string, onChange: (value: string) => void, onOpenChange: (open: boolean) => void }) {
+    const [localValue, setLocalValue] = useState(value);
+
+    const handleSave = () => {
+        onChange(localValue);
+        onOpenChange(false);
+    }
+
+    return (
+        <Dialog open onOpenChange={onOpenChange}>
+            <DialogContent className="max-w-3xl h-[70vh] flex flex-col">
+                <DialogHeader>
+                    <DialogTitle>Edit Description</DialogTitle>
+                    <DialogDescription>
+                        Modify the service description using the rich text editor.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="flex-grow min-h-0">
+                   <RichTextEditor content={localValue} onChange={setLocalValue} />
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+                    <Button onClick={handleSave}>Save Description</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
 
 function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, onComplete: () => void }) {
   const [name, setName] = useState(serviceToEdit?.name || '');
@@ -46,6 +76,8 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
   const [iconUrl, setIconUrl] = useState(serviceToEdit?.iconUrl || '');
   const firestore = useFirestore();
   const { toast } = useToast();
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+
 
   const servicesCollection = useMemoFirebase(
     () => collection(firestore, 'services'),
@@ -99,14 +131,13 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="description">Description</Label>
-             <Textarea
-                id="description"
-                placeholder="Describe the service..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={5}
-             />
+            <Label>Description</Label>
+            <div 
+                className="prose dark:prose-invert min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                dangerouslySetInnerHTML={{ __html: description || "<p class='text-muted-foreground'>Click edit to add a description.</p>"}}
+            />
+            <Button variant="outline" size="sm" onClick={() => setIsEditingDescription(true)}>Edit Description</Button>
+            
           </div>
           <ImageUpload 
               label="Icon"
@@ -121,6 +152,9 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
           </Button>
         </CardFooter>
       </Card>
+      {isEditingDescription && (
+        <DescriptionEditorModal value={description} onChange={setDescription} onOpenChange={setIsEditingDescription} />
+      )}
     </>
   );
 }
@@ -167,7 +201,8 @@ export default function ServiceManagement() {
     setIsFormVisible(false);
   };
   
-  const truncateText = (text: string, length: number) => {
+  const truncateText = (html: string, length: number) => {
+    const text = html.replace(/<[^>]*>?/gm, '');
     if (text.length <= length) return text;
     return text.substring(0, length) + '...';
   }

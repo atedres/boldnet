@@ -49,7 +49,10 @@ export default function ServicesOverview() {
                  <div className="bg-gray-900 text-white p-3 rounded-lg group-hover:bg-white group-hover:text-primary transition-colors h-10 w-10" />
             )}
             <CardTitle className="text-xl font-bold font-headline">{service.name}</CardTitle>
-            <p className="prose-sm text-muted-foreground group-hover:text-primary-foreground/80 whitespace-pre-wrap">{service.description}</p>
+            <div 
+              className="prose-sm prose-p:text-muted-foreground group-hover:prose-p:text-primary-foreground/80 dark:prose-invert max-w-none"
+              dangerouslySetInnerHTML={{ __html: service.description }}
+            />
         </CardHeader>
         <CardFooter className="flex-col items-stretch gap-4 mt-auto pt-6">
             <Button className="w-full bg-gray-900 text-white hover:bg-gray-800 group-hover:bg-white group-hover:text-primary transition-colors">
