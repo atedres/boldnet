@@ -49,10 +49,9 @@
           "type": "string",
           "description": "Description of the service."
         },
-        "iconUrl": {
+        "iconName": {
           "type": "string",
-          "description": "URL of the service's icon.",
-          "format": "uri"
+          "description": "Name of the Lucide icon for the service."
         }
       },
       "required": [

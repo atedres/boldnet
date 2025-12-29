@@ -34,12 +34,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Edit, Sparkles, Trash2, Loader2 } from 'lucide-react';
+import { Edit, Trash2, type LucideIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { ImageUpload } from '@/components/ui/image-upload';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { generateIcon } from '@/ai/flows/generate-icon-flow';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { IconSelect } from '@/components/ui/icon-select';
+
 
 function DescriptionEditorModal({ value, onChange, onOpenChange }: { value: string, onChange: (value: string) => void, onOpenChange: (open: boolean) => void }) {
     const [localValue, setLocalValue] = useState(value);
@@ -73,8 +74,7 @@ function DescriptionEditorModal({ value, onChange, onOpenChange }: { value: stri
 function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, onComplete: () => void }) {
   const [name, setName] = useState(serviceToEdit?.name || '');
   const [description, setDescription] = useState(serviceToEdit?.description || '');
-  const [iconUrl, setIconUrl] = useState(serviceToEdit?.iconUrl || '');
-  const [isGeneratingIcon, setIsGeneratingIcon] = useState(false);
+  const [iconName, setIconName] = useState(serviceToEdit?.iconName || '');
   const firestore = useFirestore();
   const { toast } = useToast();
   const [isEditingDescription, setIsEditingDescription] = useState(false);
@@ -95,7 +95,7 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
       return;
     }
 
-    const serviceData = { name, description, iconUrl };
+    const serviceData = { name, description, iconName };
 
     if (serviceToEdit) {
       const docRef = doc(firestore, 'services', serviceToEdit.id);
@@ -108,37 +108,8 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
 
     setName('');
     setDescription('');
-    setIconUrl('');
+    setIconName('');
     onComplete();
-  };
-
-  const handleGenerateIcon = async () => {
-    if (!name) {
-      toast({
-        variant: 'destructive',
-        title: 'Service Name Required',
-        description: 'Please enter a service name to generate an icon.',
-      });
-      return;
-    }
-    setIsGeneratingIcon(true);
-    try {
-      const result = await generateIcon(name);
-      setIconUrl(result.iconUrl);
-      toast({
-        title: 'Icon Generated',
-        description: 'A new icon has been generated for your service.',
-      });
-    } catch (error: any) {
-      console.error('Icon generation failed:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Icon Generation Failed',
-        description: error.message || 'Could not generate an icon at this time.',
-      });
-    } finally {
-      setIsGeneratingIcon(false);
-    }
   };
   
   return (
@@ -169,23 +140,7 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
             <Button variant="outline" size="sm" onClick={() => setIsEditingDescription(true)}>Edit Description</Button>
             
           </div>
-          <div className="grid gap-2">
-            <ImageUpload 
-                label="Icon"
-                value={iconUrl}
-                onChange={setIconUrl}
-            />
-            {!iconUrl && (
-              <Button variant="outline" size="sm" onClick={handleGenerateIcon} disabled={isGeneratingIcon}>
-                {isGeneratingIcon ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Sparkles className="mr-2 h-4 w-4" />
-                )}
-                Generate Icon
-              </Button>
-            )}
-          </div>
+          <IconSelect value={iconName} onChange={setIconName} />
         </CardContent>
         <CardFooter className="flex justify-end gap-2">
           <Button variant="outline" onClick={onComplete}>Cancel</Button>
