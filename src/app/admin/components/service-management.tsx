@@ -34,12 +34,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Edit, Trash2, type LucideIcon } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { IconSelect } from '@/components/ui/icon-select';
+import { ImageUpload } from '@/components/ui/image-upload';
 
 
 function DescriptionEditorModal({ value, onChange, onOpenChange }: { value: string, onChange: (value: string) => void, onOpenChange: (open: boolean) => void }) {
@@ -75,6 +75,7 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
   const [name, setName] = useState(serviceToEdit?.name || '');
   const [description, setDescription] = useState(serviceToEdit?.description || '');
   const [iconName, setIconName] = useState(serviceToEdit?.iconName || '');
+  const [iconUrl, setIconUrl] = useState(serviceToEdit?.iconUrl || '');
   const firestore = useFirestore();
   const { toast } = useToast();
   const [isEditingDescription, setIsEditingDescription] = useState(false);
@@ -95,7 +96,7 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
       return;
     }
 
-    const serviceData = { name, description, iconName };
+    const serviceData = { name, description, iconName, iconUrl };
 
     if (serviceToEdit) {
       const docRef = doc(firestore, 'services', serviceToEdit.id);
@@ -109,6 +110,7 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
     setName('');
     setDescription('');
     setIconName('');
+    setIconUrl('');
     onComplete();
   };
   
@@ -140,7 +142,19 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
             <Button variant="outline" size="sm" onClick={() => setIsEditingDescription(true)}>Edit Description</Button>
             
           </div>
-          <IconSelect value={iconName} onChange={setIconName} />
+          <IconSelect value={iconName} onChange={(val) => { setIconName(val); setIconUrl('')}} />
+
+          <div className="flex items-center gap-4">
+              <div className="flex-grow border-t border-muted"></div>
+              <span className="text-sm text-muted-foreground">OR</span>
+              <div className="flex-grow border-t border-muted"></div>
+          </div>
+
+          <ImageUpload 
+            label="Upload Custom Icon"
+            value={iconUrl}
+            onChange={(url) => { setIconUrl(url); setIconName('')}}
+          />
         </CardContent>
         <CardFooter className="flex justify-end gap-2">
           <Button variant="outline" onClick={onComplete}>Cancel</Button>
@@ -281,3 +295,4 @@ export default function ServiceManagement() {
     </>
   );
 }
+    

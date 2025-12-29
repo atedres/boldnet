@@ -23,6 +23,7 @@ import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import Autoplay from "embla-carousel-autoplay"
 import { DynamicIcon } from '@/components/ui/dynamic-icon';
+import Image from 'next/image';
 
 export default function ServicesOverview() {
   const { t } = useLanguage();
@@ -42,7 +43,11 @@ export default function ServicesOverview() {
     <Card key={service.id} className="bg-card text-card-foreground flex flex-col h-full shadow-lg hover:shadow-2xl transition-all duration-300 group hover:bg-primary hover:text-primary-foreground rounded-xl sm:rounded-2xl md:rounded-3xl">
         <CardHeader className="items-start gap-4">
             <div className="bg-gray-900 text-white p-3 rounded-lg group-hover:bg-white group-hover:text-primary transition-colors">
-                <DynamicIcon iconName={service.iconName} className="h-6 w-6 text-white group-hover:text-primary transition-colors" />
+              {service.iconUrl ? (
+                 <Image src={service.iconUrl} alt={service.name} width={24} height={24} className="h-6 w-6 object-contain" />
+              ) : (
+                <DynamicIcon iconName={service.iconName || 'Zap'} className="h-6 w-6 text-white group-hover:text-primary transition-colors" />
+              )}
             </div>
             <CardTitle className="text-xl font-bold font-headline">{service.name}</CardTitle>
             <div 
@@ -128,3 +133,4 @@ export default function ServicesOverview() {
     </section>
   );
 }
+    
