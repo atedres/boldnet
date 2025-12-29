@@ -38,7 +38,11 @@ export default function FunnelDisplay() {
               </>
             )}
            {sortedSteps?.map((step, index) => (
-            <div key={step.id} className="flex items-start gap-6 p-6 rounded-lg border border-border bg-card text-card-foreground">
+            <div 
+              key={step.id} 
+              className="flex items-start gap-6 p-6 rounded-lg border border-border bg-card text-card-foreground animate-fade-in-up"
+              style={{ animationDelay: `${index * 0.15}s` }}
+            >
               <div className="flex-shrink-0 w-12 h-12 rounded-full bg-muted border-2 border-border flex items-center justify-center">
                  {step.iconUrl ? (
                     <Image src={step.iconUrl} alt={step.name} width={48} height={48} className="rounded-full object-cover" />
