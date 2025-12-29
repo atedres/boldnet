@@ -41,7 +41,7 @@ export default function FunnelDisplay() {
             <div 
               key={step.id} 
               className="flex items-start gap-6 p-6 rounded-lg border border-border bg-card text-card-foreground animate-fade-in-up"
-              style={{ animationDelay: `${index * 0.15}s` }}
+              style={{ animationDelay: `${index * 0.15}s`, opacity: 0 }}
             >
               <div className="flex-shrink-0 w-12 h-12 rounded-full bg-muted border-2 border-border flex items-center justify-center">
                  {step.iconUrl ? (
