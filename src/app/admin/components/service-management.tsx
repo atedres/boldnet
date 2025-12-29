@@ -38,7 +38,6 @@ import { Edit, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
-import { Textarea } from '@/components/ui/textarea';
 
 function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, onComplete: () => void }) {
   const [name, setName] = useState(serviceToEdit?.name || '');
@@ -99,11 +98,10 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
         </div>
         <div className="grid gap-2">
           <Label htmlFor="description">Description</Label>
-          <Textarea
+          <RichTextEditor
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={setDescription}
             placeholder="Describe the service..."
-            className="min-h-[120px]"
            />
         </div>
         <ImageUpload 
