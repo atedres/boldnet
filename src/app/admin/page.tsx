@@ -2,7 +2,7 @@
 import { useUser, FirebaseClientProvider, useAuth, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { LogOut, LayoutDashboard, Users, Briefcase, Workflow } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers } from 'lucide-react';
 import { doc, setDoc } from 'firebase/firestore';
 
 import { Button } from '@/components/ui/button';
@@ -22,11 +22,12 @@ import {
 import ClientManagement from '@/app/admin/components/client-management';
 import ServiceManagement from '@/app/admin/components/service-management';
 import FunnelStepManagement from '@/app/admin/components/funnel-step-management';
+import SectionManagement from '@/app/admin/components/section-management';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 
-type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel';
+type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections';
 
 function SectionVisibilityControl() {
   const firestore = useFirestore();
@@ -123,6 +124,8 @@ function AdminDashboard() {
         return <ServiceManagement />;
       case 'funnel':
         return <FunnelStepManagement />;
+      case 'sections':
+        return <SectionManagement />;
       case 'dashboard':
       default:
         return (
@@ -156,6 +159,14 @@ function AdminDashboard() {
                 <LayoutDashboard />
                 Dashboard
               </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+                <SidebarMenuButton 
+                    onClick={() => setActiveSection('sections')}
+                    isActive={activeSection === 'sections'}>
+                    <Layers />
+                    Sections
+                </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton

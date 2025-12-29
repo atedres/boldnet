@@ -7,16 +7,17 @@
  * A dedicated collection for contact form submissions is configured to be write-only for any visitor.
  *
  * Data Structure:
- * The data is organized into five distinct, top-level collections:
+ * The data is organized into six distinct, top-level collections:
  * - /clients/{clientId}: Publicly viewable client information.
  * - /services/{serviceId}: Publicly viewable service offerings.
  * - /funnel_steps/{funnelStepId}: Publicly viewable funnel/process steps.
  * - /contact_form_submissions/{submissionId}: Private, write-only submissions.
  * - /site_settings/{settingsId}: Publicly readable site configuration.
+ * - /sections/{sectionId}: Publicly readable dynamic content sections.
  *
  * Key Security Decisions:
  * - Public Read, Admin Write: All informational collections (/clients, /services,
- *   /funnel_steps, /site_settings) are publicly readable. Write access is restricted to any user
+ *   /funnel_steps, /site_settings, /sections) are publicly readable. Write access is restricted to any user
  *   who is signed in, effectively treating all authenticated users as admins.
  * - Write-Only Ingress: The /contact_form_submissions collection is intentionally
  *   configured to allow anyone to create a document but denies all read, update,
@@ -105,7 +106,7 @@ service cloud.firestore {
       allow create: if true;
     }
 
-     /**
+    /**
      * @description Manages global site settings, like section visibility.
      * Anyone can read this data, but only an administrator can modify it.
      * @path /site_settings/{settingsId}
@@ -114,6 +115,19 @@ service cloud.firestore {
      * @principle Public read for site configuration, with writes restricted to admins.
      */
     match /site_settings/{settingsId} {
+        allow read: if true;
+        allow write: if isAdmin();
+    }
+
+    /**
+     * @description Manages dynamic content sections for the homepage.
+     * Anyone can read this data, but only an administrator can modify it.
+     * @path /sections/{sectionId}
+     * @allow (get, list) Any user, signed in or not, can read section documents.
+     * @allow (create, update, delete) Only authenticated users (admins) can write.
+     * @principle Public read for marketing content, with writes restricted to admins.
+     */
+    match /sections/{sectionId} {
         allow read: if true;
         allow write: if isAdmin();
     }

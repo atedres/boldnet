@@ -1,0 +1,148 @@
+'use client';
+
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy } from 'firebase/firestore';
+import { Award, Zap, Target, ArrowRight } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
+
+// --- Template Components ---
+
+function FeatureGridSection({ content }: { content: any }) {
+  const icons: { [key: string]: React.ReactNode } = {
+    award: <Award className="w-8 h-8 text-primary" />,
+    zap: <Zap className="w-8 h-8 text-primary" />,
+    target: <Target className="w-8 h-8 text-primary" />,
+  };
+
+  return (
+    <section className="w-full py-12 md:py-24 lg:py-32 bg-background">
+      <div className="container px-4 md:px-6">
+        <div className="flex flex-col items-center justify-center space-y-4 text-center">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">
+            {content.title}
+          </h2>
+        </div>
+        <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-3 mt-12">
+          {content.columns?.map((col: any, index: number) => (
+            <Card key={index} className="text-center">
+              <CardHeader>
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+                  {icons[col.icon] || <Zap className="w-8 h-8 text-primary" />}
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <CardTitle>{col.title}</CardTitle>
+                <p className="text-muted-foreground">{col.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CTASection({ content }: { content: any }) {
+  return (
+    <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/40">
+      <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
+        <div className="space-y-3">
+          <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight font-headline">
+            {content.title}
+          </h2>
+          <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed">
+            {content.subtitle}
+          </p>
+        </div>
+        <div className="mx-auto w-full max-w-sm space-y-2">
+          <Button asChild size="lg" className="w-full">
+            <Link href={content.buttonLink}>{content.buttonText}</Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TextImageSection({ content }: { content: any }) {
+  return (
+    <section className="w-full py-12 md:py-24 lg:py-32">
+      <div className="container px-4 md:px-6">
+        <div className={cn(
+          "grid gap-10 lg:grid-cols-2 lg:gap-16 items-center",
+          content.imagePosition === 'right' && "lg:grid-cols-[1fr_auto]"
+        )}>
+          <div className={cn(content.imagePosition === 'right' && "lg:order-last")}>
+            <Image
+              src={content.imageUrl}
+              alt={content.title}
+              width={600}
+              height={400}
+              className="rounded-lg object-cover"
+              data-ai-hint={content.imageHint}
+            />
+          </div>
+          <div className="space-y-4">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl font-headline">
+              {content.title}
+            </h2>
+            <p className="text-muted-foreground md:text-xl/relaxed">
+              {content.text}
+            </p>
+             {content.buttonText && (
+               <Button asChild>
+                 <Link href={content.buttonLink || '#'}>
+                   {content.buttonText}
+                   <ArrowRight className="ml-2 h-4 w-4" />
+                 </Link>
+               </Button>
+             )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const sectionComponents = {
+  'feature-grid': FeatureGridSection,
+  'cta': CTASection,
+  'text-image': TextImageSection,
+};
+
+export default function DynamicSections() {
+  const firestore = useFirestore();
+  const sectionsQuery = useMemoFirebase(
+    () => query(collection(firestore, 'sections'), orderBy('order')),
+    [firestore]
+  );
+  const { data: sections, isLoading } = useCollection(sectionsQuery);
+
+  if (isLoading) {
+    return (
+        <section className="w-full py-12 md:py-24 lg:py-32">
+            <div className="container px-4 md:px-6 text-center">Loading sections...</div>
+      </section>
+    );
+  }
+
+  if (!sections || sections.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      {sections.map((section) => {
+        const SectionComponent = sectionComponents[section.type as keyof typeof sectionComponents];
+        if (!SectionComponent) {
+          return <div key={section.id}>Unknown section type: {section.type}</div>;
+        }
+        return <SectionComponent key={section.id} content={section.content} />;
+      })}
+    </>
+  );
+}
