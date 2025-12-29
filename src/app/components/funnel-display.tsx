@@ -24,7 +24,7 @@ export default function FunnelDisplay() {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline text-foreground">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-5xl font-headline text-foreground">
               {t('highPerformanceFunnel')}
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
@@ -43,11 +43,11 @@ export default function FunnelDisplay() {
             <div 
               key={step.id} 
               className="flex items-start gap-6 p-6 rounded-lg border border-border bg-card text-card-foreground animate-fade-in-up"
-              style={{ animationDelay: `${index * 0.15}s`, opacity: 0 }}
+              style={{ animationDelay: `${index * 0.15}s` }}
             >
               <div className="flex-shrink-0 w-12 h-12 rounded-full bg-muted border-2 border-border flex items-center justify-center">
-                 {step.iconName ? (
-                    <DynamicIcon iconName={step.iconName || 'HelpCircle'} className="h-6 w-6 text-muted-foreground" />
+                 {step.iconUrl ? (
+                    <Image src={step.iconUrl} alt={step.name} width={24} height={24} className="h-6 w-6 object-contain" />
                  ) : (
                     <span className="text-xl font-bold text-primary">{step.order}</span>
                  )}
