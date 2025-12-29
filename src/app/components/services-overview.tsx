@@ -50,7 +50,7 @@ export default function ServicesOverview() {
                  <div className="bg-gray-900 text-white p-3 rounded-lg group-hover:bg-white group-hover:text-primary transition-colors h-10 w-10" />
             )}
             <CardTitle className="text-xl font-bold font-headline">{service.name}</CardTitle>
-            <div className="prose-sm text-muted-foreground group-hover:text-primary-foreground/80 ql-editor" dangerouslySetInnerHTML={{ __html: service.description }} />
+            <div className="prose-sm text-muted-foreground group-hover:text-primary-foreground/80" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }} />
         </CardHeader>
         <CardFooter className="flex-col items-stretch gap-4 mt-auto pt-6">
             <Button className="w-full bg-gray-900 text-white hover:bg-gray-800 group-hover:bg-white group-hover:text-primary transition-colors">
@@ -102,7 +102,7 @@ export default function ServicesOverview() {
 
     return (
         <div className="mx-auto grid max-w-5xl items-stretch gap-8 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-3 mt-12">
-            {services.map(service => <div className="h-full">{renderServiceCard(service)}</div>)}
+            {services.map(service => <div key={service.id} className="h-full">{renderServiceCard(service)}</div>)}
         </div>
     )
   }

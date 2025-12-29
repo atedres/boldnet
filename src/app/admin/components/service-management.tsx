@@ -38,6 +38,7 @@ import { Edit, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
+import { Textarea } from '@/components/ui/textarea';
 
 function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, onComplete: () => void }) {
   const [name, setName] = useState(serviceToEdit?.name || '');
@@ -98,10 +99,11 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
         </div>
         <div className="grid gap-2">
           <Label htmlFor="description">Description</Label>
-          <RichTextEditor
+          <Textarea
             value={description}
-            onChange={setDescription}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="Describe the service..."
+            className="min-h-[120px]"
            />
         </div>
         <ImageUpload 
@@ -164,6 +166,7 @@ export default function ServiceManagement() {
   
   // Helper to strip HTML for the preview
   const stripHtml = (html: string) => {
+    if(typeof document === 'undefined') return html;
     const doc = new DOMParser().parseFromString(html, 'text/html');
     return doc.body.textContent || "";
   }
