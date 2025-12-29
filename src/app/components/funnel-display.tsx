@@ -47,7 +47,7 @@ export default function FunnelDisplay() {
                  {step.iconUrl ? (
                     <Image src={step.iconUrl} alt={step.name} width={48} height={48} className="rounded-full object-cover" />
                  ) : (
-                    <span className="text-xl font-bold text-muted-foreground">{index + 1}</span>
+                    <span className="text-xl font-bold text-primary">{index + 1}</span>
                  )}
               </div>
               <div>
