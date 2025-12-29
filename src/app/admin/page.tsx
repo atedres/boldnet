@@ -153,7 +153,7 @@ function AdminDashboard() {
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <header className="flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:px-6">
+        <header className="flex h-14 items-center justify-start gap-4 border-b bg-background px-4 sm:px-6">
             <SidebarTrigger className="md:flex" />
             <h1 className="text-xl font-semibold capitalize">{activeSection}</h1>
         </header>
