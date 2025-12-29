@@ -39,20 +39,30 @@ const generateIconFlow = ai.defineFlow(
     outputSchema: GenerateIconOutputSchema,
   },
   async (serviceTitle) => {
-    const { media } = await ai.generate({
-      model: 'googleai/imagen-4.0-fast-generate-001',
-      prompt: `Generate a single, simple, modern, flat, minimalist icon for a service called "${serviceTitle}".
+    let media;
+    try {
+       const generationResult = await ai.generate({
+        model: 'googleai/imagen-4.0-fast-generate-001',
+        prompt: `Generate a single, simple, modern, flat, minimalist icon for a service called "${serviceTitle}".
       The icon should be a vector-style graphic.
       It must have a completely transparent background.
       The main color of the icon should be black.
       Do not include any text.
       The output format must be a PNG.`,
-      config: {
-        aspectRatio: '1:1',
-      },
-    });
+        config: {
+          aspectRatio: '1:1',
+        },
+      });
+      media = generationResult.media;
+    } catch (err: any) {
+      if (err.message?.includes('billed users')) {
+        throw new Error('Icon generation requires a billed Google Cloud account. Please enable billing in your project settings.');
+      }
+      throw new Error('Image generation failed.');
+    }
 
-    if (!media.url) {
+
+    if (!media?.url) {
       throw new Error('Image generation failed to return a data URI.');
     }
 

@@ -129,12 +129,12 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
         title: 'Icon Generated',
         description: 'A new icon has been generated for your service.',
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Icon generation failed:', error);
       toast({
         variant: 'destructive',
         title: 'Icon Generation Failed',
-        description: 'Could not generate an icon at this time.',
+        description: error.message || 'Could not generate an icon at this time.',
       });
     } finally {
       setIsGeneratingIcon(false);
