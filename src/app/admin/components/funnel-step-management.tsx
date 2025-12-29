@@ -1,11 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import { collection } from 'firebase/firestore';
+import { collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { useCollection } from '@/firebase/firestore/use-collection';
 import { useFirestore, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
 
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import {
   Card,
   CardContent,
@@ -18,37 +28,65 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ImageUpload } from '@/components/ui/image-upload';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Edit, Trash2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import Image from 'next/image';
 
-function FunnelStepUploader() {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [iconUrl, setIconUrl] = useState('');
-  const [order, setOrder] = useState(0);
+function FunnelStepForm({ stepToEdit, onComplete }: { stepToEdit?: any, onComplete: () => void }) {
+  const [name, setName] = useState(stepToEdit?.name || '');
+  const [description, setDescription] = useState(stepToEdit?.description || '');
+  const [iconUrl, setIconUrl] = useState(stepToEdit?.iconUrl || '');
+  const [order, setOrder] = useState(stepToEdit?.order || 0);
   const firestore = useFirestore();
+  const { toast } = useToast();
 
   const funnelStepsCollection = useMemoFirebase(
     () => collection(firestore, 'funnel_steps'),
     [firestore]
   );
 
-  const handleUpload = () => {
+  const handleAction = async () => {
     if (!name || !description) {
-      alert('Please provide a name and a description.');
+      toast({
+        variant: 'destructive',
+        title: 'Missing Information',
+        description: 'Please provide a name and a description.',
+      });
       return;
     }
-    addDocumentNonBlocking(funnelStepsCollection, { name, description, iconUrl, order });
+
+    const stepData = { name, description, iconUrl, order };
+
+    if (stepToEdit) {
+      const docRef = doc(firestore, 'funnel_steps', stepToEdit.id);
+      await updateDoc(docRef, stepData);
+      toast({ title: 'Funnel Step Updated', description: `${name} has been successfully updated.` });
+    } else {
+      await addDocumentNonBlocking(funnelStepsCollection, stepData);
+      toast({ title: 'Funnel Step Added', description: `${name} has been successfully added.` });
+    }
+    
     setName('');
     setDescription('');
     setIconUrl('');
     setOrder(0);
+    onComplete();
   };
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-lg">
       <CardHeader>
-        <CardTitle>Add New Funnel Step</CardTitle>
+        <CardTitle>{stepToEdit ? 'Edit Funnel Step' : 'Add New Funnel Step'}</CardTitle>
         <CardDescription>
-          Add a step to your high-performance funnel.
+          {stepToEdit ? 'Update the details for this step.' : "Add a new step to your high-performance funnel."}
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
@@ -71,7 +109,7 @@ function FunnelStepUploader() {
           />
         </div>
         <ImageUpload 
-            label="Icon"
+            label="Icon (optional)"
             value={iconUrl}
             onChange={setIconUrl}
         />
@@ -86,9 +124,10 @@ function FunnelStepUploader() {
           />
         </div>
       </CardContent>
-      <CardFooter>
-        <Button className="w-full" onClick={handleUpload}>
-          Add Funnel Step
+      <CardFooter className="flex justify-end gap-2">
+        <Button variant="outline" onClick={onComplete}>Cancel</Button>
+        <Button onClick={handleAction}>
+          {stepToEdit ? 'Update Step' : 'Add Step'}
         </Button>
       </CardFooter>
     </Card>
@@ -97,6 +136,11 @@ function FunnelStepUploader() {
 
 export default function FunnelStepManagement() {
     const firestore = useFirestore();
+    const { toast } = useToast();
+    const [editingStep, setEditingStep] = useState<any | null>(null);
+    const [isFormVisible, setIsFormVisible] = useState(false);
+    const [stepToDelete, setStepToDelete] = useState<{id: string; name: string} | null>(null);
+
     const funnelStepsCollection = useMemoFirebase(
         () => collection(firestore, 'funnel_steps'),
         [firestore]
@@ -106,30 +150,115 @@ export default function FunnelStepManagement() {
     
     const sortedSteps = funnelSteps?.sort((a, b) => a.order - b.order);
 
+    const confirmDelete = async () => {
+        if (!stepToDelete) return;
+        try {
+          await deleteDoc(doc(firestore, 'funnel_steps', stepToDelete.id));
+          toast({ title: 'Step Deleted', description: `"${stepToDelete.name}" has been removed.` });
+        } catch (error) {
+          toast({ variant: 'destructive', title: 'Error', description: 'Could not delete the step.' });
+          console.error("Error deleting funnel step:", error);
+        } finally {
+          setStepToDelete(null);
+        }
+    };
+
+    const handleEdit = (step: any) => {
+        setEditingStep(step);
+        setIsFormVisible(true);
+    };
+    
+    const handleAddNew = () => {
+        setEditingStep(null);
+        setIsFormVisible(true);
+    }
+
+    const handleFormComplete = () => {
+        setEditingStep(null);
+        setIsFormVisible(false);
+    };
+
     return (
-        <div className="w-full max-w-4xl mx-auto flex flex-col items-center gap-8">
-            <FunnelStepUploader />
-             <div className="w-full">
-                <h2 className="text-xl font-bold mt-8 mb-4 text-center">Current Funnel Steps</h2>
-                {isLoadingSteps && <p className="text-center">Loading steps...</p>}
-                {!isLoadingSteps && sortedSteps && sortedSteps.length === 0 && <p className="text-center text-muted-foreground">No funnel steps added yet.</p>}
-                <div className="space-y-4">
-                    {sortedSteps?.map((step) => (
-                        <Card key={step.id}>
-                            <CardHeader className="flex flex-row items-center gap-4">
-                                {step.iconUrl && (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img src={step.iconUrl} alt={step.name} className="h-10 w-10" />
-                                )}
-                                <div className="flex-1">
-                                    <CardTitle>{step.name} (Order: {step.order})</CardTitle>
-                                    <CardDescription>{step.description}</CardDescription>
-                                </div>
-                            </CardHeader>
-                        </Card>
-                    ))}
-                </div>
+        <>
+            <div className="w-full max-w-4xl mx-auto flex flex-col items-center gap-8">
+                {isFormVisible ? (
+                    <FunnelStepForm stepToEdit={editingStep} onComplete={handleFormComplete} />
+                ) : (
+                    <Card className="w-full">
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <div>
+                                <CardTitle>Manage Funnel Steps</CardTitle>
+                                <CardDescription>
+                                    Add, edit, or delete the steps in your funnel.
+                                </CardDescription>
+                            </div>
+                            <Button onClick={handleAddNew}>Add New Step</Button>
+                        </CardHeader>
+                        <CardContent>
+                             {isLoadingSteps && <p className="text-center">Loading steps...</p>}
+                             {!isLoadingSteps && sortedSteps && sortedSteps.length === 0 && <p className="text-center text-muted-foreground py-8">No steps added yet.</p>}
+                             {!isLoadingSteps && sortedSteps && sortedSteps.length > 0 && (
+                                 <Table>
+                                     <TableHeader>
+                                         <TableRow>
+                                             <TableHead className="w-[50px]">Order</TableHead>
+                                             <TableHead className="w-[80px]">Icon</TableHead>
+                                             <TableHead>Name</TableHead>
+                                             <TableHead>Description</TableHead>
+                                             <TableHead className="text-right">Actions</TableHead>
+                                         </TableRow>
+                                     </TableHeader>
+                                     <TableBody>
+                                        {sortedSteps.map((step) => (
+                                            <TableRow key={step.id}>
+                                                <TableCell className="font-medium">{step.order}</TableCell>
+                                                <TableCell>
+                                                    {step.iconUrl ? (
+                                                        <Image src={step.iconUrl} alt={step.name} width={40} height={40} className="rounded-md object-contain" />
+                                                    ) : (
+                                                        <div className="w-10 h-10 bg-muted rounded-md flex items-center justify-center text-muted-foreground text-xs">No Icon</div>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell className="font-medium">{step.name}</TableCell>
+                                                <TableCell className="text-muted-foreground max-w-xs truncate">{step.description}</TableCell>
+                                                <TableCell className="text-right">
+                                                    <Button variant="ghost" size="icon" onClick={() => handleEdit(step)}>
+                                                        <Edit className="h-4 w-4" />
+                                                        <span className="sr-only">Edit</span>
+                                                    </Button>
+                                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => setStepToDelete({id: step.id, name: step.name})}>
+                                                        <Trash2 className="h-4 w-4" />
+                                                        <span className="sr-only">Delete</span>
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                     </TableBody>
+                                 </Table>
+                             )}
+                        </CardContent>
+                    </Card>
+                )}
             </div>
-        </div>
+
+            <AlertDialog open={!!stepToDelete} onOpenChange={(isOpen) => !isOpen && setStepToDelete(null)}>
+                <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete the
+                    <span className="font-semibold"> {stepToDelete?.name} </span> 
+                    funnel step.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">
+                    Delete
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
     );
 }
