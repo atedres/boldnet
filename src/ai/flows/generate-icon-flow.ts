@@ -48,9 +48,6 @@ const generateIconFlow = ai.defineFlow(
       The main color of the icon should be black.
       Do not include any text.
       The output format must be a PNG.`,
-        config: {
-          responseModalities: ['IMAGE'],
-        }
       });
       media = generationResult.media;
     } catch (err: any) {
