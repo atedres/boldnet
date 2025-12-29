@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { collection, doc, deleteDoc, setDoc, writeBatch } from 'firebase/firestore';
-import { useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
+import { useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking, useDoc } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Layers, Trash2, Edit, Award, Zap, Target, Image as ImageIcon, MessageSquare, GripVertical } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Switch } from '@/components/ui/switch';
 import {
   DndContext,
   closestCenter,
@@ -265,6 +266,66 @@ function SortableSectionItem({ section, onEdit, onDelete }: { section: any; onEd
     );
 }
 
+function SectionVisibilityControl() {
+  const firestore = useFirestore();
+  const settingsRef = useMemoFirebase(() => doc(firestore, 'site_settings', 'visibility'), [firestore]);
+  const { data: settings, isLoading } = useDoc(settingsRef);
+
+  const handleToggle = async (section: keyof typeof settings, value: boolean) => {
+    if (settingsRef) {
+      await setDoc(settingsRef, { [section]: value }, { merge: true });
+    }
+  };
+
+  return (
+    <Card>
+        <CardHeader>
+            <CardTitle>Static Section Visibility</CardTitle>
+            <CardDescription>Control which of the original site sections are visible on your public website.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+             {isLoading ? <p>Loading settings...</p> : (
+                <>
+                    <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <div className="space-y-0.5">
+                            <Label htmlFor="showServices">Services Section</Label>
+                             <p className="text-xs text-muted-foreground">Show the services overview on the homepage.</p>
+                        </div>
+                        <Switch
+                            id="showServices"
+                            checked={settings?.showServices ?? true}
+                            onCheckedChange={(value) => handleToggle('showServices', value)}
+                        />
+                    </div>
+                    <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <div className="space-y-0.5">
+                            <Label htmlFor="showClients">Clients Section</Label>
+                             <p className="text-xs text-muted-foreground">Show the client showcase on the homepage.</p>
+                        </div>
+                        <Switch
+                            id="showClients"
+                            checked={settings?.showClients ?? true}
+                            onCheckedChange={(value) => handleToggle('showClients', value)}
+                        />
+                    </div>
+                    <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <div className="space-y-0.5">
+                            <Label htmlFor="showFunnel">Expertise/Funnel Section</Label>
+                             <p className="text-xs text-muted-foreground">Show the high-performance funnel on the homepage.</p>
+                        </div>
+                        <Switch
+                            id="showFunnel"
+                            checked={settings?.showFunnel ?? true}
+                            onCheckedChange={(value) => handleToggle('showFunnel', value)}
+                        />
+                    </div>
+                </>
+             )}
+        </CardContent>
+    </Card>
+  )
+}
+
 export default function SectionManagement() {
   const firestore = useFirestore();
   const sectionsCollection = useMemoFirebase(() => collection(firestore, 'sections'), [firestore]);
@@ -338,12 +399,13 @@ export default function SectionManagement() {
   }
 
   return (
-    <>
-      <Card className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-4xl mx-auto flex flex-col gap-8">
+      <SectionVisibilityControl />
+      <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Dynamic Sections</CardTitle>
-            <CardDescription>Add, edit, and reorder content sections on your homepage.</CardDescription>
+            <CardTitle>Dynamic Content Sections</CardTitle>
+            <CardDescription>Add, edit, and reorder custom content sections on your homepage.</CardDescription>
           </div>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
@@ -422,6 +484,6 @@ export default function SectionManagement() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   );
 }
