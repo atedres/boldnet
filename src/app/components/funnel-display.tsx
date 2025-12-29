@@ -45,7 +45,7 @@ export default function FunnelDisplay() {
             >
               <div className="relative z-10 flex-shrink-0 w-12 h-12 rounded-full bg-white border-2 border-primary flex items-center justify-center">
                  {step.iconUrl ? (
-                    <Image src={step.iconUrl} alt={step.name} width={24} height={24} className="h-6 w-6 object-contain" />
+                    <Image src={step.iconUrl} alt={t(step.name)} width={24} height={24} className="h-6 w-6 object-contain" />
                  ) : step.iconName ? (
                     <DynamicIcon iconName={step.iconName} className="h-6 w-6 text-primary" />
                  ) : (
@@ -53,8 +53,8 @@ export default function FunnelDisplay() {
                  )}
               </div>
               <div className="relative z-10">
-                <h3 className="text-xl font-bold font-headline">{step.name}</h3>
-                <p className="text-muted-foreground mt-2">{step.description}</p>
+                <h3 className="text-xl font-bold font-headline">{t(step.name)}</h3>
+                <p className="text-muted-foreground mt-2">{t(step.description)}</p>
               </div>
             </div>
           ))}
