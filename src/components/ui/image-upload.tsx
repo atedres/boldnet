@@ -5,9 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, UploadCloud, X, Image as ImageIcon } from 'lucide-react';
+import { Loader2, UploadCloud, X } from 'lucide-react';
 import Image from 'next/image';
-import { uploadImageAction } from '@/app/actions/upload-actions';
 import { cn } from '@/lib/utils';
 
 interface ImageUploadProps {
@@ -17,6 +16,12 @@ interface ImageUploadProps {
   className?: string;
 }
 
+// Configuration for Cloudinary - These are public and safe to have in client-side code.
+const CLOUDINARY_CLOUD_NAME = 'ddbj70ziv';
+const CLOUDINARY_UPLOAD_PRESET = 'boldnet_unsigned';
+const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+
 export function ImageUpload({ value, onChange, label, className }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
@@ -25,22 +30,46 @@ export function ImageUpload({ value, onChange, label, className }: ImageUploadPr
     const file = event.target.files?.[0];
     if (!file) return;
 
+    // Check for file size if necessary
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        toast({
+            variant: 'destructive',
+            title: 'File too large',
+            description: 'Image size cannot exceed 5MB.',
+        });
+        return;
+    }
+
     setIsUploading(true);
+
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
-    const result = await uploadImageAction(formData);
+    try {
+        const response = await fetch(CLOUDINARY_UPLOAD_URL, {
+            method: 'POST',
+            body: formData,
+        });
 
-    setIsUploading(false);
-    if (result.success && result.url) {
-      onChange(result.url);
-      toast({ title: 'Image Uploaded', description: 'Your image has been successfully uploaded.' });
-    } else {
-      toast({
-        variant: 'destructive',
-        title: 'Upload Failed',
-        description: result.error || 'An unknown error occurred.',
-      });
+        if (!response.ok) {
+            throw new Error('Upload failed');
+        }
+
+        const data = await response.json();
+        
+        onChange(data.secure_url);
+        toast({ title: 'Image Uploaded', description: 'Your image has been successfully uploaded.' });
+
+    } catch (error) {
+         console.error('Error uploading to Cloudinary:', error);
+         toast({
+            variant: 'destructive',
+            title: 'Upload Failed',
+            description: 'An unknown error occurred while uploading the image.',
+         });
+    } finally {
+        setIsUploading(false);
     }
   };
 
