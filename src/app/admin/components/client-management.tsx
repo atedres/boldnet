@@ -201,10 +201,14 @@ export default function ClientManagement() {
                                                     <Image src={client.logoUrl} alt={client.name} width={40} height={40} className="rounded-md object-contain" />
                                                 </TableCell>
                                                 <TableCell className="font-medium">{client.name}</TableCell>
-                                                <TableCell className="text-muted-foreground">
-                                                    <a href={client.websiteUrl} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                                                <TableCell>
+                                                  {client.websiteUrl ? (
+                                                    <a href={client.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:underline">
                                                         {client.websiteUrl}
                                                     </a>
+                                                  ) : (
+                                                    <span className="text-muted-foreground/50">Not set</span>
+                                                  )}
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <Button variant="ghost" size="icon" onClick={() => handleEdit(client)}>
