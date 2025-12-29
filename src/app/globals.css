@@ -106,6 +106,10 @@
   .ql-editor ol {
       @apply text-base;
   }
+
+  .prose ul {
+    @apply p-0;
+  }
 }
 
 @layer utilities {
