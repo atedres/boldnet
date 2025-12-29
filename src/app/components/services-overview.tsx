@@ -12,9 +12,6 @@ import { useLanguage } from '@/app/context/language-context';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Code2, Bot } from 'lucide-react';
 import Link from 'next/link';
-import { useFirestore, useMemoFirebase, useDoc } from '@/firebase';
-import { doc } from 'firebase/firestore';
-
 
 const AdIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
@@ -62,21 +59,6 @@ const serviceData = [
 
 export default function ServicesOverview() {
   const { t } = useLanguage();
-  const firestore = useFirestore();
-  const settingsRef = useMemoFirebase(() => doc(firestore, 'site_settings', 'visibility'), [firestore]);
-  const { data: settings, isLoading } = useDoc(settingsRef);
-
-  if (isLoading) {
-      return (
-          <section id="services" className="w-full py-12 md:py-24 lg:py-32 bg-background text-foreground">
-              <div className="container px-4 md:px-6 text-center">Loading...</div>
-          </section>
-      )
-  }
-
-  if (settings && settings.showServices === false) {
-    return null;
-  }
   
   return (
     <section 

@@ -8,6 +8,9 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import ServicesOverview from './services-overview';
+import ClientShowcase from './client-showcase';
+import FunnelDisplay from './funnel-display';
 
 // --- Template Components ---
 
@@ -112,6 +115,9 @@ const sectionComponents = {
   'feature-grid': FeatureGridSection,
   'cta': CTASection,
   'text-image': TextImageSection,
+  'services-overview': ServicesOverview,
+  'client-showcase': ClientShowcase,
+  'funnel-display': FunnelDisplay,
 };
 
 export default function DynamicSections() {
@@ -133,14 +139,19 @@ export default function DynamicSections() {
   if (!sections || sections.length === 0) {
     return null;
   }
+  
+  const visibleSections = sections.filter(section => section.visible !== false);
 
   return (
     <>
-      {sections.map((section) => {
+      {visibleSections.map((section) => {
         const SectionComponent = sectionComponents[section.type as keyof typeof sectionComponents];
         if (!SectionComponent) {
-          return <div key={section.id}>Unknown section type: {section.type}</div>;
+          console.warn(`Unknown section type: ${section.type}`);
+          return null;
         }
+        // For static components, we just render them. For dynamic ones, we pass content.
+        // @ts-ignore
         return <SectionComponent key={section.id} content={section.content} />;
       })}
     </>

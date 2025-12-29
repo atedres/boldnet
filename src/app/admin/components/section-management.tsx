@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { collection, doc, deleteDoc, setDoc, writeBatch } from 'firebase/firestore';
-import { useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking, useDoc } from '@/firebase';
+import { useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
@@ -10,9 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Layers, Trash2, Edit, Award, Zap, Target, Image as ImageIcon, MessageSquare, GripVertical } from 'lucide-react';
+import { Layers, Trash2, Edit, Award, Zap, Target, Image as ImageIcon, MessageSquare, GripVertical, Briefcase, Users, Workflow, EyeOff, Eye } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Switch } from '@/components/ui/switch';
 import {
   DndContext,
   closestCenter,
@@ -72,6 +71,30 @@ const sectionTemplates = [
       buttonText: 'Learn More',
       buttonLink: '#',
     },
+  },
+  {
+    type: 'services-overview',
+    name: 'Services Overview',
+    description: 'Displays the main services section.',
+    icon: <Briefcase className="w-8 h-8" />,
+    defaultContent: {},
+    isStatic: true,
+  },
+  {
+    type: 'client-showcase',
+    name: 'Client Showcase',
+    description: 'Displays the scrolling client logo section.',
+    icon: <Users className="w-8 h-8" />,
+    defaultContent: {},
+    isStatic: true,
+  },
+  {
+    type: 'funnel-display',
+    name: 'Funnel / Expertise',
+    description: 'Displays the funnel/process steps section.',
+    icon: <Workflow className="w-8 h-8" />,
+    defaultContent: {},
+    isStatic: true,
   },
 ];
 
@@ -227,7 +250,7 @@ function SectionForm({ section, onComplete }: { section?: any; onComplete: () =>
   )
 }
 
-function SortableSectionItem({ section, onEdit, onDelete }: { section: any; onEdit: () => void; onDelete: () => void; }) {
+function SortableSectionItem({ section, onEdit, onDelete, onToggleVisibility }: { section: any; onEdit: () => void; onDelete: () => void; onToggleVisibility: () => void; }) {
     const template = sectionTemplates.find(t => t.type === section.type);
     const {
         attributes,
@@ -250,13 +273,19 @@ function SortableSectionItem({ section, onEdit, onDelete }: { section: any; onEd
             {template?.icon}
             <div className="flex-1">
                 <p className="font-semibold">{template?.name || 'Unknown Section'}</p>
-                <p className="text-sm text-muted-foreground">Order: {section.order}</p>
+                <p className="text-sm text-muted-foreground">Type: {section.type} | Order: {section.order}</p>
             </div>
             <div className="flex items-center gap-2">
-                 <Button variant="ghost" size="icon" onClick={onEdit}>
-                    <Edit className="h-4 w-4" />
-                    <span className="sr-only">Edit</span>
+                <Button variant="ghost" size="icon" onClick={onToggleVisibility}>
+                    {section.visible === false ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    <span className="sr-only">Toggle Visibility</span>
                 </Button>
+                 {!template?.isStatic && (
+                    <Button variant="ghost" size="icon" onClick={onEdit}>
+                        <Edit className="h-4 w-4" />
+                        <span className="sr-only">Edit</span>
+                    </Button>
+                 )}
                 <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={onDelete}>
                     <Trash2 className="h-4 w-4" />
                     <span className="sr-only">Delete</span>
@@ -264,66 +293,6 @@ function SortableSectionItem({ section, onEdit, onDelete }: { section: any; onEd
             </div>
         </Card>
     );
-}
-
-function SectionVisibilityControl() {
-  const firestore = useFirestore();
-  const settingsRef = useMemoFirebase(() => doc(firestore, 'site_settings', 'visibility'), [firestore]);
-  const { data: settings, isLoading } = useDoc(settingsRef);
-
-  const handleToggle = async (section: keyof typeof settings, value: boolean) => {
-    if (settingsRef) {
-      await setDoc(settingsRef, { [section]: value }, { merge: true });
-    }
-  };
-
-  return (
-    <Card>
-        <CardHeader>
-            <CardTitle>Static Section Visibility</CardTitle>
-            <CardDescription>Control which of the original site sections are visible on your public website.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-             {isLoading ? <p>Loading settings...</p> : (
-                <>
-                    <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
-                        <div className="space-y-0.5">
-                            <Label htmlFor="showServices">Services Section</Label>
-                             <p className="text-xs text-muted-foreground">Show the services overview on the homepage.</p>
-                        </div>
-                        <Switch
-                            id="showServices"
-                            checked={settings?.showServices ?? true}
-                            onCheckedChange={(value) => handleToggle('showServices', value)}
-                        />
-                    </div>
-                    <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
-                        <div className="space-y-0.5">
-                            <Label htmlFor="showClients">Clients Section</Label>
-                             <p className="text-xs text-muted-foreground">Show the client showcase on the homepage.</p>
-                        </div>
-                        <Switch
-                            id="showClients"
-                            checked={settings?.showClients ?? true}
-                            onCheckedChange={(value) => handleToggle('showClients', value)}
-                        />
-                    </div>
-                    <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
-                        <div className="space-y-0.5">
-                            <Label htmlFor="showFunnel">Expertise/Funnel Section</Label>
-                             <p className="text-xs text-muted-foreground">Show the high-performance funnel on the homepage.</p>
-                        </div>
-                        <Switch
-                            id="showFunnel"
-                            checked={settings?.showFunnel ?? true}
-                            onCheckedChange={(value) => handleToggle('showFunnel', value)}
-                        />
-                    </div>
-                </>
-             )}
-        </CardContent>
-    </Card>
-  )
 }
 
 export default function SectionManagement() {
@@ -346,11 +315,22 @@ export default function SectionManagement() {
   );
 
   const handleAddSection = async (template: typeof sectionTemplates[0]) => {
+    // Prevent adding static sections if they already exist
+    if (template.isStatic && sections?.some(s => s.type === template.type)) {
+        toast({
+            variant: 'destructive',
+            title: 'Section already exists',
+            description: `The "${template.name}" section can only be added once.`,
+        });
+        return;
+    }
+    
     try {
       const newSection = {
         type: template.type,
         order: (sections?.length || 0) + 1,
-        content: template.defaultContent,
+        content: template.defaultContent || {},
+        visible: true, // Default to visible
       };
       await addDocumentNonBlocking(sectionsCollection, newSection);
       toast({ title: 'Section Added', description: `${template.name} has been added.` });
@@ -370,6 +350,17 @@ export default function SectionManagement() {
     } catch (error) {
        console.error(error);
       toast({ variant: 'destructive', title: 'Error', description: 'Could not delete the section.' });
+    }
+  }
+
+  const handleToggleVisibility = async (section: any) => {
+    const docRef = doc(firestore, 'sections', section.id);
+    try {
+        await setDoc(docRef, { visible: !(section.visible ?? true) }, { merge: true });
+        toast({ title: 'Visibility Updated' });
+    } catch(error) {
+        console.error(error);
+        toast({ variant: 'destructive', title: 'Error', description: 'Could not update visibility.' });
     }
   }
 
@@ -400,12 +391,11 @@ export default function SectionManagement() {
 
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-8">
-      <SectionVisibilityControl />
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Dynamic Content Sections</CardTitle>
-            <CardDescription>Add, edit, and reorder custom content sections on your homepage.</CardDescription>
+            <CardTitle>Homepage Content</CardTitle>
+            <CardDescription>Add, edit, and reorder all sections on your homepage.</CardDescription>
           </div>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
@@ -414,11 +404,12 @@ export default function SectionManagement() {
             <DialogContent className="sm:max-w-[625px]">
                  <DialogHeader>
                     <DialogTitle>Add a new section</DialogTitle>
-                    <DialogDescription>Select a pre-designed template to add to your homepage.</DialogDescription>
+                    <DialogDescription>Select a template to add to your homepage.</DialogDescription>
                 </DialogHeader>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
                     {sectionTemplates.map(template => (
-                        <button key={template.type} onClick={() => handleAddSection(template)} className="text-left p-4 border rounded-lg hover:bg-accent transition-colors">
+                        <button key={template.type} onClick={() => handleAddSection(template)} className="text-left p-4 border rounded-lg hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                         disabled={template.isStatic && sections?.some(s => s.type === template.type)}>
                             <div className="flex items-center gap-4">
                                 {template.icon}
                                 <div className="flex-1">
@@ -435,7 +426,7 @@ export default function SectionManagement() {
         <CardContent>
           {isLoading && <p className="text-center">Loading sections...</p>}
           {!isLoading && (!sortedSections || sortedSections.length === 0) && (
-            <p className="text-center text-muted-foreground py-8">No dynamic sections added yet.</p>
+            <p className="text-center text-muted-foreground py-8">No sections added yet. Click "Add New Section" to get started.</p>
           )}
           <DndContext
             sensors={sensors}
@@ -453,6 +444,7 @@ export default function SectionManagement() {
                         section={section}
                         onEdit={() => setEditingSection(section)}
                         onDelete={() => setDeletingSection(section)}
+                        onToggleVisibility={() => handleToggleVisibility(section)}
                     />
                 ))}
               </div>

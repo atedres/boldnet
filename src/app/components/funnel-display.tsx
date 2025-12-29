@@ -1,15 +1,12 @@
 'use client';
 
 import { useLanguage } from '@/app/context/language-context';
-import { useCollection, useFirestore, useMemoFirebase, useDoc } from '@/firebase';
-import { collection, doc } from 'firebase/firestore';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
 
 export default function FunnelDisplay() {
   const { t } = useLanguage();
   const firestore = useFirestore();
-
-  const settingsRef = useMemoFirebase(() => doc(firestore, 'site_settings', 'visibility'), [firestore]);
-  const { data: settings, isLoading: isLoadingSettings } = useDoc(settingsRef);
 
   const funnelStepsCollection = useMemoFirebase(
     () => collection(firestore, 'funnel_steps'),
@@ -18,18 +15,6 @@ export default function FunnelDisplay() {
   const { data: funnelSteps, isLoading: isLoadingSteps } = useCollection(funnelStepsCollection);
   
   const sortedSteps = funnelSteps?.sort((a, b) => a.order - b.order);
-
-  if (isLoadingSettings) {
-    return (
-      <section className="w-full py-12 md:py-24 lg:py-32">
-        <div className="container px-4 md:px-6 text-center">Loading...</div>
-      </section>
-    );
-  }
-
-  if (settings && settings.showFunnel === false) {
-    return null;
-  }
 
   return (
     <section id="funnel" className="w-full py-12 md:py-24 lg:py-32">

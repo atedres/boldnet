@@ -1,16 +1,13 @@
 'use client';
 import React, { useMemo } from 'react';
 import { useLanguage } from '@/app/context/language-context';
-import { useCollection, useFirestore, useMemoFirebase, useDoc } from '@/firebase';
-import { collection, doc } from 'firebase/firestore';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
 import Image from 'next/image';
 
 export default function ClientShowcase() {
   const { t } = useLanguage();
   const firestore = useFirestore();
-
-  const settingsRef = useMemoFirebase(() => doc(firestore, 'site_settings', 'visibility'), [firestore]);
-  const { data: settings, isLoading: isLoadingSettings } = useDoc(settingsRef);
 
   const clientsCollection = useMemoFirebase(
     () => collection(firestore, 'clients'),
@@ -23,18 +20,6 @@ export default function ClientShowcase() {
     // Duplicate the clients to ensure a seamless loop
     return [...clients, ...clients, ...clients, ...clients];
   }, [clients]);
-
-  if (isLoadingSettings) {
-    return (
-        <section className="w-full bg-background py-12 md:py-24">
-            <div className="container mx-auto text-center">Loading...</div>
-        </section>
-    )
-  }
-
-  if (settings && settings.showClients === false) {
-    return null;
-  }
 
   return (
     <section id="clients" className="w-full bg-background py-12 md:py-24">
