@@ -208,7 +208,7 @@ function AdminDashboard() {
       </Sidebar>
       <SidebarInset>
         <header className="flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:px-6">
-            <SidebarTrigger className="md:hidden" />
+            <SidebarTrigger />
             <h1 className="text-xl font-semibold capitalize">{activeSection}</h1>
         </header>
         <main className="flex-1 overflow-auto p-4 sm:p-6">
