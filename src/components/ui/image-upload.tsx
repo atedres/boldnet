@@ -110,7 +110,7 @@ export function ImageUpload({ value, onChange, label, className }: ImageUploadPr
                   <p className="mb-2 text-sm text-muted-foreground">
                     <span className="font-semibold text-primary">Click to upload</span> or drag and drop
                   </p>
-                  <p className="text-xs text-muted-foreground">PNG, JPG, GIF up to 5MB</p>
+                  <p className="text-xs text-muted-foreground">PNG, JPG, GIF, SVG up to 5MB</p>
                 </>
               )}
             </div>
@@ -119,7 +119,7 @@ export function ImageUpload({ value, onChange, label, className }: ImageUploadPr
               type="file"
               className="hidden"
               onChange={handleFileChange}
-              accept="image/png, image/jpeg, image/gif"
+              accept="image/png, image/jpeg, image/gif, image/svg+xml"
               disabled={isUploading}
             />
           </label>
