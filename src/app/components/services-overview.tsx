@@ -24,10 +24,12 @@ import { collection } from 'firebase/firestore';
 import Autoplay from "embla-carousel-autoplay"
 import { DynamicIcon } from '@/components/ui/dynamic-icon';
 import Image from 'next/image';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function ServicesOverview() {
   const { t } = useLanguage();
   const firestore = useFirestore();
+  const isMobile = useIsMobile();
   
   const servicesCollection = useMemoFirebase(
     () => collection(firestore, 'services'),
@@ -77,7 +79,9 @@ export default function ServicesOverview() {
         return <p className="text-center text-muted-foreground">No services available.</p>
     }
 
-    if (services.length > 3) {
+    const useCarouselView = (isMobile && services.length > 1) || services.length > 3;
+
+    if (useCarouselView) {
         return (
              <Carousel 
                 opts={{
