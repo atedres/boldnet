@@ -3,8 +3,8 @@
  * @fileOverview A flow to generate an icon for a service.
  *
  * - generateIcon - A function that generates an icon based on a service title.
- * - GenerateIconInputSchema - The input type for the generateIcon function.
- * - GenerateIconOutputSchema - The return type for the generateIcon function.
+ * - GenerateIconInput - The input type for the generateIcon function.
+ * - GenerateIconOutput - The return type for the generateIcon function.
  */
 
 import { ai } from '@/ai/genkit';
@@ -18,10 +18,10 @@ cloudinary.config({
   secure: true,
 });
 
-export const GenerateIconInputSchema = z.string();
+const GenerateIconInputSchema = z.string();
 export type GenerateIconInput = z.infer<typeof GenerateIconInputSchema>;
 
-export const GenerateIconOutputSchema = z.object({
+const GenerateIconOutputSchema = z.object({
   iconUrl: z.string().url(),
 });
 export type GenerateIconOutput = z.infer<typeof GenerateIconOutputSchema>;
