@@ -15,12 +15,6 @@ import FunnelDisplay from './funnel-display';
 // --- Template Components ---
 
 function FeatureGridSection({ content }: { content: any }) {
-  const icons: { [key: string]: React.ReactNode } = {
-    award: <Award className="w-8 h-8 text-primary" />,
-    zap: <Zap className="w-8 h-8 text-primary" />,
-    target: <Target className="w-8 h-8 text-primary" />,
-  };
-
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 bg-background">
       <div className="container px-4 md:px-6">
@@ -34,7 +28,7 @@ function FeatureGridSection({ content }: { content: any }) {
             <Card key={index} className="text-center">
               <CardHeader>
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                  {icons[col.icon] || <Zap className="w-8 h-8 text-primary" />}
+                  <DynamicIcon iconName={col.icon || 'Zap'} className="w-8 h-8 text-primary" />
                 </div>
               </CardHeader>
               <CardContent className="space-y-2">

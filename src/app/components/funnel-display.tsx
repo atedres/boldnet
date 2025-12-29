@@ -2,20 +2,22 @@
 
 import { useLanguage } from '@/app/context/language-context';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { collection, query, orderBy } from 'firebase/firestore';
 import Image from 'next/image';
+import { DynamicIcon } from '@/components/ui/dynamic-icon';
+
 
 export default function FunnelDisplay() {
   const { t } = useLanguage();
   const firestore = useFirestore();
 
   const funnelStepsCollection = useMemoFirebase(
-    () => collection(firestore, 'funnel_steps'),
+    () => query(collection(firestore, 'funnel_steps'), orderBy('order')),
     [firestore]
   );
   const { data: funnelSteps, isLoading: isLoadingSteps } = useCollection(funnelStepsCollection);
   
-  const sortedSteps = funnelSteps?.sort((a, b) => a.order - b.order);
+  const sortedSteps = funnelSteps;
 
   return (
     <section id="funnel" className="w-full py-12 md:py-24 lg:py-32">
@@ -44,10 +46,10 @@ export default function FunnelDisplay() {
               style={{ animationDelay: `${index * 0.15}s`, opacity: 0 }}
             >
               <div className="flex-shrink-0 w-12 h-12 rounded-full bg-muted border-2 border-border flex items-center justify-center">
-                 {step.iconUrl ? (
-                    <Image src={step.iconUrl} alt={step.name} width={48} height={48} className="rounded-full object-cover" />
+                 {step.iconName ? (
+                    <DynamicIcon iconName={step.iconName || 'HelpCircle'} className="h-6 w-6 text-muted-foreground" />
                  ) : (
-                    <span className="text-xl font-bold text-primary">{index + 1}</span>
+                    <span className="text-xl font-bold text-primary">{step.order}</span>
                  )}
               </div>
               <div>

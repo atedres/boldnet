@@ -24,7 +24,7 @@ export default function ClientShowcase() {
   return (
     <section id="clients" className="w-full bg-background py-12 md:py-24">
       <div className="container mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-2 font-headline">
+        <h2 className="text-3xl font-bold text-center mb-2 font-headline tracking-tighter">
           {t('trustedBy')}
         </h2>
         <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
