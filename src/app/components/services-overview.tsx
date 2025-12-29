@@ -50,7 +50,7 @@ export default function ServicesOverview() {
             )}
             <CardTitle className="text-xl font-bold font-headline">{service.name}</CardTitle>
             <div 
-              className="prose-sm prose-p:text-muted-foreground group-hover:prose-p:text-primary-foreground/80 dark:prose-invert max-w-none"
+              className="prose-sm prose-p:text-muted-foreground group-hover:prose-p:text-primary-foreground/80 dark:prose-invert max-w-none prose-ul:list-disc prose-ul:pl-5"
               dangerouslySetInnerHTML={{ __html: service.description }}
             />
         </CardHeader>
