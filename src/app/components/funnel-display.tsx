@@ -37,11 +37,10 @@ export default function FunnelDisplay() {
                 <div className="p-6 rounded-lg border">Loading...</div>
               </>
             )}
-           {sortedSteps?.map((step, index) => (
+           {sortedSteps?.map((step) => (
             <div 
               key={step.id} 
               className="relative flex items-start gap-6 p-6 rounded-lg border border-border bg-card text-card-foreground overflow-hidden card-fill-animation"
-              style={{ animationDelay: `${index * 0.2}s` } as React.CSSProperties}
             >
               <div className="relative z-10 flex-shrink-0 w-12 h-12 rounded-full bg-white border-2 border-border flex items-center justify-center">
                  {step.iconUrl ? (
