@@ -1,19 +1,35 @@
 'use client';
 
 import { useLanguage } from '@/app/context/language-context';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { useCollection, useFirestore, useMemoFirebase, useDoc } from '@/firebase';
+import { collection, doc } from 'firebase/firestore';
 
 export default function FunnelDisplay() {
   const { t } = useLanguage();
   const firestore = useFirestore();
+
+  const settingsRef = useMemoFirebase(() => doc(firestore, 'site_settings', 'visibility'), [firestore]);
+  const { data: settings, isLoading: isLoadingSettings } = useDoc(settingsRef);
+
   const funnelStepsCollection = useMemoFirebase(
     () => collection(firestore, 'funnel_steps'),
     [firestore]
   );
-  const { data: funnelSteps, isLoading } = useCollection(funnelStepsCollection);
+  const { data: funnelSteps, isLoading: isLoadingSteps } = useCollection(funnelStepsCollection);
   
   const sortedSteps = funnelSteps?.sort((a, b) => a.order - b.order);
+
+  if (isLoadingSettings) {
+    return (
+      <section className="w-full py-12 md:py-24 lg:py-32">
+        <div className="container px-4 md:px-6 text-center">Loading...</div>
+      </section>
+    );
+  }
+
+  if (settings && settings.showFunnel === false) {
+    return null;
+  }
 
   return (
     <section id="funnel" className="w-full py-12 md:py-24 lg:py-32">
@@ -29,7 +45,7 @@ export default function FunnelDisplay() {
           </div>
         </div>
         <div className="relative mt-12 grid max-w-5xl mx-auto gap-8 md:grid-cols-2">
-            {isLoading && (
+            {isLoadingSteps && (
               <>
                 <div className="p-6 rounded-lg border">Loading...</div>
                 <div className="p-6 rounded-lg border">Loading...</div>

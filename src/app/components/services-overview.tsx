@@ -12,8 +12,9 @@ import { useLanguage } from '@/app/context/language-context';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Code2, Bot } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import { useFirestore, useMemoFirebase, useDoc } from '@/firebase';
+import { doc } from 'firebase/firestore';
+
 
 const AdIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
@@ -24,36 +25,36 @@ const AdIcon = () => (
 const serviceData = [
   {
     icon: <Code2 />,
-    title: 'Site web et Application',
-    description: 'Concevoir des plateformes digitales sur mesure, alliant design moderne et performance, pour offrir une expérience utilisateur optimale.',
-    features: [
-      'Sites vitrine dès 250€',
-      'E-commerce dès 500€',
-      'Web apps & SaaS dès 2000€',
-      'Templates métier (Restaurant, VTC, Artisan)',
+    titleKey: 'websiteLandingPages',
+    descriptionKey: 'websiteLandingPagesDescription',
+    featuresKeys: [
+      'featureWeb1',
+      'featureWeb2',
+      'featureWeb3',
+      'featureWeb4',
     ],
   },
   {
     icon: <AdIcon />,
-    title: 'Publicité digitale',
-    description: 'Créez des campagnes publicitaires ciblées et efficaces pour atteindre votre audience et maximiser votre retour sur investissement.',
-    features: [
-      'Lancement simple dès 80€',
-      'Pack complet à 280€',
-      'Campagne Premium +350€',
-      'Formation Meta Ads gratuite',
+    titleKey: 'adsAdvertising',
+    descriptionKey: 'adsAdvertisingDescription',
+    featuresKeys: [
+      'featureAds1',
+      'featureAds2',
+      'featureAds3',
+      'featureAds4',
     ],
   },
   {
     icon: <Bot />,
-    title: 'Automatisation & IA',
-    description: 'Automatisations Make/Zapier/Python, micro-services et agents IA pour accélérer vos process.',
-    features: [
-        'Automatisation simple dès 100€',
-        'Automatisation complexe dès 250€',
-        'Scripts Python sur mesure',
-        'Intégrations multiples',
-        'Formation et support'
+    titleKey: 'automationAI',
+    descriptionKey: 'automationAIDescription',
+    featuresKeys: [
+        'featureAuto1',
+        'featureAuto2',
+        'featureAuto3',
+        'featureAuto4',
+        'featureAuto5'
     ]
   },
 ];
@@ -61,6 +62,21 @@ const serviceData = [
 
 export default function ServicesOverview() {
   const { t } = useLanguage();
+  const firestore = useFirestore();
+  const settingsRef = useMemoFirebase(() => doc(firestore, 'site_settings', 'visibility'), [firestore]);
+  const { data: settings, isLoading } = useDoc(settingsRef);
+
+  if (isLoading) {
+      return (
+          <section id="services" className="w-full py-12 md:py-24 lg:py-32 bg-background text-foreground">
+              <div className="container px-4 md:px-6 text-center">Loading...</div>
+          </section>
+      )
+  }
+
+  if (settings && settings.showServices === false) {
+    return null;
+  }
   
   return (
     <section 
@@ -80,20 +96,20 @@ export default function ServicesOverview() {
         </div>
         <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-3 mt-12">
             {serviceData.map((service, index) => (
-                 <Card key={index} className="bg-card text-card-foreground flex flex-col h-full shadow-lg hover:shadow-2xl transition-all duration-300 group hover:bg-primary hover:text-primary-foreground">
+                 <Card key={index} className="bg-card text-card-foreground flex flex-col h-full shadow-lg hover:shadow-2xl transition-all duration-300 group hover:bg-primary hover:text-primary-foreground rounded-xl sm:rounded-2xl md:rounded-3xl">
                     <CardHeader className="items-start gap-4">
                         <div className="bg-gray-900 text-white p-3 rounded-lg group-hover:bg-white group-hover:text-primary transition-colors">
                             {service.icon}
                         </div>
-                        <CardTitle className="text-xl font-bold font-headline">{service.title}</CardTitle>
-                        <CardDescription className="text-muted-foreground group-hover:text-primary-foreground/80">{service.description}</CardDescription>
+                        <CardTitle className="text-xl font-bold font-headline">{t(service.titleKey)}</CardTitle>
+                        <CardDescription className="text-muted-foreground group-hover:text-primary-foreground/80">{t(service.descriptionKey)}</CardDescription>
                     </CardHeader>
                     <CardContent className="flex-grow">
                         <ul className="space-y-2 text-sm text-muted-foreground group-hover:text-primary-foreground/80">
-                            {service.features.map((feature, fIndex) => (
+                            {service.featuresKeys.map((featureKey, fIndex) => (
                                 <li key={fIndex} className="flex items-center gap-2">
                                     <span className="h-1.5 w-1.5 rounded-full bg-primary/50 group-hover:bg-primary-foreground"></span>
-                                    {feature}
+                                    {t(featureKey)}
                                 </li>
                             ))}
                         </ul>
