@@ -41,8 +41,7 @@ const generateIconFlow = ai.defineFlow(
   async (serviceTitle) => {
     let media;
     try {
-       const generationResult = await ai.generate({
-        model: 'googleai/imagen-4.0-fast-generate-001',
+      const generationResult = await ai.generate({
         prompt: `Generate a single, simple, modern, flat, minimalist icon for a service called "${serviceTitle}".
       The icon should be a vector-style graphic.
       It must have a completely transparent background.
@@ -50,17 +49,17 @@ const generateIconFlow = ai.defineFlow(
       Do not include any text.
       The output format must be a PNG.`,
         config: {
-          aspectRatio: '1:1',
-        },
+          responseModalities: ['IMAGE'],
+        }
       });
       media = generationResult.media;
     } catch (err: any) {
+      console.error('Image generation failed with Gemini:', err);
       if (err.message?.includes('billed users')) {
         throw new Error('Icon generation requires a billed Google Cloud account. Please enable billing in your project settings.');
       }
       throw new Error('Image generation failed.');
     }
-
 
     if (!media?.url) {
       throw new Error('Image generation failed to return a data URI.');
