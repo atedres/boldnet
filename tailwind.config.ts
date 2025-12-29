@@ -103,14 +103,6 @@ export default {
             transform: 'scaleX(1)',
           },
         },
-        'fill-in-pseudo': {
-          from: {
-            transform: 'scaleX(0)',
-          },
-          to: {
-            transform: 'scaleX(1)',
-          }
-        },
         scroll: {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-100%)' },
