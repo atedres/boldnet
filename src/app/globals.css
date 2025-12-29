@@ -95,6 +95,17 @@
   .dark body {
     background-image: radial-gradient(circle at 1px 1px, hsl(var(--border)) 1px, transparent 0);
   }
+  
+  .ql-editor {
+    @apply prose dark:prose-invert max-w-none;
+    @apply prose-headings:font-headline;
+  }
+
+  .ql-editor p,
+  .ql-editor ul,
+  .ql-editor ol {
+      @apply text-base;
+  }
 }
 
 @layer utilities {

@@ -26,7 +26,6 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Table,
   TableBody,
@@ -38,6 +37,7 @@ import {
 import { Edit, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { ImageUpload } from '@/components/ui/image-upload';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
 
 function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, onComplete: () => void }) {
   const [name, setName] = useState(serviceToEdit?.name || '');
@@ -98,12 +98,11 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
         </div>
         <div className="grid gap-2">
           <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            placeholder="Describe the service..."
+          <RichTextEditor
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
+            onChange={setDescription}
+            placeholder="Describe the service..."
+           />
         </div>
         <ImageUpload 
             label="Icon"
@@ -162,6 +161,12 @@ export default function ServiceManagement() {
     setEditingService(null);
     setIsFormVisible(false);
   };
+  
+  // Helper to strip HTML for the preview
+  const stripHtml = (html: string) => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || "";
+  }
 
   return (
     <>
@@ -196,7 +201,9 @@ export default function ServiceManagement() {
                   {services.map((service) => (
                     <TableRow key={service.id}>
                       <TableCell className="font-medium">{service.name}</TableCell>
-                      <TableCell className="text-muted-foreground max-w-sm truncate">{service.description}</TableCell>
+                      <TableCell className="text-muted-foreground max-w-sm truncate">
+                        {stripHtml(service.description)}
+                      </TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="icon" onClick={() => handleEdit(service)}>
                           <Edit className="h-4 w-4" />
