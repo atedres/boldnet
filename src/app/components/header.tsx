@@ -5,8 +5,11 @@ import Link from 'next/link';
 import LanguageSwitcher from '@/app/components/language-switcher';
 import { ThemeSwitcher } from './theme-switcher';
 import { useLanguage } from '@/app/context/language-context';
+import { doc } from 'firebase/firestore';
+import { useDoc, useFirestore, useMemoFirebase } from '@/firebase';
+import Image from 'next/image';
 
-const BDLogo = () => (
+const DefaultLogo = () => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
@@ -18,13 +21,30 @@ const BDLogo = () => (
     </svg>
   );
 
+const SiteLogo = () => {
+  const firestore = useFirestore();
+  const settingsDocRef = useMemoFirebase(() => doc(firestore, 'theme_settings', 'main'), [firestore]);
+  const { data: themeSettings, isLoading } = useDoc(settingsDocRef);
+
+  if (isLoading) {
+    // You can return a placeholder skeleton here
+    return <div className="h-8 w-8 bg-muted rounded-md animate-pulse"></div>;
+  }
+  
+  if (themeSettings?.logoUrl) {
+    return <Image src={themeSettings.logoUrl} alt="BoldNet Digital Logo" width={32} height={32} className="h-8 w-8 object-contain" />;
+  }
+  
+  return <DefaultLogo />;
+}
+
 export default function Header() {
     const { t } = useLanguage();
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-          <BDLogo />
+          <SiteLogo />
           <span className="font-bold text-lg inline-block font-headline">
             BoldNet Digital
           </span>

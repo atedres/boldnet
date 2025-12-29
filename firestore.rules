@@ -1,24 +1,25 @@
 /**
  * Core Philosophy:
  * This ruleset is designed for a public-facing portfolio or marketing website.
- * The primary goal is to make informational content (like clients, services, and
- * process steps) publicly readable by anyone. Write operations are restricted to
- * authenticated users, who are considered administrators for content management.
+ * The primary goal is to make informational content (like clients, services,
+ * process steps, and theme settings) publicly readable by anyone. Write operations
+ * are restricted to authenticated users, who are considered administrators for content management.
  * A dedicated collection for contact form submissions is configured to be write-only for any visitor.
  *
  * Data Structure:
- * The data is organized into six distinct, top-level collections:
+ * The data is organized into seven distinct, top-level collections:
  * - /clients/{clientId}: Publicly viewable client information.
  * - /services/{serviceId}: Publicly viewable service offerings.
  * - /funnel_steps/{funnelStepId}: Publicly viewable funnel/process steps.
  * - /contact_form_submissions/{submissionId}: Private, write-only submissions.
  * - /site_settings/{settingsId}: Publicly readable site configuration.
  * - /sections/{sectionId}: Publicly readable dynamic content sections.
+ * - /theme_settings/{settingsId}: Publicly readable theme customization.
  *
  * Key Security Decisions:
- * - Public Read, Admin Write: All informational collections (/clients, /services,
- *   /funnel_steps, /site_settings, /sections) are publicly readable. Write access is restricted to any user
- *   who is signed in, effectively treating all authenticated users as admins.
+ * - Public Read, Admin Write: All informational collections are publicly readable.
+ *   Write access is restricted to any user who is signed in, effectively
+ *   treating all authenticated users as admins.
  * - Write-Only Ingress: The /contact_form_submissions collection is intentionally
  *   configured to allow anyone to create a document but denies all read, update,
  *   and delete operations. This protects the privacy of submitted user data (PII)
@@ -55,11 +56,7 @@ service cloud.firestore {
 
     /**
      * @description Manages public information about company clients.
-     * Anyone can read this data, but only an administrator can modify it.
      * @path /clients/{clientId}
-     * @allow (get, list) Any user, signed in or not, can read client documents.
-     * @allow (create, update, delete) Only authenticated users (admins) can write.
-     * @principle Public read for marketing content, with writes restricted to admins.
      */
     match /clients/{clientId} {
       allow read: if true;
@@ -68,11 +65,7 @@ service cloud.firestore {
 
     /**
      * @description Manages public information about company services.
-     * Anyone can read this data, but only an administrator can modify it.
      * @path /services/{serviceId}
-     * @allow (get, list) Any user, signed in or not, can read service documents.
-     * @allow (create, update, delete) Only authenticated users (admins) can write.
-     * @principle Public read for marketing content, with writes restricted to admins.
      */
     match /services/{serviceId} {
       allow read: if true;
@@ -81,11 +74,7 @@ service cloud.firestore {
 
     /**
      * @description Manages public information about the company's process/funnel.
-     * Anyone can read this data, but only an administrator can modify it.
      * @path /funnel_steps/{funnelStepId}
-     * @allow (get, list) Any user, signed in or not, can read funnel step documents.
-     * @allow (create, update, delete) Only authenticated users (admins) can write.
-     * @principle Public read for marketing content, with writes restricted to admins.
      */
     match /funnel_steps/{funnelStepId} {
       allow read: if true;
@@ -94,12 +83,7 @@ service cloud.firestore {
 
     /**
      * @description A write-only collection for receiving contact form messages.
-     * Any user (including anonymous visitors) can create a submission, but no one
-     * can read, update, or delete any data to protect user privacy.
      * @path /contact_form_submissions/{contactFormSubmissionId}
-     * @allow (create) An anonymous website visitor submits the contact form.
-     * @deny (read, update, delete) All other operations are denied to protect PII.
-     * @principle Enforces a secure data ingress pattern for public forms, protecting PII.
      */
     match /contact_form_submissions/{contactFormSubmissionId} {
       allow read, update, delete: if false;
@@ -108,11 +92,7 @@ service cloud.firestore {
 
     /**
      * @description Manages global site settings, like section visibility.
-     * Anyone can read this data, but only an administrator can modify it.
      * @path /site_settings/{settingsId}
-     * @allow (get, list) Any user, signed in or not, can read site settings.
-     * @allow (create, update, delete) Only authenticated users (admins) can write.
-     * @principle Public read for site configuration, with writes restricted to admins.
      */
     match /site_settings/{settingsId} {
         allow read: if true;
@@ -121,13 +101,18 @@ service cloud.firestore {
 
     /**
      * @description Manages dynamic content sections for the homepage.
-     * Anyone can read this data, but only an administrator can modify it.
      * @path /sections/{sectionId}
-     * @allow (get, list) Any user, signed in or not, can read section documents.
-     * @allow (create, update, delete) Only authenticated users (admins) can write.
-     * @principle Public read for marketing content, with writes restricted to admins.
      */
     match /sections/{sectionId} {
+        allow read: if true;
+        allow write: if isAdmin();
+    }
+
+    /**
+     * @description Manages global theme settings, like logo and colors.
+     * @path /theme_settings/{settingsId}
+     */
+    match /theme_settings/{settingsId} {
         allow read: if true;
         allow write: if isAdmin();
     }

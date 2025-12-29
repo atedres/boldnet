@@ -2,7 +2,7 @@
 import { useUser, FirebaseClientProvider, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -23,8 +23,9 @@ import ServiceManagement from '@/app/admin/components/service-management';
 import FunnelStepManagement from '@/app/admin/components/funnel-step-management';
 import SectionManagement from '@/app/admin/components/section-management';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import ThemeManagement from './components/theme-management';
 
-type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections';
+type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme';
 
 function AdminDashboard() {
   const { user, isUserLoading } = useUser();
@@ -62,6 +63,8 @@ function AdminDashboard() {
         return <FunnelStepManagement />;
       case 'sections':
         return <SectionManagement />;
+      case 'theme':
+        return <ThemeManagement />;
       case 'dashboard':
       default:
         return (
@@ -103,6 +106,14 @@ function AdminDashboard() {
                     isActive={activeSection === 'sections'}>
                     <Layers />
                     Sections
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+                <SidebarMenuButton 
+                    onClick={() => setActiveSection('theme')}
+                    isActive={activeSection === 'theme'}>
+                    <Palette />
+                    Theme
                 </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>

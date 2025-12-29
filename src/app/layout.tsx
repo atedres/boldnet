@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/app/context/language-context';
 import { FirebaseClientProvider } from '@/firebase';
 import { ThemeProvider } from '@/app/components/theme-provider';
+import DynamicTheme from './components/dynamic-theme';
 
 export const metadata: Metadata = {
   title: 'BoldNet Digital',
@@ -42,6 +43,7 @@ export default function RootLayout({
         >
           <FirebaseClientProvider>
             <LanguageProvider>
+              <DynamicTheme />
               {children}
               <Toaster />
             </LanguageProvider>
