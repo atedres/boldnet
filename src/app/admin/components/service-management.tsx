@@ -17,6 +17,14 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
+import {
   Card,
   CardContent,
   CardDescription,
@@ -34,15 +42,60 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2, Pencil } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
+
+function DescriptionEditorModal({
+  value,
+  onSave,
+  onCancel,
+}: {
+  value: string;
+  onSave: (newValue: string) => void;
+  onCancel: () => void;
+}) {
+  const [content, setContent] = useState(value);
+
+  const handleSave = () => {
+    onSave(content);
+  };
+
+  return (
+    <Dialog open onOpenChange={(isOpen) => !isOpen && onCancel()}>
+      <DialogContent className="sm:max-w-3xl h-[80vh] flex flex-col">
+        <DialogHeader>
+          <DialogTitle>Edit Description</DialogTitle>
+        </DialogHeader>
+        <div className="flex-grow min-h-0">
+          <RichTextEditor
+            value={content}
+            onChange={setContent}
+            placeholder="Describe the service..."
+          />
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button type="button" variant="outline" onClick={onCancel}>
+              Cancel
+            </Button>
+          </DialogClose>
+          <Button type="button" onClick={handleSave}>
+            Save Description
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 
 function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, onComplete: () => void }) {
   const [name, setName] = useState(serviceToEdit?.name || '');
   const [description, setDescription] = useState(serviceToEdit?.description || '');
   const [iconUrl, setIconUrl] = useState(serviceToEdit?.iconUrl || '');
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
   const firestore = useFirestore();
   const { toast } = useToast();
 
@@ -77,46 +130,72 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
     setIconUrl('');
     onComplete();
   };
+  
+  // Helper to strip HTML for the preview
+  const stripHtml = (html: string) => {
+    if (typeof window === 'undefined') return html;
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || "";
+  }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>{serviceToEdit ? 'Edit Service' : 'Add New Service'}</CardTitle>
-        <CardDescription>
-          {serviceToEdit ? `Editing the service: ${serviceToEdit.name}` : 'Add a new service offered by your agency.'}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-4">
-        <div className="grid gap-2">
-          <Label htmlFor="name">Service Name</Label>
-          <Input
-            id="name"
-            placeholder="e.g., UGC Videos"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+    <>
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>{serviceToEdit ? 'Edit Service' : 'Add New Service'}</CardTitle>
+          <CardDescription>
+            {serviceToEdit ? `Editing the service: ${serviceToEdit.name}` : 'Add a new service offered by your agency.'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="name">Service Name</Label>
+            <Input
+              id="name"
+              placeholder="e.g., UGC Videos"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label>Description</Label>
+             <div className="prose dark:prose-invert prose-sm min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-muted-foreground">
+                {description ? (
+                    <span dangerouslySetInnerHTML={{ __html: description.substring(0, 150) + (description.length > 150 ? '...' : '') }} />
+                ) : (
+                    <p>Describe the service...</p>
+                )}
+            </div>
+            <Button variant="outline" size="sm" onClick={() => setIsEditingDescription(true)}>
+                <Pencil className="mr-2 h-4 w-4" />
+                Edit Description
+            </Button>
+          </div>
+          <ImageUpload 
+              label="Icon"
+              value={iconUrl}
+              onChange={setIconUrl}
           />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="description">Description</Label>
-          <RichTextEditor
-            value={description}
-            onChange={setDescription}
-            placeholder="Describe the service..."
-           />
-        </div>
-        <ImageUpload 
-            label="Icon"
-            value={iconUrl}
-            onChange={setIconUrl}
+        </CardContent>
+        <CardFooter className="flex justify-end gap-2">
+          <Button variant="outline" onClick={onComplete}>Cancel</Button>
+          <Button onClick={handleUpload}>
+            {serviceToEdit ? 'Update Service' : 'Add Service'}
+          </Button>
+        </CardFooter>
+      </Card>
+      
+      {isEditingDescription && (
+        <DescriptionEditorModal 
+          value={description}
+          onSave={(newDescription) => {
+            setDescription(newDescription);
+            setIsEditingDescription(false);
+          }}
+          onCancel={() => setIsEditingDescription(false)}
         />
-      </CardContent>
-      <CardFooter className="flex justify-end gap-2">
-        <Button variant="outline" onClick={onComplete}>Cancel</Button>
-        <Button onClick={handleUpload}>
-          {serviceToEdit ? 'Update Service' : 'Add Service'}
-        </Button>
-      </CardFooter>
-    </Card>
+      )}
+    </>
   );
 }
 
