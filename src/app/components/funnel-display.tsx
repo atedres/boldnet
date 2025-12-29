@@ -4,6 +4,7 @@ import { useLanguage } from '@/app/context/language-context';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import Image from 'next/image';
+import { DynamicIcon } from '@/components/ui/dynamic-icon';
 
 export default function FunnelDisplay() {
   const { t } = useLanguage();
@@ -37,21 +38,23 @@ export default function FunnelDisplay() {
                 <div className="p-6 rounded-lg border">Loading...</div>
               </>
             )}
-           {sortedSteps?.map((step) => (
+           {sortedSteps?.map((step, index) => (
             <div 
               key={step.id} 
-              className="relative flex items-start gap-6 p-6 rounded-lg border border-border bg-card text-card-foreground overflow-hidden card-fill-animation"
+              className="relative flex items-start gap-6 p-6 rounded-lg border bg-primary text-primary-foreground overflow-hidden"
             >
-              <div className="relative z-10 flex-shrink-0 w-12 h-12 rounded-full bg-white border-2 border-border flex items-center justify-center">
+              <div className="relative z-10 flex-shrink-0 w-12 h-12 rounded-full bg-white border-2 border-primary flex items-center justify-center">
                  {step.iconUrl ? (
                     <Image src={step.iconUrl} alt={step.name} width={24} height={24} className="h-6 w-6 object-contain" />
+                 ) : step.iconName ? (
+                    <DynamicIcon iconName={step.iconName} className="h-6 w-6 text-primary" />
                  ) : (
                     <span className="text-xl font-bold text-primary">{step.order}</span>
                  )}
               </div>
               <div className="relative z-10">
                 <h3 className="text-xl font-bold font-headline">{step.name}</h3>
-                <p className="text-muted-foreground mt-2">{step.description}</p>
+                <p className="text-primary-foreground/80 mt-2">{step.description}</p>
               </div>
             </div>
           ))}

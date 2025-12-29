@@ -138,23 +138,4 @@
     }
   }
 
-  @keyframes fill-in {
-    from { transform: scaleX(0); }
-    to { transform: scaleX(1); }
-  }
-
-  .card-fill-animation::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-color: hsl(var(--primary) / 0.1);
-    transform-origin: left;
-    animation: fill-in 1s ease-out forwards;
-    animation-timeline: view();
-    animation-range: entry 0% cover 50%;
-    z-index: 0;
-  }
 }
