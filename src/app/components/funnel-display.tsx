@@ -41,7 +41,7 @@ export default function FunnelDisplay() {
            {sortedSteps?.map((step, index) => (
             <div 
               key={step.id} 
-              className="relative flex items-start gap-6 p-6 rounded-lg border bg-primary text-primary-foreground overflow-hidden"
+              className="relative flex items-start gap-6 p-6 rounded-lg border bg-card text-card-foreground overflow-hidden"
             >
               <div className="relative z-10 flex-shrink-0 w-12 h-12 rounded-full bg-white border-2 border-primary flex items-center justify-center">
                  {step.iconUrl ? (
@@ -54,7 +54,7 @@ export default function FunnelDisplay() {
               </div>
               <div className="relative z-10">
                 <h3 className="text-xl font-bold font-headline">{step.name}</h3>
-                <p className="text-primary-foreground/80 mt-2">{step.description}</p>
+                <p className="text-muted-foreground mt-2">{step.description}</p>
               </div>
             </div>
           ))}
