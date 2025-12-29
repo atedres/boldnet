@@ -16,7 +16,6 @@ import {
   SidebarFooter,
   SidebarInset,
   SidebarTrigger,
-  SidebarMenuBadge,
 } from '@/components/ui/sidebar';
 import ClientManagement from '@/app/admin/components/client-management';
 import ServiceManagement from '@/app/admin/components/service-management';
@@ -86,10 +85,9 @@ function AdminDashboard() {
         <SidebarHeader>
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-semibold">Admin Panel</h2>
-            <SidebarMenuBadge>Beta</SidebarMenuBadge>
           </div>
         </SidebarHeader>
-        <SidebarContent>
+        <SidebarContent className="mt-4">
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton
