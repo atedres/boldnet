@@ -2,7 +2,7 @@
 import { useUser, FirebaseClientProvider, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -23,8 +23,9 @@ import FunnelStepManagement from '@/app/admin/components/funnel-step-management'
 import SectionManagement from '@/app/admin/components/section-management';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import ThemeManagement from './components/theme-management';
+import QuoteRequestManagement from './components/quote-request-management';
 
-type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme';
+type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes';
 
 function AdminDashboard() {
   const { user, isUserLoading } = useUser();
@@ -64,6 +65,8 @@ function AdminDashboard() {
         return <SectionManagement />;
       case 'theme':
         return <ThemeManagement />;
+      case 'quotes':
+        return <QuoteRequestManagement />;
       case 'dashboard':
       default:
         return (
@@ -97,6 +100,14 @@ function AdminDashboard() {
                 <LayoutDashboard />
                 Dashboard
               </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+                <SidebarMenuButton 
+                    onClick={() => setActiveSection('quotes')}
+                    isActive={activeSection === 'quotes'}>
+                    <FileText />
+                    Quotes
+                </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
                 <SidebarMenuButton 
