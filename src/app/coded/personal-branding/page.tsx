@@ -5,6 +5,8 @@ import { CheckCircle, Zap, Target, Lightbulb, Users, BarChart, ArrowRight } from
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import { SiteLogo } from './components';
+import { FirebaseClientProvider } from '@/firebase';
 
 const SectionTitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
   <h2 className={`text-3xl md:text-4xl font-bold text-center font-headline tracking-tight ${className}`}>{children}</h2>
@@ -27,13 +29,9 @@ const HeroSection = () => (
         <div className="absolute inset-0 bg-gradient-to-t from-black via-red-900/50 to-transparent"></div>
     </div>
     <div className="relative z-10 container mx-auto flex flex-col items-center justify-center h-full text-center px-4">
-      <Image 
-        src="https://res.cloudinary.com/ddbj70ziv/image/upload/v1718049610/boldnet/logo-white_ca6ggh.png"
-        alt="BoldNet Digital Logo"
-        width={100}
-        height={100}
-        className="mb-6"
-      />
+      <div className="w-24 h-24 mb-6 relative">
+        <SiteLogo />
+      </div>
       <h1 className="text-4xl md:text-6xl font-extrabold font-headline leading-tight tracking-wider uppercase">
         On ne crée pas de personal brands
       </h1>
@@ -281,7 +279,7 @@ const FinalCtaSection = () => (
     </section>
 )
 
-export default function PersonalBrandingPage() {
+function PersonalBrandingContent() {
   return (
     <div className="bg-white">
       <main>
@@ -296,4 +294,12 @@ export default function PersonalBrandingPage() {
       </main>
     </div>
   );
+}
+
+export default function PersonalBrandingPage() {
+    return (
+        <FirebaseClientProvider>
+            <PersonalBrandingContent />
+        </FirebaseClientProvider>
+    )
 }
