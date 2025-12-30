@@ -12,7 +12,7 @@
  * - /services/{serviceId}: Publicly viewable service offerings.
  * - /funnel_steps/{funnelStepId}: Publicly viewable funnel/process steps.
  * - /contact_form_submissions/{submissionId}: Private, write-only submissions.
- * - /quote_requests/{quoteId}: Private, write-only submissions for quotes.
+ * - /quote_requests/{quoteId}: Private, admin-readable submissions for quotes.
  * - /site_settings/{settingsId}: Publicly readable site configuration.
  * - /sections/{sectionId}: Publicly readable dynamic content sections.
  * - /theme_settings/{settingsId}: Publicly readable theme customization.
@@ -21,10 +21,12 @@
  * - Public Read, Admin Write: All informational collections are publicly readable.
  *   Write access is restricted to any user who is signed in, effectively
  *   treating all authenticated users as admins.
- * - Write-Only Ingress: The submission collections are intentionally
+ * - Write-Only Ingress: The `contact_form_submissions` collection is intentionally
  *   configured to allow anyone to create a document but denies all read, update,
- *   and delete operations. This protects the privacy of submitted user data (PII)
- *   while providing a secure endpoint for data collection.
+ *   and delete operations to protect PII.
+ * - Admin-Readable Ingress: The `quote_requests` collection allows anyone to create
+ *   a document, but only admins can read or delete them. This protects PII
+ *   while allowing admin management.
  * - Default Secure: The default security posture is to deny all access unless
  *   explicitly granted.
  */
@@ -92,11 +94,11 @@ service cloud.firestore {
     }
 
     /**
-     * @description A write-only collection for receiving quote requests.
+     * @description A collection for receiving quote requests. Writable by anyone, readable by admins.
      * @path /quote_requests/{quoteId}
      */
     match /quote_requests/{quoteId} {
-        allow read, update, delete: if false;
+        allow read, update, delete: if isAdmin();
         allow create: if true;
     }
 
