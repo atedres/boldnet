@@ -5,7 +5,7 @@ import { useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } 
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Plus, Code, Trash2 } from 'lucide-react';
+import { Plus, Code, Trash2, Link as LinkIcon } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { format } from 'date-fns';
@@ -45,6 +45,17 @@ export default function CodedLandingPageManagement() {
   }
 
   const handleAddPersonalBrandingPage = async () => {
+    // Check if it already exists to avoid duplicates
+    const pageExists = pages?.some(p => p.slug === 'personal-branding');
+    if (pageExists) {
+        toast({
+            variant: 'destructive',
+            title: 'Page already exists',
+            description: 'The Personal Branding page has already been added.',
+        });
+        return;
+    }
+    
     try {
         const newPageData = {
             title: `Personal Branding Page`,
@@ -57,6 +68,13 @@ export default function CodedLandingPageManagement() {
         console.error(e);
         toast({variant: 'destructive', title: 'Error creating coded page'});
     }
+  }
+  
+  const copyLink = (slug: string) => {
+    if (typeof window === 'undefined') return;
+    const url = `${window.location.origin}/coded/${slug}`;
+    navigator.clipboard.writeText(url);
+    toast({title: "Link Copied!", description: url});
   }
 
   return (
@@ -105,6 +123,10 @@ export default function CodedLandingPageManagement() {
                                 <TableCell className="text-muted-foreground">/coded/{page.slug}</TableCell>
                                 <TableCell>{page.createdAt ? format(page.createdAt.toDate(), 'PPP') : 'N/A'}</TableCell>
                                 <TableCell className="text-right">
+                                    <Button variant="ghost" size="icon" title="Copy Link" onClick={() => copyLink(page.slug)}>
+                                        <LinkIcon className="h-4 w-4" />
+                                        <span className="sr-only">Copy Link</span>
+                                    </Button>
                                     <Button variant="ghost" size="sm" disabled>
                                         Modifier
                                     </Button>
