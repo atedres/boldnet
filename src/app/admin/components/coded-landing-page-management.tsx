@@ -44,6 +44,21 @@ export default function CodedLandingPageManagement() {
     }
   }
 
+  const handleAddPersonalBrandingPage = async () => {
+    try {
+        const newPageData = {
+            title: `Personal Branding Page`,
+            slug: `personal-branding`,
+            createdAt: serverTimestamp(),
+        };
+        await addDocumentNonBlocking(codedPagesCollection, newPageData);
+        toast({ title: 'Personal Branding Page Added', description: 'You can now manage its content.' });
+    } catch(e) {
+        console.error(e);
+        toast({variant: 'destructive', title: 'Error creating coded page'});
+    }
+  }
+
   return (
     <>
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-8">
@@ -53,7 +68,10 @@ export default function CodedLandingPageManagement() {
             <CardTitle>Coded Landing Pages</CardTitle>
             <CardDescription>Manage metadata for manually coded pages.</CardDescription>
           </div>
-          <Button onClick={handleAddNew}><Plus className="mr-2 h-4 w-4" /> Add New</Button>
+           <div className="flex gap-2">
+            <Button onClick={handleAddPersonalBrandingPage}><Plus className="mr-2 h-4 w-4" /> Add Personal Branding Page</Button>
+            <Button onClick={handleAddNew}><Plus className="mr-2 h-4 w-4" /> Add New</Button>
+          </div>
         </CardHeader>
         <CardContent>
           {isLoading && <p className="text-center py-8">Loading coded pages...</p>}
@@ -84,7 +102,7 @@ export default function CodedLandingPageManagement() {
                         {pages.map((page: any) => (
                             <TableRow key={page.id}>
                                 <TableCell className="font-medium">{page.title}</TableCell>
-                                <TableCell className="text-muted-foreground">/{page.slug}</TableCell>
+                                <TableCell className="text-muted-foreground">/coded/{page.slug}</TableCell>
                                 <TableCell>{page.createdAt ? format(page.createdAt.toDate(), 'PPP') : 'N/A'}</TableCell>
                                 <TableCell className="text-right">
                                     <Button variant="ghost" size="sm" disabled>
