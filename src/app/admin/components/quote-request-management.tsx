@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { collection, deleteDoc, doc, query, orderBy, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, query, orderBy, where, updateDoc } from 'firebase/firestore';
 import { useCollection } from '@/firebase/firestore/use-collection';
 import { useFirestore, useMemoFirebase } from '@/firebase';
 import { format } from 'date-fns';
@@ -33,11 +33,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Eye, Trash2 } from 'lucide-react';
+import { Eye, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 function QuoteDetailsModal({ quote }: { quote: any }) {
     return (
@@ -92,13 +93,24 @@ export default function QuoteRequestManagement() {
     const firestore = useFirestore();
     const { toast } = useToast();
     const [quoteToDelete, setQuoteToDelete] = useState<{id: string; name: string} | null>(null);
+    const [statusFilter, setStatusFilter] = useState<'all' | 'new' | 'contacted'>('all');
+    const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
 
-    const quotesCollection = useMemoFirebase(
-        () => query(collection(firestore, 'quote_requests'), orderBy('submittedAt', 'desc')),
-        [firestore]
-    );
+    const quotesQuery = useMemoFirebase(() => {
+      const baseCollection = collection(firestore, 'quote_requests');
+      const queries = [];
+      
+      if (statusFilter !== 'all') {
+        queries.push(where('status', '==', statusFilter));
+      }
+      
+      queries.push(orderBy('submittedAt', sortOrder));
+      
+      return query(baseCollection, ...queries);
+    }, [firestore, statusFilter, sortOrder]);
 
-    const { data: quotes, isLoading: isLoadingQuotes } = useCollection(quotesCollection);
+
+    const { data: quotes, isLoading: isLoadingQuotes } = useCollection(quotesQuery);
     
     const confirmDelete = async () => {
         if (!quoteToDelete) return;
@@ -135,14 +147,34 @@ export default function QuoteRequestManagement() {
             <div className="w-full max-w-6xl mx-auto flex flex-col items-center gap-8">
                 <Card className="w-full">
                     <CardHeader>
-                        <CardTitle>Manage Quote Requests</CardTitle>
-                        <CardDescription>
-                            View and manage quote requests submitted by potential clients.
-                        </CardDescription>
+                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                           <div>
+                             <CardTitle>Manage Quote Requests</CardTitle>
+                             <CardDescription>
+                                 View, filter, and manage quote requests submitted by potential clients.
+                             </CardDescription>
+                           </div>
+                           <div className="flex items-center gap-2">
+                               <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as any)}>
+                                 <SelectTrigger className="w-[180px]">
+                                   <SelectValue placeholder="Filter by status" />
+                                 </SelectTrigger>
+                                 <SelectContent>
+                                   <SelectItem value="all">All Statuses</SelectItem>
+                                   <SelectItem value="new">New</SelectItem>
+                                   <SelectItem value="contacted">Contacted</SelectItem>
+                                 </SelectContent>
+                               </Select>
+                               <Button variant="outline" size="icon" onClick={() => setSortOrder(prev => prev === 'desc' ? 'asc' : 'desc')}>
+                                {sortOrder === 'desc' ? <ArrowDown className="h-4 w-4" /> : <ArrowUp className="h-4 w-4" />}
+                                <span className="sr-only">Toggle Sort Order</span>
+                               </Button>
+                           </div>
+                        </div>
                     </CardHeader>
                     <CardContent>
-                         {isLoadingQuotes && <p className="text-center">Loading quotes...</p>}
-                         {!isLoadingQuotes && quotes && quotes.length === 0 && <p className="text-center text-muted-foreground py-8">No quote requests submitted yet.</p>}
+                         {isLoadingQuotes && <p className="text-center py-8">Loading quotes...</p>}
+                         {!isLoadingQuotes && quotes && quotes.length === 0 && <p className="text-center text-muted-foreground py-8">No quote requests match the current filters.</p>}
                          {!isLoadingQuotes && quotes && quotes.length > 0 && (
                              <Table>
                                  <TableHeader>
@@ -217,5 +249,3 @@ export default function QuoteRequestManagement() {
         </>
     );
 }
-
-    
