@@ -2,9 +2,14 @@
 import { useUser, FirebaseClientProvider, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import {
   SidebarProvider,
   Sidebar,
@@ -24,6 +29,7 @@ import SectionManagement from '@/app/admin/components/section-management';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import ThemeManagement from './components/theme-management';
 import QuoteRequestManagement from './components/quote-request-management';
+import { cn } from '@/lib/utils';
 
 type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes';
 
@@ -32,6 +38,7 @@ function AdminDashboard() {
   const router = useRouter();
   const auth = useAuth();
   const [activeSection, setActiveSection] = useState<AdminSection>('dashboard');
+  const [isSiteMenuOpen, setIsSiteMenuOpen] = useState(true);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -109,31 +116,54 @@ function AdminDashboard() {
                     Quotes
                 </SidebarMenuButton>
             </SidebarMenuItem>
-             <SidebarMenuItem>
-                <SidebarMenuButton 
-                    onClick={() => setActiveSection('sections')}
-                    isActive={activeSection === 'sections'}>
-                    <Layers />
-                    Sections
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-                <SidebarMenuButton 
-                    onClick={() => setActiveSection('theme')}
-                    isActive={activeSection === 'theme'}>
-                    <Palette />
-                    Theme
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                onClick={() => setActiveSection('clients')}
-                isActive={activeSection === 'clients'}
-              >
-                <Users />
-                Clients
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+            
+            <Collapsible open={isSiteMenuOpen} onOpenChange={setIsSiteMenuOpen}>
+              <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <Button variant="ghost" className="w-full justify-start gap-2 px-2">
+                      <Settings />
+                      <span className="flex-1 text-left">Site & Contenu</span>
+                      <ChevronDown className={cn("transform transition-transform duration-200", isSiteMenuOpen && "rotate-180")} />
+                    </Button>
+                  </CollapsibleTrigger>
+              </SidebarMenuItem>
+
+              <CollapsibleContent className="pl-6 space-y-1">
+                <SidebarMenuItem>
+                    <SidebarMenuButton 
+                        onClick={() => setActiveSection('theme')}
+                        isActive={activeSection === 'theme'}>
+                        <Palette />
+                        Theme
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton 
+                        onClick={() => setActiveSection('sections')}
+                        isActive={activeSection === 'sections'}>
+                        <Layers />
+                        Sections
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                    <SidebarMenuButton 
+                        onClick={() => setActiveSection('clients')}
+                        isActive={activeSection === 'clients'}>
+                        <Users />
+                        Clients
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton 
+                        onClick={() => setActiveSection('funnel')}
+                        isActive={activeSection === 'funnel'}>
+                        <Workflow />
+                        Funnel Steps
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+              </CollapsibleContent>
+            </Collapsible>
+
             <SidebarMenuItem>
                 <SidebarMenuButton 
                     onClick={() => setActiveSection('services')}
@@ -142,14 +172,7 @@ function AdminDashboard() {
                     Services
                 </SidebarMenuButton>
             </SidebarMenuItem>
-             <SidebarMenuItem>
-                <SidebarMenuButton 
-                    onClick={() => setActiveSection('funnel')}
-                    isActive={activeSection === 'funnel'}>
-                    <Workflow />
-                    Funnel Steps
-                </SidebarMenuButton>
-            </SidebarMenuItem>
+
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
