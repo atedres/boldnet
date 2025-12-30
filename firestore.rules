@@ -4,14 +4,15 @@
  * The primary goal is to make informational content (like clients, services,
  * process steps, and theme settings) publicly readable by anyone. Write operations
  * are restricted to authenticated users, who are considered administrators for content management.
- * A dedicated collection for contact form submissions is configured to be write-only for any visitor.
+ * Dedicated collections for contact and quote submissions are configured to be write-only for any visitor.
  *
  * Data Structure:
- * The data is organized into seven distinct, top-level collections:
+ * The data is organized into multiple distinct, top-level collections including:
  * - /clients/{clientId}: Publicly viewable client information.
  * - /services/{serviceId}: Publicly viewable service offerings.
  * - /funnel_steps/{funnelStepId}: Publicly viewable funnel/process steps.
  * - /contact_form_submissions/{submissionId}: Private, write-only submissions.
+ * - /quote_requests/{quoteId}: Private, write-only submissions for quotes.
  * - /site_settings/{settingsId}: Publicly readable site configuration.
  * - /sections/{sectionId}: Publicly readable dynamic content sections.
  * - /theme_settings/{settingsId}: Publicly readable theme customization.
@@ -20,7 +21,7 @@
  * - Public Read, Admin Write: All informational collections are publicly readable.
  *   Write access is restricted to any user who is signed in, effectively
  *   treating all authenticated users as admins.
- * - Write-Only Ingress: The /contact_form_submissions collection is intentionally
+ * - Write-Only Ingress: The submission collections are intentionally
  *   configured to allow anyone to create a document but denies all read, update,
  *   and delete operations. This protects the privacy of submitted user data (PII)
  *   while providing a secure endpoint for data collection.
@@ -89,6 +90,16 @@ service cloud.firestore {
       allow read, update, delete: if false;
       allow create: if true;
     }
+
+    /**
+     * @description A write-only collection for receiving quote requests.
+     * @path /quote_requests/{quoteId}
+     */
+    match /quote_requests/{quoteId} {
+        allow read, update, delete: if false;
+        allow create: if true;
+    }
+
 
     /**
      * @description Manages global site settings, like section visibility.

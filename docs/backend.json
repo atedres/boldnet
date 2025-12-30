@@ -137,6 +137,72 @@
         "submittedAt"
       ]
     },
+    "QuoteRequest": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "QuoteRequest",
+      "type": "object",
+      "description": "Represents a quote request submission from the multi-step form.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the QuoteRequest entity."
+        },
+        "serviceNeeded": {
+          "type": "string",
+          "description": "The service the user is interested in."
+        },
+        "industry": {
+          "type": "string",
+          "description": "The user's industry."
+        },
+        "businessSize": {
+          "type": "string",
+          "description": "The size of the user's business."
+        },
+        "timeline": {
+          "type": "string",
+          "description": "The user's desired project timeline."
+        },
+        "budget": {
+          "type": "string",
+          "description": "The user's estimated budget."
+        },
+        "contactName": {
+          "type": "string",
+          "description": "Name of the contact person."
+        },
+        "businessName": {
+          "type": "string",
+          "description": "Name of the business."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the contact person.",
+          "format": "email"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number of the contact person (optional)."
+        },
+        "submittedAt": {
+          "type": "string",
+          "description": "Timestamp of when the form was submitted.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "serviceNeeded",
+        "industry",
+        "businessSize",
+        "timeline",
+        "budget",
+        "contactName",
+        "businessName",
+        "email",
+        "submittedAt"
+      ]
+    },
     "SiteSettings": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "SiteSettings",
@@ -282,6 +348,22 @@
             {
               "name": "contactFormSubmissionId",
               "description": "Unique identifier for the contact form submission."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/quote_requests/{quoteId}",
+        "definition": {
+          "entityName": "QuoteRequest",
+          "schema": {
+            "$ref": "#/backend/entities/QuoteRequest"
+          },
+          "description": "Stores quote request submissions. Security rules allow only write operations.",
+          "params": [
+            {
+              "name": "quoteId",
+              "description": "Unique identifier for the quote request."
             }
           ]
         }

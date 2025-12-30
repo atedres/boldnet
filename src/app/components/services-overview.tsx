@@ -58,8 +58,10 @@ export default function ServicesOverview() {
             />
         </CardHeader>
         <CardFooter className="flex-col items-stretch gap-4 mt-auto pt-6">
-            <Button className="w-full bg-gray-900 text-white hover:bg-gray-800 group-hover:bg-white group-hover:text-primary transition-colors">
-                <ArrowRight className="mr-2 h-4 w-4" /> Demander un devis
+            <Button asChild className="w-full bg-gray-900 text-white hover:bg-gray-800 group-hover:bg-white group-hover:text-primary transition-colors">
+                <Link href="/quote">
+                  <ArrowRight className="mr-2 h-4 w-4" /> {t('requestAQuote')}
+                </Link>
             </Button>
             <Button variant="link" className="text-muted-foreground hover:text-primary group-hover:text-primary-foreground/80 group-hover:hover:text-primary-foreground" asChild>
                 <Link href="#">
