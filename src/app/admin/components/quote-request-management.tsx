@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { collection, deleteDoc, doc, query, orderBy } from 'firebase/firestore';
+import { collection, deleteDoc, doc, query, orderBy, updateDoc } from 'firebase/firestore';
 import { useCollection } from '@/firebase/firestore/use-collection';
 import { useFirestore, useMemoFirebase } from '@/firebase';
 import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -35,6 +36,8 @@ import {
 import { Eye, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 function QuoteDetailsModal({ quote }: { quote: any }) {
     return (
@@ -110,6 +113,18 @@ export default function QuoteRequestManagement() {
         }
     };
 
+    const handleStatusChange = async (quote: any, contacted: boolean) => {
+      const docRef = doc(firestore, 'quote_requests', quote.id);
+      const newStatus = contacted ? 'contacted' : 'new';
+      try {
+        await updateDoc(docRef, { status: newStatus });
+        toast({ title: 'Status Updated', description: `Request from ${quote.contactName} marked as ${newStatus}.` });
+      } catch (error) {
+        toast({ variant: 'destructive', title: 'Error', description: 'Could not update the status.' });
+        console.error("Error updating status:", error);
+      }
+    };
+
     const formatDate = (timestamp: any) => {
         if (!timestamp || !timestamp.toDate) return 'Invalid Date';
         return format(timestamp.toDate(), 'PPP');
@@ -132,6 +147,7 @@ export default function QuoteRequestManagement() {
                              <Table>
                                  <TableHeader>
                                      <TableRow>
+                                         <TableHead className="w-[120px]">Status</TableHead>
                                          <TableHead>Date</TableHead>
                                          <TableHead>Contact Name</TableHead>
                                          <TableHead>Business</TableHead>
@@ -142,6 +158,25 @@ export default function QuoteRequestManagement() {
                                  <TableBody>
                                     {quotes.map((quote) => (
                                         <TableRow key={quote.id}>
+                                            <TableCell>
+                                              <div className="flex items-center space-x-2">
+                                                <Switch
+                                                  id={`status-${quote.id}`}
+                                                  checked={quote.status === 'contacted'}
+                                                  onCheckedChange={(checked) => handleStatusChange(quote, checked)}
+                                                  aria-label="Toggle contacted status"
+                                                />
+                                                <Label 
+                                                    htmlFor={`status-${quote.id}`}
+                                                    className={cn(
+                                                      "capitalize",
+                                                      quote.status === 'contacted' ? 'text-green-600' : 'text-red-600'
+                                                    )}
+                                                >
+                                                  {quote.status || 'new'}
+                                                </Label>
+                                              </div>
+                                            </TableCell>
                                             <TableCell className="font-medium">{formatDate(quote.submittedAt)}</TableCell>
                                             <TableCell>{quote.contactName}</TableCell>
                                             <TableCell className="text-muted-foreground">{quote.businessName}</TableCell>
@@ -182,3 +217,5 @@ export default function QuoteRequestManagement() {
         </>
     );
 }
+
+    

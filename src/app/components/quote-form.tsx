@@ -90,6 +90,7 @@ const QuoteForm = () => {
         try {
             await addDocumentNonBlocking(quoteRequestsCollection, {
                 ...values,
+                status: 'new',
                 submittedAt: serverTimestamp(),
             });
             setIsSubmitted(true);
@@ -264,3 +265,5 @@ const QuoteForm = () => {
 }
 
 export default QuoteForm;
+
+    
