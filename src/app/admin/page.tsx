@@ -31,8 +31,9 @@ import ThemeManagement from './components/theme-management';
 import QuoteRequestManagement from './components/quote-request-management';
 import { cn } from '@/lib/utils';
 import LandingPageManagement from './components/landing-page-management';
+import CodedLandingPageManagement from './components/coded-landing-page-management';
 
-type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'landing-pages';
+type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'landing-pages' | 'coded-landing-pages';
 
 function AdminDashboard() {
   const { user, isUserLoading } = useUser();
@@ -40,6 +41,7 @@ function AdminDashboard() {
   const auth = useAuth();
   const [activeSection, setActiveSection] = useState<AdminSection>('dashboard');
   const [isSiteMenuOpen, setIsSiteMenuOpen] = useState(true);
+  const [isLandingPageMenuOpen, setIsLandingPageMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -77,6 +79,8 @@ function AdminDashboard() {
         return <QuoteRequestManagement />;
       case 'landing-pages':
         return <LandingPageManagement />;
+      case 'coded-landing-pages':
+        return <CodedLandingPageManagement />;
       case 'dashboard':
       default:
         return (
@@ -140,14 +144,6 @@ function AdminDashboard() {
                         Theme
                     </SidebarMenuButton>
                 </SidebarMenuItem>
-                 <SidebarMenuItem>
-                    <SidebarMenuButton 
-                        onClick={() => setActiveSection('landing-pages')}
-                        isActive={activeSection === 'landing-pages'}>
-                        <Presentation />
-                        Landing Pages
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
                 <SidebarMenuItem>
                     <SidebarMenuButton 
                         onClick={() => setActiveSection('sections')}
@@ -178,6 +174,35 @@ function AdminDashboard() {
                         isActive={activeSection === 'funnel'}>
                         <Workflow />
                         Funnel Steps
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+              </CollapsibleContent>
+            </Collapsible>
+            
+             <Collapsible open={isLandingPageMenuOpen} onOpenChange={setIsLandingPageMenuOpen}>
+              <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <Button variant="ghost" className="w-full justify-start gap-2 px-2">
+                      <Presentation />
+                      <span className="flex-1 text-left">Landing Pages</span>
+                      <ChevronDown className={cn("transform transition-transform duration-200", isLandingPageMenuOpen && "rotate-180")} />
+                    </Button>
+                  </CollapsibleTrigger>
+              </SidebarMenuItem>
+
+              <CollapsibleContent className="pl-6 space-y-1">
+                 <SidebarMenuItem>
+                    <SidebarMenuButton 
+                        onClick={() => setActiveSection('landing-pages')}
+                        isActive={activeSection === 'landing-pages'}>
+                        Pages Dynamiques
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton 
+                        onClick={() => setActiveSection('coded-landing-pages')}
+                        isActive={activeSection === 'coded-landing-pages'}>
+                        Pages Codées
                     </SidebarMenuButton>
                 </SidebarMenuItem>
               </CollapsibleContent>

@@ -17,6 +17,7 @@
  * - /sections/{sectionId}: Publicly readable dynamic content sections.
  * - /theme_settings/{settingsId}: Publicly readable theme customization.
  * - /landing_pages/{landingPageId}: Publicly readable, admin-writable landing pages.
+ * - /coded_landing_pages/{codedLandingPageId}: Admin-only landing page metadata.
  *
  * Key Security Decisions:
  * - Public Read, Admin Write: All informational collections are publicly readable.
@@ -138,6 +139,14 @@ service cloud.firestore {
     match /landing_pages/{landingPageId} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    /**
+     * @description Manages metadata for manually coded landing pages. Admin only.
+     * @path /coded_landing_pages/{codedLandingPageId}
+     */
+    match /coded_landing_pages/{codedLandingPageId} {
+      allow read, write: if isAdmin();
     }
   }
 }

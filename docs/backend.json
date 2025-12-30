@@ -322,6 +322,32 @@
         }
       },
       "required": ["id", "title", "slug"]
+    },
+    "CodedLandingPage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CodedLandingPage",
+      "type": "object",
+      "description": "Represents a manually coded landing page with editable metadata.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the CodedLandingPage."
+        },
+        "title": {
+          "type": "string",
+          "description": "The main title of the page, for display in the admin panel."
+        },
+        "slug": {
+          "type": "string",
+          "description": "The URL-friendly identifier for the page (e.g., 'coded-offer')."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the page was created.",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "title", "slug"]
     }
   },
   "auth": {
@@ -472,6 +498,22 @@
                 {
                     "name": "landingPageId",
                     "description": "Unique identifier for the landing page."
+                }
+            ]
+        }
+      },
+      {
+        "path": "/coded_landing_pages/{codedLandingPageId}",
+        "definition": {
+            "entityName": "CodedLandingPage",
+            "schema": {
+                "$ref": "#/backend/entities/CodedLandingPage"
+            },
+            "description": "Stores metadata for manually coded landing pages. Admin only access.",
+            "params": [
+                {
+                    "name": "codedLandingPageId",
+                    "description": "Unique identifier for the coded landing page."
                 }
             ]
         }
