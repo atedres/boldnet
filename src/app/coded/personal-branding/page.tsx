@@ -1,9 +1,10 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, Zap, Target, Lightbulb, Users, BarChart, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import React from 'react';
 
 const SectionTitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
   <h2 className={`text-3xl md:text-4xl font-bold text-center font-headline tracking-tight ${className}`}>{children}</h2>
@@ -19,9 +20,8 @@ const HeroSection = () => (
         <Image
             src="https://picsum.photos/seed/hero-bg/1200/800"
             alt="Background"
-            layout="fill"
-            objectFit="cover"
-            className="opacity-40"
+            fill
+            className="opacity-40 object-cover"
             data-ai-hint="group people business"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-red-900/50 to-transparent"></div>
@@ -269,9 +269,8 @@ const FinalCtaSection = () => (
             <Image
                 src="https://picsum.photos/seed/final-cta/1200/400"
                 alt="Office background"
-                layout="fill"
-                objectFit="cover"
-                className="opacity-20"
+                fill
+                className="opacity-20 object-cover"
                 data-ai-hint="busy office meeting"
             />
         </div>
