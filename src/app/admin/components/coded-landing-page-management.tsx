@@ -1,12 +1,13 @@
 'use client';
 import { useState } from 'react';
-import { collection, serverTimestamp } from 'firebase/firestore';
+import { collection, serverTimestamp, deleteDoc, doc } from 'firebase/firestore';
 import { useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Plus, Code } from 'lucide-react';
+import { Plus, Code, Trash2 } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { format } from 'date-fns';
 
 export default function CodedLandingPageManagement() {
@@ -14,6 +15,7 @@ export default function CodedLandingPageManagement() {
   const codedPagesCollection = useMemoFirebase(() => collection(firestore, 'coded_landing_pages'), [firestore]);
   const { data: pages, isLoading } = useCollection(codedPagesCollection);
   const { toast } = useToast();
+  const [deletingPage, setDeletingPage] = useState<any | null>(null);
 
   const handleAddNew = async () => {
     try {
@@ -30,7 +32,20 @@ export default function CodedLandingPageManagement() {
     }
   }
 
+  const handleDelete = async () => {
+    if (!deletingPage) return;
+    try {
+      await deleteDoc(doc(firestore, 'coded_landing_pages', deletingPage.id));
+      toast({ title: 'Page codée supprimée' });
+      setDeletingPage(null);
+    } catch (error) {
+       console.error(error);
+      toast({ variant: 'destructive', title: 'Erreur', description: 'Impossible de supprimer la page.' });
+    }
+  }
+
   return (
+    <>
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-8">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
@@ -72,8 +87,12 @@ export default function CodedLandingPageManagement() {
                                 <TableCell className="text-muted-foreground">/{page.slug}</TableCell>
                                 <TableCell>{page.createdAt ? format(page.createdAt.toDate(), 'PPP') : 'N/A'}</TableCell>
                                 <TableCell className="text-right">
-                                    <Button variant="ghost" size="icon" disabled>
-                                        Edit
+                                    <Button variant="ghost" size="sm" disabled>
+                                        Modifier
+                                    </Button>
+                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => setDeletingPage(page)}>
+                                        <Trash2 className="h-4 w-4" />
+                                        <span className="sr-only">Supprimer</span>
                                     </Button>
                                 </TableCell>
                             </TableRow>
@@ -84,5 +103,19 @@ export default function CodedLandingPageManagement() {
         </CardContent>
       </Card>
     </div>
+    
+    <AlertDialog open={!!deletingPage} onOpenChange={(isOpen) => !isOpen && setDeletingPage(null)}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Êtes-vous sûr(e) ?</AlertDialogTitle>
+          <AlertDialogDescription>Cette action est irréversible. La page "{deletingPage?.title}" sera définitivement supprimée.</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Annuler</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">Supprimer</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+    </>
   );
 }
