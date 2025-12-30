@@ -16,6 +16,7 @@
  * - /site_settings/{settingsId}: Publicly readable site configuration.
  * - /sections/{sectionId}: Publicly readable dynamic content sections.
  * - /theme_settings/{settingsId}: Publicly readable theme customization.
+ * - /landing_pages/{landingPageId}: Publicly readable, admin-writable landing pages.
  *
  * Key Security Decisions:
  * - Public Read, Admin Write: All informational collections are publicly readable.
@@ -128,6 +129,15 @@ service cloud.firestore {
     match /theme_settings/{settingsId} {
         allow read: if true;
         allow write: if isAdmin();
+    }
+    
+    /**
+     * @description Manages standalone, dynamic landing pages.
+     * @path /landing_pages/{landingPageId}
+     */
+    match /landing_pages/{landingPageId} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
   }
 }

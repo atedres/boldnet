@@ -2,7 +2,7 @@
 import { useUser, FirebaseClientProvider, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -30,8 +30,9 @@ import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/ca
 import ThemeManagement from './components/theme-management';
 import QuoteRequestManagement from './components/quote-request-management';
 import { cn } from '@/lib/utils';
+import LandingPageManagement from './components/landing-page-management';
 
-type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes';
+type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'landing-pages';
 
 function AdminDashboard() {
   const { user, isUserLoading } = useUser();
@@ -74,6 +75,8 @@ function AdminDashboard() {
         return <ThemeManagement />;
       case 'quotes':
         return <QuoteRequestManagement />;
+      case 'landing-pages':
+        return <LandingPageManagement />;
       case 'dashboard':
       default:
         return (
@@ -137,6 +140,14 @@ function AdminDashboard() {
                         Theme
                     </SidebarMenuButton>
                 </SidebarMenuItem>
+                 <SidebarMenuItem>
+                    <SidebarMenuButton 
+                        onClick={() => setActiveSection('landing-pages')}
+                        isActive={activeSection === 'landing-pages'}>
+                        <Presentation />
+                        Landing Pages
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
                 <SidebarMenuItem>
                     <SidebarMenuButton 
                         onClick={() => setActiveSection('sections')}
@@ -188,7 +199,7 @@ function AdminDashboard() {
       <SidebarInset>
         <header className="flex h-14 items-center justify-start gap-4 border-b bg-background px-4 sm:px-6">
             <SidebarTrigger className="md:flex" />
-            <h1 className="text-xl font-semibold capitalize">{activeSection}</h1>
+            <h1 className="text-xl font-semibold capitalize">{activeSection.replace('-', ' ')}</h1>
         </header>
         <main className="flex-1 overflow-auto p-4 sm:p-6">
           <div className="flex items-center justify-center">
