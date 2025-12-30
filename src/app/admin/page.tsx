@@ -145,6 +145,14 @@ function AdminDashboard() {
                         Sections
                     </SidebarMenuButton>
                 </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton 
+                        onClick={() => setActiveSection('services')}
+                        isActive={activeSection === 'services'}>
+                        <Briefcase />
+                        Services
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
                  <SidebarMenuItem>
                     <SidebarMenuButton 
                         onClick={() => setActiveSection('clients')}
@@ -163,15 +171,6 @@ function AdminDashboard() {
                 </SidebarMenuItem>
               </CollapsibleContent>
             </Collapsible>
-
-            <SidebarMenuItem>
-                <SidebarMenuButton 
-                    onClick={() => setActiveSection('services')}
-                    isActive={activeSection === 'services'}>
-                    <Briefcase />
-                    Services
-                </SidebarMenuButton>
-            </SidebarMenuItem>
 
           </SidebarMenu>
         </SidebarContent>
