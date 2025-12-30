@@ -33,12 +33,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Eye, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
+import { Eye, Trash2, ArrowUp, ArrowDown, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 
 function QuoteDetailsModal({ quote }: { quote: any }) {
     return (
@@ -95,6 +96,8 @@ export default function QuoteRequestManagement() {
     const [quoteToDelete, setQuoteToDelete] = useState<{id: string; name: string} | null>(null);
     const [statusFilter, setStatusFilter] = useState<'all' | 'new' | 'contacted'>('all');
     const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
+    const [searchTerm, setSearchTerm] = useState('');
+
 
     const quotesQuery = useMemoFirebase(() => {
       const baseCollection = collection(firestore, 'quote_requests');
@@ -105,9 +108,16 @@ export default function QuoteRequestManagement() {
 
     const filteredQuotes = useMemo(() => {
         if (!allQuotes) return [];
-        if (statusFilter === 'all') return allQuotes;
-        return allQuotes.filter(quote => quote.status === statusFilter);
-    }, [allQuotes, statusFilter]);
+        
+        return allQuotes.filter(quote => {
+            const statusMatch = statusFilter === 'all' || quote.status === statusFilter;
+            const searchMatch = !searchTerm || 
+                                quote.contactName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                quote.businessName.toLowerCase().includes(searchTerm.toLowerCase());
+            return statusMatch && searchMatch;
+        });
+
+    }, [allQuotes, statusFilter, searchTerm]);
     
     const confirmDelete = async () => {
         if (!quoteToDelete) return;
@@ -144,16 +154,26 @@ export default function QuoteRequestManagement() {
             <div className="w-full max-w-6xl mx-auto flex flex-col items-center gap-8">
                 <Card className="w-full">
                     <CardHeader>
-                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-                           <div>
+                        <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4">
+                           <div className="flex-1">
                              <CardTitle>Manage Quote Requests</CardTitle>
                              <CardDescription>
                                  View, filter, and manage quote requests submitted by potential clients.
                              </CardDescription>
                            </div>
-                           <div className="flex items-center gap-2">
+                           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                               <div className="relative">
+                                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                                    <Input
+                                        type="search"
+                                        placeholder="Search by name or business..."
+                                        className="pl-8 sm:w-[200px] lg:w-[300px]"
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
+                                </div>
                                <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as any)}>
-                                 <SelectTrigger className="w-[180px]">
+                                 <SelectTrigger className="w-full sm:w-[180px]">
                                    <SelectValue placeholder="Filter by status" />
                                  </SelectTrigger>
                                  <SelectContent>
