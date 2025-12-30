@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { collection, deleteDoc, doc, query, orderBy, where, updateDoc } from 'firebase/firestore';
+import { useState, useMemo } from 'react';
+import { collection, deleteDoc, doc, query, orderBy, updateDoc } from 'firebase/firestore';
 import { useCollection } from '@/firebase/firestore/use-collection';
 import { useFirestore, useMemoFirebase } from '@/firebase';
 import { format } from 'date-fns';
@@ -98,19 +98,16 @@ export default function QuoteRequestManagement() {
 
     const quotesQuery = useMemoFirebase(() => {
       const baseCollection = collection(firestore, 'quote_requests');
-      const queries = [];
-      
-      if (statusFilter !== 'all') {
-        queries.push(where('status', '==', statusFilter));
-      }
-      
-      queries.push(orderBy('submittedAt', sortOrder));
-      
-      return query(baseCollection, ...queries);
-    }, [firestore, statusFilter, sortOrder]);
+      return query(baseCollection, orderBy('submittedAt', sortOrder));
+    }, [firestore, sortOrder]);
 
+    const { data: allQuotes, isLoading: isLoadingQuotes } = useCollection(quotesQuery);
 
-    const { data: quotes, isLoading: isLoadingQuotes } = useCollection(quotesQuery);
+    const filteredQuotes = useMemo(() => {
+        if (!allQuotes) return [];
+        if (statusFilter === 'all') return allQuotes;
+        return allQuotes.filter(quote => quote.status === statusFilter);
+    }, [allQuotes, statusFilter]);
     
     const confirmDelete = async () => {
         if (!quoteToDelete) return;
@@ -174,8 +171,8 @@ export default function QuoteRequestManagement() {
                     </CardHeader>
                     <CardContent>
                          {isLoadingQuotes && <p className="text-center py-8">Loading quotes...</p>}
-                         {!isLoadingQuotes && quotes && quotes.length === 0 && <p className="text-center text-muted-foreground py-8">No quote requests match the current filters.</p>}
-                         {!isLoadingQuotes && quotes && quotes.length > 0 && (
+                         {!isLoadingQuotes && filteredQuotes && filteredQuotes.length === 0 && <p className="text-center text-muted-foreground py-8">No quote requests match the current filters.</p>}
+                         {!isLoadingQuotes && filteredQuotes && filteredQuotes.length > 0 && (
                              <Table>
                                  <TableHeader>
                                      <TableRow>
@@ -188,7 +185,7 @@ export default function QuoteRequestManagement() {
                                      </TableRow>
                                  </TableHeader>
                                  <TableBody>
-                                    {quotes.map((quote) => (
+                                    {filteredQuotes.map((quote) => (
                                         <TableRow key={quote.id}>
                                             <TableCell>
                                               <div className="flex items-center space-x-2">
