@@ -87,8 +87,8 @@ export default function ContactSubmissionManagement() {
 
 
     const submissionsQuery = useMemoFirebase(() => {
-      const baseCollection = collection(firestore, 'contact_form_submissions');
-      return query(baseCollection, orderBy('submittedAt', sortOrder));
+        if (!firestore) return null;
+        return query(collection(firestore, 'contact_form_submissions'), orderBy('submittedAt', sortOrder));
     }, [firestore, sortOrder]);
 
     const { data: allSubmissions, isLoading: isLoadingSubmissions } = useCollection(submissionsQuery);

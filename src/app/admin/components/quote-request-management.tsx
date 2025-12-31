@@ -100,8 +100,8 @@ export default function QuoteRequestManagement() {
 
 
     const quotesQuery = useMemoFirebase(() => {
-      const baseCollection = collection(firestore, 'quote_requests');
-      return query(baseCollection, orderBy('submittedAt', sortOrder));
+      if (!firestore) return null;
+      return query(collection(firestore, 'quote_requests'), orderBy('submittedAt', sortOrder));
     }, [firestore, sortOrder]);
 
     const { data: allQuotes, isLoading: isLoadingQuotes } = useCollection(quotesQuery);
