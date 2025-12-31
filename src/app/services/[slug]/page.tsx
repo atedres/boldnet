@@ -18,15 +18,16 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { t } = useLanguage();
+  const { slug } = params;
 
   useEffect(() => {
-    if (!firestore || !params.slug) return;
+    if (!firestore || !slug) return;
 
     const fetchService = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const q = query(collection(firestore, 'services'), where('slug', '==', params.slug));
+        const q = query(collection(firestore, 'services'), where('slug', '==', slug));
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
@@ -44,7 +45,7 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
     };
 
     fetchService();
-  }, [firestore, params.slug]);
+  }, [firestore, slug]);
 
   const renderContent = () => {
     if (isLoading) {
