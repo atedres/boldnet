@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { Award, Zap, Target, ArrowRight, Presentation } from 'lucide-react';
+import { Award, Zap, Target, ArrowRight, Presentation, Video } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -13,6 +13,28 @@ import { DynamicIcon } from '@/components/ui/dynamic-icon';
 import Header from '@/app/components/header';
 import Footer from '@/app/components/footer';
 import ContactSection from '@/app/components/contact-section';
+
+// --- Helper Functions ---
+function getYouTubeEmbedUrl(url: string) {
+    if (!url) return null;
+    let videoId = null;
+    try {
+        const urlObj = new URL(url);
+        if (urlObj.hostname === 'youtu.be') {
+            videoId = urlObj.pathname.slice(1);
+        } else if (urlObj.hostname === 'www.youtube.com' || urlObj.hostname === 'youtube.com') {
+            videoId = urlObj.searchParams.get('v');
+        }
+    } catch (error) {
+        console.error("Invalid YouTube URL:", url);
+        return null;
+    }
+
+    if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}`;
+    }
+    return null;
+}
 
 // Re-usable section components from the main page dynamic sections
 function FeatureGridSection({ content }: { content: any }) {
@@ -106,10 +128,55 @@ function TextImageSection({ content }: { content: any }) {
   );
 }
 
+function YoutubeGallerySection({ content }: { content: any }) {
+    if (!content.videos || content.videos.length === 0) {
+        return null;
+    }
+    return (
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-background">
+            <div className="container px-4 md:px-6">
+                <div className="flex flex-col items-center justify-center space-y-4 text-center">
+                    <h2 className="text-3xl font-bold tracking-tight sm:text-5xl font-headline">
+                        {content.title || 'Our Video Gallery'}
+                    </h2>
+                </div>
+                <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-1 md:grid-cols-2 lg:max-w-none mt-12">
+                    {content.videos.map((video: any, index: number) => {
+                        const embedUrl = getYouTubeEmbedUrl(video.youtubeUrl);
+                        if (!embedUrl) return null;
+
+                        return (
+                            <Card key={index} className="overflow-hidden">
+                                <div className="aspect-video relative">
+                                    <iframe
+                                        src={embedUrl}
+                                        title={video.title}
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        className="w-full h-full"
+                                    ></iframe>
+                                </div>
+                                <CardHeader>
+                                    <CardTitle>{video.title}</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-muted-foreground">{video.description}</p>
+                                </CardContent>
+                            </Card>
+                        );
+                    })}
+                </div>
+            </div>
+        </section>
+    );
+}
+
 const sectionComponents = {
   'feature-grid': FeatureGridSection,
   'cta': CTASection,
   'text-image': TextImageSection,
+  'youtube-gallery': YoutubeGallerySection,
 };
 
 function DynamicSectionsRenderer({ sections }: { sections: any[] }) {

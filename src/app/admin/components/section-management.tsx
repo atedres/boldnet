@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Layers, Trash2, Edit, Award, Zap, Target, ImageIcon, MessageSquare, GripVertical, Briefcase, Users, Workflow, EyeOff, Eye } from 'lucide-react';
+import { Layers, Trash2, Edit, Award, Zap, Target, ImageIcon, MessageSquare, GripVertical, Briefcase, Users, Workflow, EyeOff, Eye, Plus, Video } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { ImageUpload } from '@/components/ui/image-upload';
 import {
@@ -74,6 +74,19 @@ const sectionTemplates = [
     },
   },
   {
+    type: 'youtube-gallery',
+    name: 'YouTube Video Gallery',
+    description: 'Display a list of YouTube videos with titles and descriptions.',
+    icon: <Video className="w-8 h-8" />,
+    defaultContent: {
+      title: 'Our Latest Work',
+      videos: [
+        { youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', title: 'Project Showcase 1', description: 'An overview of our first major project, highlighting the key features and outcomes.' },
+        { youtubeUrl: 'https://www.youtube.com/watch?v=3JZ_D3ELwOQ', title: 'Client Testimonial', description: 'A satisfied client shares their experience working with our team.' },
+      ],
+    },
+  },
+  {
     type: 'services-overview',
     name: 'Services Overview',
     description: 'Displays the main services section.',
@@ -114,6 +127,23 @@ function SectionForm({ section, onComplete }: { section?: any; onComplete: () =>
       newColumns[index] = { ...newColumns[index], [field]: value };
       handleContentChange('columns', newColumns);
   }
+
+  const handleVideoChange = (index: number, field: string, value: string) => {
+    const newVideos = [...(content.videos || [])];
+    newVideos[index] = { ...newVideos[index], [field]: value };
+    handleContentChange('videos', newVideos);
+  };
+
+  const handleAddVideo = () => {
+      const newVideos = [...(content.videos || []), { youtubeUrl: '', title: 'New Video', description: '' }];
+      handleContentChange('videos', newVideos);
+  };
+
+  const handleRemoveVideo = (index: number) => {
+      const newVideos = [...(content.videos || [])];
+      newVideos.splice(index, 1);
+      handleContentChange('videos', newVideos);
+  };
 
   const handleSubmit = async () => {
     if (!section?.id) return; // Should not happen
@@ -223,6 +253,45 @@ function SectionForm({ section, onComplete }: { section?: any; onComplete: () =>
               <Input id="buttonLink" value={content.buttonLink} onChange={(e) => handleContentChange('buttonLink', e.target.value)} />
             </div>
           </>
+        );
+      case 'youtube-gallery':
+        return (
+            <>
+                <div className="grid gap-2">
+                    <Label htmlFor="title">Main Title</Label>
+                    <Input id="title" value={content.title} onChange={(e) => handleContentChange('title', e.target.value)} />
+                </div>
+                <div className="space-y-4">
+                    {content.videos?.map((video: any, index: number) => (
+                        <div key={index} className="grid gap-4 border p-4 rounded-md relative">
+                            <h4 className="font-semibold">Video {index + 1}</h4>
+                            <Button
+                                variant="destructive"
+                                size="icon"
+                                className="absolute top-2 right-2 h-6 w-6"
+                                onClick={() => handleRemoveVideo(index)}
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                            <div className="grid gap-2">
+                                <Label>YouTube URL</Label>
+                                <Input value={video.youtubeUrl} onChange={(e) => handleVideoChange(index, 'youtubeUrl', e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label>Title</Label>
+                                <Input value={video.title} onChange={(e) => handleVideoChange(index, 'title', e.target.value)} />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label>Description</Label>
+                                <Textarea value={video.description} onChange={(e) => handleVideoChange(index, 'description', e.target.value)} />
+                            </div>
+                        </div>
+                    ))}
+                    <Button variant="outline" onClick={handleAddVideo}>
+                        <Plus className="mr-2 h-4 w-4" /> Add Video
+                    </Button>
+                </div>
+            </>
         );
       default:
         return <p>This section type has no configurable content.</p>;
