@@ -73,9 +73,11 @@ function DescriptionEditorModal({ value, onChange, onOpenChange }: { value: stri
 
 function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, onComplete: () => void }) {
   const [name, setName] = useState(serviceToEdit?.name || '');
+  const [slug, setSlug] = useState(serviceToEdit?.slug || '');
   const [description, setDescription] = useState(serviceToEdit?.description || '');
   const [iconName, setIconName] = useState(serviceToEdit?.iconName || '');
   const [iconUrl, setIconUrl] = useState(serviceToEdit?.iconUrl || '');
+  const [imageUrl, setImageUrl] = useState(serviceToEdit?.imageUrl || '');
   const firestore = useFirestore();
   const { toast } = useToast();
   const [isEditingDescription, setIsEditingDescription] = useState(false);
@@ -87,16 +89,16 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
   );
 
   const handleUpload = async () => {
-    if (!name || !description) {
+    if (!name || !description || !slug) {
       toast({
         variant: 'destructive',
         title: 'Missing Information',
-        description: 'Please provide a name and a description.',
+        description: 'Please provide a name, slug, and a description.',
       });
       return;
     }
 
-    const serviceData = { name, description, iconName, iconUrl };
+    const serviceData = { name, slug, description, iconName, iconUrl, imageUrl };
 
     if (serviceToEdit) {
       const docRef = doc(firestore, 'services', serviceToEdit.id);
@@ -109,8 +111,10 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
 
     setName('');
     setDescription('');
+    setSlug('');
     setIconName('');
     setIconUrl('');
+    setImageUrl('');
     onComplete();
   };
   
@@ -123,16 +127,34 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
             {serviceToEdit ? `Editing the service: ${serviceToEdit.name}` : 'Add a new service offered by your agency.'}
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="name">Service Name</Label>
-            <Input
-              id="name"
-              placeholder="e.g., UGC Videos"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+        <CardContent className="grid gap-6">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="name">Service Name</Label>
+              <Input
+                id="name"
+                placeholder="e.g., UGC Videos"
+                value={name}
+                onChange={(e) => {
+                  const newName = e.target.value;
+                  setName(newName);
+                  if (!serviceToEdit?.slug) { // Only auto-update slug for new services
+                    setSlug(newName.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, ''));
+                  }
+                }}
+              />
+            </div>
+             <div className="grid gap-2">
+              <Label htmlFor="slug">URL Slug</Label>
+              <Input
+                id="slug"
+                placeholder="e.g., ugc-videos"
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+              />
+            </div>
           </div>
+
           <div className="grid gap-2">
             <Label>Description</Label>
             <div 
@@ -154,6 +176,14 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
             label="Upload Custom Icon"
             value={iconUrl}
             onChange={(url) => { setIconUrl(url); setIconName('')}}
+          />
+
+          <div className="flex-grow border-t border-muted"></div>
+
+           <ImageUpload 
+            label="Service Detail Page Image"
+            value={imageUrl}
+            onChange={setImageUrl}
           />
         </CardContent>
         <CardFooter className="flex justify-end gap-2">
@@ -243,6 +273,7 @@ export default function ServiceManagement() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Name</TableHead>
+                    <TableHead>Slug</TableHead>
                     <TableHead>Description</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -251,6 +282,7 @@ export default function ServiceManagement() {
                   {services.map((service) => (
                     <TableRow key={service.id}>
                       <TableCell className="font-medium">{service.name}</TableCell>
+                       <TableCell className="text-muted-foreground">/services/{service.slug}</TableCell>
                       <TableCell className="text-muted-foreground max-w-sm truncate">
                         {truncateText(service.description, 100)}
                       </TableCell>

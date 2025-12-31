@@ -64,7 +64,7 @@ export default function ServicesOverview() {
                 </Link>
             </Button>
             <Button variant="link" className="text-muted-foreground hover:text-primary group-hover:text-primary-foreground/80 group-hover:hover:text-primary-foreground" asChild>
-                <Link href="#">
+                <Link href={`/services/${service.slug}`}>
                     En savoir plus <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
             </Button>

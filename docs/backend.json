@@ -45,6 +45,10 @@
           "type": "string",
           "description": "Name of the service."
         },
+        "slug": {
+          "type": "string",
+          "description": "URL-friendly identifier for the service page."
+        },
         "description": {
           "type": "string",
           "description": "Description of the service."
@@ -57,11 +61,17 @@
           "type": "string",
           "description": "URL of a custom uploaded icon for the service.",
           "format": "uri"
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of a hero image for the service detail page.",
+          "format": "uri"
         }
       },
       "required": [
         "id",
         "name",
+        "slug",
         "description"
       ]
     },
