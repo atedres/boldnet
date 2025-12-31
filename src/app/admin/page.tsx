@@ -2,7 +2,7 @@
 import { useUser, FirebaseClientProvider, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -129,7 +129,7 @@ function AdminDashboard() {
                   <CollapsibleTrigger asChild>
                     <Button variant="ghost" className="w-full justify-start gap-2 px-2">
                       <Settings />
-                      <span className="flex-1 text-left">Site & Contenu</span>
+                      <span className="flex-1 text-left">Site & Content</span>
                       <ChevronDown className={cn("transform transition-transform duration-200", isSiteMenuOpen && "rotate-180")} />
                     </Button>
                   </CollapsibleTrigger>
@@ -149,7 +149,7 @@ function AdminDashboard() {
                         onClick={() => setActiveSection('sections')}
                         isActive={activeSection === 'sections'}>
                         <Layers />
-                        Sections
+                        Homepage Sections
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
@@ -195,14 +195,15 @@ function AdminDashboard() {
                     <SidebarMenuButton 
                         onClick={() => setActiveSection('landing-pages')}
                         isActive={activeSection === 'landing-pages'}>
-                        Pages Dynamiques
+                        Dynamic Pages
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                     <SidebarMenuButton 
                         onClick={() => setActiveSection('coded-landing-pages')}
                         isActive={activeSection === 'coded-landing-pages'}>
-                        Pages Codées
+                        <Code className="mr-2" />
+                        Coded Pages
                     </SidebarMenuButton>
                 </SidebarMenuItem>
               </CollapsibleContent>
