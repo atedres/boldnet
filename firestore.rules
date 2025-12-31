@@ -91,7 +91,7 @@ service cloud.firestore {
      * @path /contact_form_submissions/{contactFormSubmissionId}
      */
     match /contact_form_submissions/{contactFormSubmissionId} {
-      allow read, update, delete: if false;
+      allow read, update, delete: if isAdmin();
       allow create: if true;
     }
 
