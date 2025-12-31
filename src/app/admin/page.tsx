@@ -2,7 +2,7 @@
 import { useUser, FirebaseClientProvider, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code, Mail } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code, Mail, Inbox } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -45,7 +45,8 @@ function AdminDashboard() {
   const router = useRouter();
   const auth = useAuth();
   const [activeSection, setActiveSection] = useState<AdminSection>('dashboard');
-  const [isSiteMenuOpen, setIsSiteMenuOpen] = useState(true);
+  const [isSubmissionsMenuOpen, setIsSubmissionsMenuOpen] = useState(true);
+  const [isSiteMenuOpen, setIsSiteMenuOpen] = useState(false);
   const [isLandingPageMenuOpen, setIsLandingPageMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -135,22 +136,37 @@ function AdminDashboard() {
                 {t('adminDashboard')}
               </SidebarMenuButton>
             </SidebarMenuItem>
-             <SidebarMenuItem>
-                <SidebarMenuButton 
-                    onClick={() => setActiveSection('quotes')}
-                    isActive={activeSection === 'quotes'}>
-                    <FileText />
-                    {t('adminQuotes')}
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-                <SidebarMenuButton 
-                    onClick={() => setActiveSection('contacts')}
-                    isActive={activeSection === 'contacts'}>
-                    <Mail />
-                    {t('adminContacts')}
-                </SidebarMenuButton>
-            </SidebarMenuItem>
+            
+            <Collapsible open={isSubmissionsMenuOpen} onOpenChange={setIsSubmissionsMenuOpen}>
+              <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <Button variant="ghost" className="w-full justify-start gap-2 px-2">
+                      <Inbox />
+                      <span className="flex-1 text-left">{t('adminSubmissions')}</span>
+                      <ChevronDown className={cn("transform transition-transform duration-200", isSubmissionsMenuOpen && "rotate-180")} />
+                    </Button>
+                  </CollapsibleTrigger>
+              </SidebarMenuItem>
+
+              <CollapsibleContent className="pl-6 space-y-1">
+                <SidebarMenuItem>
+                    <SidebarMenuButton 
+                        onClick={() => setActiveSection('quotes')}
+                        isActive={activeSection === 'quotes'}>
+                        <FileText />
+                        {t('adminQuotes')}
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton 
+                        onClick={() => setActiveSection('contacts')}
+                        isActive={activeSection === 'contacts'}>
+                        <Mail />
+                        {t('adminContacts')}
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+              </CollapsibleContent>
+            </Collapsible>
             
             <Collapsible open={isSiteMenuOpen} onOpenChange={setIsSiteMenuOpen}>
               <SidebarMenuItem>
