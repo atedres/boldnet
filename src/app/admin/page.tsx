@@ -2,7 +2,7 @@
 import { useUser, FirebaseClientProvider, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code, Mail } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -35,8 +35,9 @@ import CodedLandingPageManagement from './components/coded-landing-page-manageme
 import { useLanguage } from '../context/language-context';
 import LanguageSwitcher from '../components/language-switcher';
 import { ThemeSwitcher } from '../components/theme-switcher';
+import ContactSubmissionManagement from './components/contact-submission-management';
 
-type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'landing-pages' | 'coded-landing-pages';
+type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'contacts' | 'landing-pages' | 'coded-landing-pages';
 
 function AdminDashboard() {
   const { user, isUserLoading } = useUser();
@@ -75,6 +76,7 @@ function AdminDashboard() {
     sections: t('adminHomepageSections'),
     theme: t('adminTheme'),
     quotes: t('adminQuotes'),
+    contacts: t('adminContacts'),
     'landing-pages': t('adminLandingPages'),
     'coded-landing-pages': t('adminCodedPages'),
   };
@@ -93,6 +95,8 @@ function AdminDashboard() {
         return <ThemeManagement />;
       case 'quotes':
         return <QuoteRequestManagement />;
+      case 'contacts':
+        return <ContactSubmissionManagement />;
       case 'landing-pages':
         return <LandingPageManagement />;
       case 'coded-landing-pages':
@@ -137,6 +141,14 @@ function AdminDashboard() {
                     isActive={activeSection === 'quotes'}>
                     <FileText />
                     {t('adminQuotes')}
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+                <SidebarMenuButton 
+                    onClick={() => setActiveSection('contacts')}
+                    isActive={activeSection === 'contacts'}>
+                    <Mail />
+                    {t('adminContacts')}
                 </SidebarMenuButton>
             </SidebarMenuItem>
             
