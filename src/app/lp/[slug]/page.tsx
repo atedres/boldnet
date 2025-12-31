@@ -213,16 +213,15 @@ export default function LandingPage({ params }: { params: { slug: string } }) {
   const [pageData, setPageData] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { slug } = params;
 
   useEffect(() => {
-    if (!firestore || !slug) return;
+    if (!firestore || !params.slug) return;
 
     const fetchPage = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const q = query(collection(firestore, 'landing_pages'), where('slug', '==', slug));
+        const q = query(collection(firestore, 'landing_pages'), where('slug', '==', params.slug));
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
@@ -240,7 +239,7 @@ export default function LandingPage({ params }: { params: { slug: string } }) {
     };
 
     fetchPage();
-  }, [firestore, slug]);
+  }, [firestore, params.slug]);
 
   if (isLoading) {
     return (
