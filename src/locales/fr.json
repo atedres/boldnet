@@ -105,5 +105,21 @@
   "optional": "Optionnel",
   "previous": "Précédent",
   "next": "Suivant",
-  "submitQuote": "Envoyer la demande"
+  "submitQuote": "Envoyer la demande",
+  
+  "adminPanel": "Panneau d'Administration",
+  "adminDashboard": "Tableau de Bord",
+  "adminQuotes": "Devis",
+  "adminSiteContent": "Site & Contenu",
+  "adminTheme": "Thème",
+  "adminHomepageSections": "Sections de l'Accueil",
+  "adminServices": "Services",
+  "adminClients": "Clients",
+  "adminFunnel": "Étapes du Funnel",
+  "adminLandingPages": "Pages de Destination",
+  "adminDynamicPages": "Pages Dynamiques",
+  "adminCodedPages": "Pages Codées",
+  "adminLogout": "Déconnexion",
+  "adminWelcome": "Bienvenue sur votre Tableau de Bord",
+  "adminWelcomeDesc": "Utilisez le menu latéral pour gérer le contenu de votre site. Vous pouvez ajouter, modifier, réorganiser et basculer la visibilité des différentes sections de votre site web public."
 }

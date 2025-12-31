@@ -97,7 +97,7 @@
   "timeline_flexible": "Flexible",
   "budget": "What is your estimated budget?",
   "contactName": "Full Name",
-  "contactNamePlaceholder": "e.g., Jean Dupont",
+  "contactNamePlaceholder": "e.g., John Doe",
   "businessName": "Business Name",
   "businessNamePlaceholder": "e.g., Acme Inc.",
   "businessNameMinLength": "Business name must be at least 2 characters.",
@@ -105,5 +105,21 @@
   "optional": "Optional",
   "previous": "Previous",
   "next": "Next",
-  "submitQuote": "Submit Request"
+  "submitQuote": "Submit Request",
+
+  "adminPanel": "Admin Panel",
+  "adminDashboard": "Dashboard",
+  "adminQuotes": "Quotes",
+  "adminSiteContent": "Site & Content",
+  "adminTheme": "Theme",
+  "adminHomepageSections": "Homepage Sections",
+  "adminServices": "Services",
+  "adminClients": "Clients",
+  "adminFunnel": "Funnel Steps",
+  "adminLandingPages": "Landing Pages",
+  "adminDynamicPages": "Dynamic Pages",
+  "adminCodedPages": "Coded Pages",
+  "adminLogout": "Logout",
+  "adminWelcome": "Welcome to your Dashboard",
+  "adminWelcomeDesc": "Use the sidebar to manage your site content. You can add, edit, reorder, and toggle the visibility of different sections of your public website."
 }

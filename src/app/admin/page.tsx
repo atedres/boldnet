@@ -32,11 +32,15 @@ import QuoteRequestManagement from './components/quote-request-management';
 import { cn } from '@/lib/utils';
 import LandingPageManagement from './components/landing-page-management';
 import CodedLandingPageManagement from './components/coded-landing-page-management';
+import { useLanguage } from '../context/language-context';
+import LanguageSwitcher from '../components/language-switcher';
+import { ThemeSwitcher } from '../components/theme-switcher';
 
 type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'landing-pages' | 'coded-landing-pages';
 
 function AdminDashboard() {
   const { user, isUserLoading } = useUser();
+  const { t } = useLanguage();
   const router = useRouter();
   const auth = useAuth();
   const [activeSection, setActiveSection] = useState<AdminSection>('dashboard');
@@ -63,6 +67,18 @@ function AdminDashboard() {
     );
   }
 
+  const sectionTitles: Record<AdminSection, string> = {
+    dashboard: t('adminDashboard'),
+    clients: t('adminClients'),
+    services: t('adminServices'),
+    funnel: t('adminFunnel'),
+    sections: t('adminHomepageSections'),
+    theme: t('adminTheme'),
+    quotes: t('adminQuotes'),
+    'landing-pages': t('adminLandingPages'),
+    'coded-landing-pages': t('adminCodedPages'),
+  };
+
   const renderContent = () => {
     switch (activeSection) {
       case 'clients':
@@ -87,8 +103,8 @@ function AdminDashboard() {
             <div className="text-center max-w-2xl w-full flex flex-col gap-8">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Welcome to your Dashboard</CardTitle>
-                        <CardDescription>Use the sidebar to manage your site content. You can add, edit, reorder, and toggle the visibility of different sections of your public website.</CardDescription>
+                        <CardTitle>{t('adminWelcome')}</CardTitle>
+                        <CardDescription>{t('adminWelcomeDesc')}</CardDescription>
                     </CardHeader>
                 </Card>
             </div>
@@ -101,7 +117,7 @@ function AdminDashboard() {
       <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-semibold">Admin Panel</h2>
+            <h2 className="text-lg font-semibold">{t('adminPanel')}</h2>
           </div>
         </SidebarHeader>
         <SidebarContent className="mt-4">
@@ -112,7 +128,7 @@ function AdminDashboard() {
                 isActive={activeSection === 'dashboard'}
               >
                 <LayoutDashboard />
-                Dashboard
+                {t('adminDashboard')}
               </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
@@ -120,7 +136,7 @@ function AdminDashboard() {
                     onClick={() => setActiveSection('quotes')}
                     isActive={activeSection === 'quotes'}>
                     <FileText />
-                    Quotes
+                    {t('adminQuotes')}
                 </SidebarMenuButton>
             </SidebarMenuItem>
             
@@ -129,7 +145,7 @@ function AdminDashboard() {
                   <CollapsibleTrigger asChild>
                     <Button variant="ghost" className="w-full justify-start gap-2 px-2">
                       <Settings />
-                      <span className="flex-1 text-left">Site & Content</span>
+                      <span className="flex-1 text-left">{t('adminSiteContent')}</span>
                       <ChevronDown className={cn("transform transition-transform duration-200", isSiteMenuOpen && "rotate-180")} />
                     </Button>
                   </CollapsibleTrigger>
@@ -141,7 +157,7 @@ function AdminDashboard() {
                         onClick={() => setActiveSection('theme')}
                         isActive={activeSection === 'theme'}>
                         <Palette />
-                        Theme
+                        {t('adminTheme')}
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
@@ -149,7 +165,7 @@ function AdminDashboard() {
                         onClick={() => setActiveSection('sections')}
                         isActive={activeSection === 'sections'}>
                         <Layers />
-                        Homepage Sections
+                        {t('adminHomepageSections')}
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
@@ -157,7 +173,7 @@ function AdminDashboard() {
                         onClick={() => setActiveSection('services')}
                         isActive={activeSection === 'services'}>
                         <Briefcase />
-                        Services
+                        {t('adminServices')}
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                  <SidebarMenuItem>
@@ -165,7 +181,7 @@ function AdminDashboard() {
                         onClick={() => setActiveSection('clients')}
                         isActive={activeSection === 'clients'}>
                         <Users />
-                        Clients
+                        {t('adminClients')}
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
@@ -173,7 +189,7 @@ function AdminDashboard() {
                         onClick={() => setActiveSection('funnel')}
                         isActive={activeSection === 'funnel'}>
                         <Workflow />
-                        Funnel Steps
+                        {t('adminFunnel')}
                     </SidebarMenuButton>
                 </SidebarMenuItem>
               </CollapsibleContent>
@@ -184,7 +200,7 @@ function AdminDashboard() {
                   <CollapsibleTrigger asChild>
                     <Button variant="ghost" className="w-full justify-start gap-2 px-2">
                       <Presentation />
-                      <span className="flex-1 text-left">Landing Pages</span>
+                      <span className="flex-1 text-left">{t('adminLandingPages')}</span>
                       <ChevronDown className={cn("transform transition-transform duration-200", isLandingPageMenuOpen && "rotate-180")} />
                     </Button>
                   </CollapsibleTrigger>
@@ -195,7 +211,7 @@ function AdminDashboard() {
                     <SidebarMenuButton 
                         onClick={() => setActiveSection('landing-pages')}
                         isActive={activeSection === 'landing-pages'}>
-                        Dynamic Pages
+                        {t('adminDynamicPages')}
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
@@ -203,7 +219,7 @@ function AdminDashboard() {
                         onClick={() => setActiveSection('coded-landing-pages')}
                         isActive={activeSection === 'coded-landing-pages'}>
                         <Code className="mr-2" />
-                        Coded Pages
+                        {t('adminCodedPages')}
                     </SidebarMenuButton>
                 </SidebarMenuItem>
               </CollapsibleContent>
@@ -216,7 +232,7 @@ function AdminDashboard() {
             <SidebarMenuItem>
               <SidebarMenuButton onClick={handleLogout}>
                 <LogOut />
-                Logout
+                {t('adminLogout')}
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -225,7 +241,11 @@ function AdminDashboard() {
       <SidebarInset>
         <header className="flex h-14 items-center justify-start gap-4 border-b bg-background px-4 sm:px-6">
             <SidebarTrigger className="md:flex" />
-            <h1 className="text-xl font-semibold capitalize">{activeSection.replace('-', ' ')}</h1>
+            <h1 className="text-xl font-semibold capitalize flex-1">{sectionTitles[activeSection]}</h1>
+            <div className="flex items-center gap-2">
+                <ThemeSwitcher />
+                <LanguageSwitcher />
+            </div>
         </header>
         <main className="flex-1 overflow-auto p-4 sm:p-6">
           <div className="flex items-center justify-center">
@@ -241,7 +261,7 @@ function AdminDashboard() {
 export default function Admin() {
   return (
     <FirebaseClientProvider>
-      <AdminDashboard />
+        <AdminDashboard />
     </FirebaseClientProvider>
   );
 }
