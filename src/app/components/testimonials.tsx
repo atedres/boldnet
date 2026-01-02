@@ -74,7 +74,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
                         {testimonial.source?.toLowerCase() === 'google' && <GoogleIcon />}
                     </div>
                     <StarRating rating={testimonial.rating} />
-                    <p className="mt-4 text-neutral-300 flex-grow">
+                    <p className="mt-4 text-neutral-300 flex-grow break-words">
                         {displayedReview}
                         {isTruncated && (
                             <DialogTrigger asChild>
