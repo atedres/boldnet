@@ -1,6 +1,6 @@
 'use client';
 
-import { Instagram, Linkedin, Twitter, Zap, Mail, Phone, MapPin } from 'lucide-react';
+import { Instagram, Linkedin, Facebook, Zap, Mail, Phone, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/app/context/language-context';
 
@@ -32,8 +32,8 @@ export default function Footer() {
               <a href="https://www.instagram.com/boldnetdigital/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="mx-2 text-gray-400 transition-colors duration-300 hover:text-primary">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" aria-label="Twitter" className="mx-2 text-gray-400 transition-colors duration-300 hover:text-primary">
-                <Twitter className="w-5 h-5" />
+              <a href="https://web.facebook.com/profile.php?id=61580707476970" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="mx-2 text-gray-400 transition-colors duration-300 hover:text-primary">
+                <Facebook className="w-5 h-5" />
               </a>
               <a href="#" aria-label="LinkedIn" className="mx-2 text-gray-400 transition-colors duration-300 hover:text-primary">
                 <Linkedin className="w-5 h-5" />
