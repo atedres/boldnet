@@ -98,7 +98,7 @@ export default function Hero() {
                 {displayedService}
             </div>
         </div>
-        <p className="leading-7 [&:not(:first-child)]:mt-6 text-lg text-muted-foreground max-w-2xl mx-auto">
+        <p className="leading-7 [&:not(:first-child)]:mt-6 text-lg text-muted-foreground max-w-2xl mx-auto dark:text-gray-300">
           <span dangerouslySetInnerHTML={{ __html: content.description }} />
         </p>
       </div>
