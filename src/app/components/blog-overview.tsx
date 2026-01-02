@@ -64,7 +64,7 @@ export default function BlogOverview({ content }: { content: any }) {
     
     return (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map(renderPostCard)}
+            {posts.map(post => <div key={post.id}>{renderPostCard(post)}</div>)}
         </div>
     )
   }
