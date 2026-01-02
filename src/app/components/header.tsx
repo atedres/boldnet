@@ -77,6 +77,9 @@ export default function Header() {
             <Link href="#team" className="transition-colors hover:text-foreground/80 text-foreground/80 font-medium">
                 {t('team')}
             </Link>
+             <Link href="#blog" className="transition-colors hover:text-foreground/80 text-foreground/80 font-medium">
+                {t('blog')}
+            </Link>
              <Link href="#contact" className="transition-colors hover:text-foreground/80 text-foreground/80 font-medium">
                 {t('contactUs')}
             </Link>
@@ -104,6 +107,7 @@ export default function Header() {
                     <Link href="#funnel" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('highPerformanceFunnel')}</Link>
                     <Link href="#testimonials" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('testimonials')}</Link>
                     <Link href="#team" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('team')}</Link>
+                    <Link href="#blog" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('blog')}</Link>
                     <Link href="#contact" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('contactUs')}</Link>
                      <Button asChild className="mt-4">
                         <Link href="#contact" onClick={() => setIsMobileMenuOpen(false)}>{t('discuss')}</Link>

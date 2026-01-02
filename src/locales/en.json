@@ -137,13 +137,7 @@
   "submissionDeletedTitle": "Submission Deleted",
   "submissionDeletedMessage": "Submission from \"{0}\" has been removed.",
   "submissionDeleteError": "Could not delete the submission.",
-  "manageContactSubmissions": "Manage Contact Submissions",
-  "manageContactSubmissionsDesc": "View, filter, and manage messages submitted through your contact form.",
-  "searchByNameOrEmail": "Search by name or email...",
-  "toggleSortOrder": "Toggle Sort Order",
-  "loadingSubmissions": "Loading submissions...",
-  "noSubmissionsMatchFilters": "No submissions match the current filters.",
-  "deleteSubmissionConfirmation": "This action cannot be undone. This will permanently delete the submission from {0}.",
   "testimonials": "Testimonials",
-  "team": "Team"
+  "team": "Team",
+  "blog": "Blog"
 }

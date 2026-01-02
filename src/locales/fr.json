@@ -137,13 +137,7 @@
   "submissionDeletedTitle": "Soumission supprimée",
   "submissionDeletedMessage": "La soumission de \"{0}\" a été supprimée.",
   "submissionDeleteError": "Impossible de supprimer la soumission.",
-  "manageContactSubmissions": "Gérer les soumissions de contact",
-  "manageContactSubmissionsDesc": "Consultez, filtrez et gérez les messages soumis via votre formulaire de contact.",
-  "searchByNameOrEmail": "Rechercher par nom ou e-mail...",
-  "toggleSortOrder": "Changer l'ordre de tri",
-  "loadingSubmissions": "Chargement des soumissions...",
-  "noSubmissionsMatchFilters": "Aucune soumission ne correspond aux filtres actuels.",
-  "deleteSubmissionConfirmation": "Cette action est irréversible. Cela supprimera définitivement la soumission de {0}.",
   "testimonials": "Avis",
-  "team": "Équipe"
+  "team": "Équipe",
+  "blog": "Blog"
 }

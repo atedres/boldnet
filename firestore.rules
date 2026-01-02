@@ -20,6 +20,7 @@
  * - /coded_landing_pages/{codedLandingPageId}: Admin-only landing page metadata.
  * - /testimonials/{testimonialId}: Publicly readable client testimonials.
  * - /team_members/{memberId}: Publicly readable team member information.
+ * - /blog_posts/{postId}: Publicly readable blog posts.
  *
  * Key Security Decisions:
  * - Public Read, Admin Write: All informational collections are publicly readable.
@@ -165,6 +166,15 @@ service cloud.firestore {
      * @path /team_members/{memberId}
      */
     match /team_members/{memberId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    /**
+     * @description Manages blog posts.
+     * @path /blog_posts/{postId}
+     */
+    match /blog_posts/{postId} {
       allow read: if true;
       allow write: if isAdmin();
     }

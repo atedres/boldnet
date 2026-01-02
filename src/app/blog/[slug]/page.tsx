@@ -1,20 +1,19 @@
 'use client';
 
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy } from 'firebase/firestore';
-import { Award, Zap, Target, ArrowRight, Video } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { Award, Zap, Target, ArrowRight, Presentation, Video } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import ServicesOverview from './services-overview';
-import ClientShowcase from './client-showcase';
-import FunnelDisplay from './funnel-display';
-import Testimonials from './testimonials';
 import { DynamicIcon } from '@/components/ui/dynamic-icon';
-import TeamSection from './team-section';
-import BlogOverview from './blog-overview';
+import Header from '@/app/components/header';
+import Footer from '@/app/components/footer';
+import ContactSection from '@/app/components/contact-section';
+import { format } from 'date-fns';
 
 // --- Helper Functions ---
 function getYouTubeEmbedUrl(url: string) {
@@ -38,9 +37,7 @@ function getYouTubeEmbedUrl(url: string) {
     return null;
 }
 
-
-// --- Template Components ---
-
+// Re-usable section components
 function FeatureGridSection({ content }: { content: any }) {
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 bg-background">
@@ -181,48 +178,133 @@ const sectionComponents = {
   'cta': CTASection,
   'text-image': TextImageSection,
   'youtube-gallery': YoutubeGallerySection,
-  'services-overview': ServicesOverview,
-  'client-showcase': ClientShowcase,
-  'funnel-display': FunnelDisplay,
-  'testimonials': Testimonials,
-  'team': TeamSection,
-  'blog-overview': BlogOverview
 };
 
-export default function DynamicSections() {
+function DynamicSectionsRenderer({ sections }: { sections: any[] }) {
+    if (!sections || sections.length === 0) {
+        return null;
+    }
+  
+    const visibleSections = sections
+        .filter(section => section.visible !== false)
+        .sort((a,b) => a.order - b.order);
+
+    return (
+        <>
+            {visibleSections.map((section) => {
+                const SectionComponent = sectionComponents[section.type as keyof typeof sectionComponents];
+                if (!SectionComponent) {
+                    return null;
+                }
+                return <SectionComponent key={section.id} content={section.content} />;
+            })}
+        </>
+    );
+}
+
+export default function BlogPostPage({ params }: { params: { slug: string } }) {
   const firestore = useFirestore();
-  const sectionsQuery = useMemoFirebase(
-    () => query(collection(firestore, 'sections'), orderBy('order')),
-    [firestore]
-  );
-  const { data: sections, isLoading } = useCollection(sectionsQuery);
+  const [postData, setPostData] = useState<any | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!firestore || !params.slug) return;
+
+    const fetchPost = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const q = query(collection(firestore, 'blog_posts'), where('slug', '==', params.slug));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          setError('Blog post not found');
+        } else {
+          const doc = querySnapshot.docs[0];
+          setPostData({ id: doc.id, ...doc.data() });
+        }
+      } catch (e) {
+        console.error("Error fetching blog post:", e);
+        setError('Error loading page');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPost();
+  }, [firestore, params.slug]);
+  
+  const renderHeader = () => {
+      if (!postData) return null;
+      return (
+        <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-28">
+            <div className="absolute inset-0">
+                {postData.imageUrl ? (
+                    <Image
+                        src={postData.imageUrl}
+                        alt={postData.title}
+                        fill
+                        className="object-cover opacity-20"
+                    />
+                ) : (
+                    <div className="bg-muted w-full h-full"></div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
+            </div>
+            <div className="container relative text-center">
+                <h1 className="text-4xl md:text-6xl font-extrabold font-headline tracking-tight">
+                    {postData.title}
+                </h1>
+                {postData.createdAt && (
+                     <p className="mt-4 text-muted-foreground">
+                        Posted on {format(postData.createdAt.toDate(), 'PPP')}
+                    </p>
+                )}
+            </div>
+        </section>
+      )
+  }
 
   if (isLoading) {
     return (
-        <section className="w-full py-12 md:py-24 lg:py-32">
-            <div className="container px-4 md:px-6 text-center">Loading sections...</div>
-      </section>
+        <div className="flex flex-col min-h-dvh bg-background">
+            <Header />
+            <main className="flex-1 flex items-center justify-center">
+                 <p>Loading Post...</p>
+            </main>
+            <Footer />
+        </div>
     );
   }
 
-  if (!sections || sections.length === 0) {
-    return null;
+  if (error) {
+     return (
+        <div className="flex flex-col min-h-dvh bg-background">
+            <Header />
+            <main className="flex-1 flex items-center justify-center text-center">
+                 <div>
+                    <h1 className="text-4xl font-bold">404</h1>
+                    <p className="text-muted-foreground">{error}</p>
+                    <Button asChild variant="link" className="mt-4"><Link href="/">Go back home</Link></Button>
+                 </div>
+            </main>
+            <Footer />
+        </div>
+    );
   }
   
-  const visibleSections = sections.filter(section => section.visible !== false);
-
   return (
-    <>
-      {visibleSections.map((section) => {
-        const SectionComponent = sectionComponents[section.type as keyof typeof sectionComponents];
-        if (!SectionComponent) {
-          console.warn(`Unknown section type: ${section.type}`);
-          return null;
-        }
-        // For static components, we just render them. For dynamic ones, we pass content.
-        // @ts-ignore
-        return <SectionComponent key={section.id} content={section.content} />;
-      })}
-    </>
+    <div className="flex flex-col min-h-dvh bg-background">
+        <Header />
+        <main className="flex-1">
+            {renderHeader()}
+            <div className="container py-8 max-w-4xl">
+                 <DynamicSectionsRenderer sections={postData?.content || []} />
+            </div>
+            <ContactSection />
+        </main>
+        <Footer />
+    </div>
   );
 }

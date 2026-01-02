@@ -2,7 +2,7 @@
 import { useUser, FirebaseClientProvider, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code, Mail, Inbox, Star, UserSquare } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code, Mail, Inbox, Star, UserSquare, Rss } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -38,8 +38,9 @@ import { ThemeSwitcher } from '../components/theme-switcher';
 import ContactSubmissionManagement from './components/contact-submission-management';
 import TestimonialManagement from './components/testimonial-management';
 import TeamManagement from './components/team-management';
+import BlogManagement from './components/blog-management';
 
-type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'contacts' | 'landing-pages' | 'coded-landing-pages' | 'testimonials' | 'team';
+type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'contacts' | 'landing-pages' | 'coded-landing-pages' | 'testimonials' | 'team' | 'blog';
 
 function AdminDashboard() {
   const { user, isUserLoading } = useUser();
@@ -83,7 +84,8 @@ function AdminDashboard() {
     'landing-pages': t('adminLandingPages'),
     'coded-landing-pages': t('adminCodedPages'),
     testimonials: 'Témoignages',
-    team: 'Équipe'
+    team: 'Équipe',
+    blog: 'Blog'
   };
 
   const renderContent = () => {
@@ -110,6 +112,8 @@ function AdminDashboard() {
         return <TestimonialManagement />;
       case 'team':
         return <TeamManagement />;
+      case 'blog':
+        return <BlogManagement />;
       case 'dashboard':
       default:
         return (
@@ -202,6 +206,14 @@ function AdminDashboard() {
                         isActive={activeSection === 'sections'}>
                         <Layers />
                         {t('adminHomepageSections')}
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                    <SidebarMenuButton 
+                        onClick={() => setActiveSection('blog')}
+                        isActive={activeSection === 'blog'}>
+                        <Rss />
+                        Blog
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
