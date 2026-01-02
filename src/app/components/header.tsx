@@ -68,11 +68,14 @@ export default function Header() {
             <Link href="#services" className="transition-colors hover:text-foreground/80 text-foreground/80 font-medium">
                 {t('ourServices')}
             </Link>
-            <Link href="#clients" className="transition-colors hover:text-foreground/80 text-foreground/80 font-medium">
-                {t('trustedBy')}
-            </Link>
              <Link href="#funnel" className="transition-colors hover:text-foreground/80 text-foreground/80 font-medium">
                 {t('highPerformanceFunnel')}
+            </Link>
+             <Link href="#testimonials" className="transition-colors hover:text-foreground/80 text-foreground/80 font-medium">
+                {t('testimonials')}
+            </Link>
+            <Link href="#team" className="transition-colors hover:text-foreground/80 text-foreground/80 font-medium">
+                {t('team')}
             </Link>
              <Link href="#contact" className="transition-colors hover:text-foreground/80 text-foreground/80 font-medium">
                 {t('contactUs')}
@@ -98,8 +101,9 @@ export default function Header() {
                         <SiteLogo />
                     </Link>
                     <Link href="#services" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('ourServices')}</Link>
-                    <Link href="#clients" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('trustedBy')}</Link>
                     <Link href="#funnel" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('highPerformanceFunnel')}</Link>
+                    <Link href="#testimonials" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('testimonials')}</Link>
+                    <Link href="#team" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('team')}</Link>
                     <Link href="#contact" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('contactUs')}</Link>
                      <Button asChild className="mt-4">
                         <Link href="#contact" onClick={() => setIsMobileMenuOpen(false)}>{t('discuss')}</Link>

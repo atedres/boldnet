@@ -158,7 +158,7 @@ export default function Testimonials() {
   }
 
   return (
-    <section className="bg-background text-foreground dark:bg-black dark:text-white py-16 md:py-24">
+    <section id="testimonials" className="bg-background text-foreground dark:bg-black dark:text-white py-16 md:py-24">
       <div className="container mx-auto">
         <div className="text-center mb-12">
             <span className="text-sm font-bold text-muted-foreground dark:text-neutral-400 tracking-widest uppercase">Témoignages</span>

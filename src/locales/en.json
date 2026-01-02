@@ -143,5 +143,7 @@
   "toggleSortOrder": "Toggle Sort Order",
   "loadingSubmissions": "Loading submissions...",
   "noSubmissionsMatchFilters": "No submissions match the current filters.",
-  "deleteSubmissionConfirmation": "This action cannot be undone. This will permanently delete the submission from {0}."
+  "deleteSubmissionConfirmation": "This action cannot be undone. This will permanently delete the submission from {0}.",
+  "testimonials": "Testimonials",
+  "team": "Team"
 }

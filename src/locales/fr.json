@@ -143,5 +143,7 @@
   "toggleSortOrder": "Changer l'ordre de tri",
   "loadingSubmissions": "Chargement des soumissions...",
   "noSubmissionsMatchFilters": "Aucune soumission ne correspond aux filtres actuels.",
-  "deleteSubmissionConfirmation": "Cette action est irréversible. Cela supprimera définitivement la soumission de {0}."
+  "deleteSubmissionConfirmation": "Cette action est irréversible. Cela supprimera définitivement la soumission de {0}.",
+  "testimonials": "Avis",
+  "team": "Équipe"
 }
