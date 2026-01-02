@@ -1,24 +1,13 @@
 'use client';
 
-import React from 'react';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import Autoplay from "embla-carousel-autoplay"
+import React, { useMemo } from 'react';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
-import { useIsMobile } from '@/hooks/use-mobile';
-
 
 export default function TeamSection() {
   const firestore = useFirestore();
-  const isMobile = useIsMobile();
   
   const teamQuery = useMemoFirebase(
     () => query(collection(firestore, 'team_members'), orderBy('order')),
@@ -26,19 +15,22 @@ export default function TeamSection() {
   );
   const { data: members, isLoading: isLoadingMembers } = useCollection(teamQuery);
   
-  const plugin = React.useRef(
-    Autoplay({ delay: 3000, stopOnInteraction: true, stopOnMouseEnter: true })
-  )
+  const duplicatedMembers = useMemo(() => {
+    if (!members) return [];
+    // Duplicate for a seamless loop
+    const items = members.length > 0 ? members : [];
+    return [...items, ...items, ...items, ...items];
+  }, [members]);
 
   const renderMemberCard = (member: any) => (
-    <Card key={member.id} className="border-none shadow-none bg-transparent">
+    <Card key={member.id} className="border-none shadow-none bg-transparent flex-shrink-0" style={{ width: '160px' }}>
         <CardContent className="p-0 flex flex-col items-center text-center gap-4">
             <Image 
                 src={member.imageUrl}
                 alt={member.name}
-                width={150}
-                height={150}
-                className="rounded-full object-cover aspect-square w-32 h-32 md:w-40 md:h-40"
+                width={128}
+                height={128}
+                className="rounded-full object-cover aspect-square w-32 h-32"
             />
             <div>
                 <h3 className="font-bold text-lg font-headline">{member.name}</h3>
@@ -50,33 +42,25 @@ export default function TeamSection() {
 
   const renderContent = () => {
     if (isLoadingMembers) {
-        return <p className="text-center">Loading team...</p>
+        return <p className="text-center">Chargement de l'équipe...</p>
     }
 
     if (!members || members.length === 0) {
-        return <p className="text-center text-muted-foreground">No team members available.</p>
+        return <p className="text-center text-muted-foreground">Aucun membre d'équipe disponible.</p>
     }
 
      return (
-         <Carousel 
-            opts={{
-                align: "start",
-                loop: true,
-            }}
-            plugins={[plugin.current]}
-            className="w-full max-w-sm md:max-w-xl lg:max-w-4xl xl:max-w-6xl mx-auto">
-            <CarouselContent>
-                {members.map((member) => (
-                    <CarouselItem key={member.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
-                        <div className="p-1 h-full">
-                            {renderMemberCard(member)}
-                        </div>
-                    </CarouselItem>
+         <div className="relative marquee group">
+            <div className="marquee-content group-hover:[animation-play-state:paused]">
+                {duplicatedMembers.map((member, index) => (
+                    <div key={`${member.id}-${index}`} className="flex-shrink-0" style={{ width: '200px' }}>
+                        {renderMemberCard(member)}
+                    </div>
                 ))}
-            </CarouselContent>
-            <CarouselPrevious className="hidden sm:flex" />
-            <CarouselNext className="hidden sm:flex" />
-        </Carousel>
+            </div>
+             <div className="absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-muted/40 to-transparent"></div>
+             <div className="absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-muted/40 to-transparent"></div>
+        </div>
     )
   }
   
