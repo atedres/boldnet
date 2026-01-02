@@ -18,6 +18,7 @@
  * - /theme_settings/{settingsId}: Publicly readable theme customization.
  * - /landing_pages/{landingPageId}: Publicly readable, admin-writable landing pages.
  * - /coded_landing_pages/{codedLandingPageId}: Admin-only landing page metadata.
+ * - /testimonials/{testimonialId}: Publicly readable client testimonials.
  *
  * Key Security Decisions:
  * - Public Read, Admin Write: All informational collections are publicly readable.
@@ -148,5 +149,16 @@ service cloud.firestore {
     match /coded_landing_pages/{codedLandingPageId} {
       allow read, write: if isAdmin();
     }
+
+    /**
+     * @description Manages client testimonials.
+     * @path /testimonials/{testimonialId}
+     */
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
   }
 }
+
+    
