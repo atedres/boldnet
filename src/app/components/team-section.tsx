@@ -19,7 +19,12 @@ export default function TeamSection() {
     if (!members) return [];
     // Duplicate for a seamless loop
     const items = members.length > 0 ? members : [];
-    return [...items, ...items, ...items, ...items];
+    if (items.length === 0) return [];
+    const baseItems = [...items, ...items, ...items, ...items];
+    while(baseItems.length < 20) { // ensure enough items for a long scroll
+        baseItems.push(...items);
+    }
+    return baseItems;
   }, [members]);
 
   const renderMemberCard = (member: any) => (
@@ -53,13 +58,13 @@ export default function TeamSection() {
          <div className="relative marquee group">
             <div className="marquee-content group-hover:[animation-play-state:paused]">
                 {duplicatedMembers.map((member, index) => (
-                    <div key={`${member.id}-${index}`} className="flex-shrink-0" style={{ width: '200px' }}>
+                    <div key={`${member.id}-${index}`} className="flex-shrink-0 mx-4" style={{ width: '160px' }}>
                         {renderMemberCard(member)}
                     </div>
                 ))}
             </div>
-             <div className="absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-muted/40 to-transparent"></div>
-             <div className="absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-muted/40 to-transparent"></div>
+             <div className="absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-background to-transparent"></div>
+             <div className="absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-background to-transparent"></div>
         </div>
     )
   }
@@ -67,7 +72,7 @@ export default function TeamSection() {
   return (
     <section 
         id="team" 
-        className="w-full py-12 md:py-24 lg:py-32 bg-muted/40 text-foreground"
+        className="w-full py-12 md:py-24 lg:py-32 bg-background text-foreground"
     >
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
