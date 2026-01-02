@@ -55,7 +55,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
 
     return (
         <Dialog>
-            <Card className="bg-red-600 dark:bg-neutral-800/50 border-transparent dark:border-neutral-700 text-white flex flex-col h-full">
+            <Card className="group bg-card dark:bg-neutral-800/50 border dark:border-neutral-700 text-card-foreground dark:text-white flex flex-col h-full transition-colors duration-300 hover:bg-red-600 hover:text-white">
                 <CardContent className="p-6 flex-grow flex flex-col">
                     <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
@@ -68,17 +68,17 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
                             />
                             <div>
                                 <p className="font-semibold">{testimonial.name}</p>
-                                <p className="text-sm text-red-100 dark:text-neutral-400">{testimonial.date}</p>
+                                <p className="text-sm text-muted-foreground dark:text-neutral-400 group-hover:text-red-100">{testimonial.date}</p>
                             </div>
                         </div>
                         {testimonial.source?.toLowerCase() === 'google' && <GoogleIcon />}
                     </div>
                     <StarRating rating={testimonial.rating} />
-                    <p className="mt-4 text-red-50 dark:text-neutral-300 flex-grow break-words">
+                    <p className="mt-4 text-muted-foreground dark:text-neutral-300 group-hover:text-red-50 flex-grow break-words">
                         {displayedReview}
                         {isTruncated && (
                             <DialogTrigger asChild>
-                                <button className="text-yellow-300 dark:text-primary hover:underline ml-1 font-semibold">Lire la suite</button>
+                                <button className="text-primary dark:text-primary group-hover:text-yellow-300 hover:underline ml-1 font-semibold">Lire la suite</button>
                             </DialogTrigger>
                         )}
                     </p>
