@@ -78,7 +78,7 @@ export default function Header() {
         <div className="flex items-center justify-end space-x-2">
           <ThemeSwitcher />
           <LanguageSwitcher />
-          <Button asChild className="hidden md:flex bg-gray-900 text-white hover:bg-gray-800 rounded-full">
+          <Button asChild className="hidden md:flex rounded-full">
             <Link href="#contact">{t('discuss')}</Link>
           </Button>
         </div>
