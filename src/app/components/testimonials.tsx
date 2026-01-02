@@ -103,7 +103,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
                 </DialogHeader>
                 <div className="py-4 space-y-4">
                     <StarRating rating={testimonial.rating} />
-                    <p className="text-neutral-300 whitespace-pre-wrap">{testimonial.review}</p>
+                    <p className="text-neutral-300 whitespace-pre-wrap break-words">{testimonial.review}</p>
                     {testimonial.source?.toLowerCase() === 'google' && (
                         <div className="flex items-center gap-2 text-sm text-neutral-400">
                            <GoogleIcon /> <span>Avis de Google</span>
