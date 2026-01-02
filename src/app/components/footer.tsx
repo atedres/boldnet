@@ -19,8 +19,8 @@ export default function Footer() {
   return (
     <footer className="w-full bg-background dark:bg-gray-900 text-muted-foreground dark:text-gray-300 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
       <div className="container px-6 py-12 mx-auto">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          <div>
+        <div className="grid grid-cols-1 gap-8 text-center sm:text-left sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="flex flex-col items-center sm:items-start">
             <div className="flex items-center gap-2">
               <Zap className="h-6 w-6 text-primary" />
               <span className="text-xl font-bold text-foreground dark:text-white">BoldNet Digital</span>
@@ -41,18 +41,18 @@ export default function Footer() {
             </div>
           </div>
 
-          <div>
+          <div className="flex flex-col items-center sm:items-start">
             <h3 className="text-sm font-bold text-foreground dark:text-white uppercase">Navigation</h3>
-            <div className="flex flex-col items-start mt-4 space-y-4">
+            <div className="flex flex-col items-center sm:items-start mt-4 space-y-4">
               {navLinks.map(link => (
                 <Link key={link.href} href={link.href} className="transition-colors duration-300 hover:underline hover:text-primary">{link.label}</Link>
               ))}
             </div>
           </div>
 
-          <div>
+          <div className="flex flex-col items-center sm:items-start">
             <h3 className="text-sm font-bold text-foreground dark:text-white uppercase">Contact</h3>
-            <div className="flex flex-col items-start mt-4 space-y-4">
+            <div className="flex flex-col items-center sm:items-start mt-4 space-y-4">
                 <p className="flex items-center gap-2">
                     <Mail className="w-5 h-5"/>
                     <span>contact@boldnet.ma</span>
@@ -68,9 +68,9 @@ export default function Footer() {
             </div>
           </div>
 
-          <div>
+          <div className="flex flex-col items-center sm:items-start">
             <h3 className="text-sm font-bold text-foreground dark:text-white uppercase">Légal</h3>
-            <div className="flex flex-col items-start mt-4 space-y-4">
+            <div className="flex flex-col items-center sm:items-start mt-4 space-y-4">
               <a href="#" className="transition-colors duration-300 hover:underline hover:text-primary">Mentions légales</a>
               <a href="#" className="transition-colors duration-300 hover:underline hover:text-primary">Politique de confidentialité</a>
             </div>
