@@ -7,6 +7,14 @@ import {
   CarouselItem,
   CarouselApi,
 } from '@/components/ui/carousel';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog"
 import Autoplay from "embla-carousel-autoplay"
 import { Card, CardContent } from '@/components/ui/card';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
@@ -40,30 +48,72 @@ const StarRating = ({ rating, className }: { rating: number, className?: string 
   };
   
 
-const TestimonialCard = ({ testimonial }: { testimonial: any }) => (
-    <Card className="bg-neutral-800/50 border-neutral-700 text-white flex flex-col h-full">
-        <CardContent className="p-6 flex-grow flex flex-col">
-            <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                    <Image
-                        src={testimonial.avatarUrl}
-                        alt={testimonial.name}
-                        width={48}
-                        height={48}
-                        className="rounded-full object-cover"
-                    />
-                    <div>
-                        <p className="font-semibold">{testimonial.name}</p>
-                        <p className="text-sm text-neutral-400">{testimonial.date}</p>
+const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
+    const TRUNCATE_LENGTH = 150;
+    const isTruncated = testimonial.review.length > TRUNCATE_LENGTH;
+    const displayedReview = isTruncated ? `${testimonial.review.substring(0, TRUNCATE_LENGTH)}...` : testimonial.review;
+
+    return (
+        <Dialog>
+            <Card className="bg-neutral-800/50 border-neutral-700 text-white flex flex-col h-full">
+                <CardContent className="p-6 flex-grow flex flex-col">
+                    <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                            <Image
+                                src={testimonial.avatarUrl}
+                                alt={testimonial.name}
+                                width={48}
+                                height={48}
+                                className="rounded-full object-cover"
+                            />
+                            <div>
+                                <p className="font-semibold">{testimonial.name}</p>
+                                <p className="text-sm text-neutral-400">{testimonial.date}</p>
+                            </div>
+                        </div>
+                        {testimonial.source?.toLowerCase() === 'google' && <GoogleIcon />}
                     </div>
+                    <StarRating rating={testimonial.rating} />
+                    <p className="mt-4 text-neutral-300 flex-grow">
+                        {displayedReview}
+                        {isTruncated && (
+                            <DialogTrigger asChild>
+                                <button className="text-primary hover:underline ml-1 font-semibold">Lire la suite</button>
+                            </DialogTrigger>
+                        )}
+                    </p>
+                </CardContent>
+            </Card>
+
+             <DialogContent className="sm:max-w-lg bg-[#181818] border-neutral-700 text-white">
+                <DialogHeader>
+                    <DialogTitle className="flex items-center gap-4">
+                         <Image
+                            src={testimonial.avatarUrl}
+                            alt={testimonial.name}
+                            width={48}
+                            height={48}
+                            className="rounded-full object-cover"
+                        />
+                        <div>
+                            <p className="font-semibold text-lg">{testimonial.name}</p>
+                            <p className="text-sm text-neutral-400 font-normal">{testimonial.date}</p>
+                        </div>
+                    </DialogTitle>
+                </DialogHeader>
+                <div className="py-4 space-y-4">
+                    <StarRating rating={testimonial.rating} />
+                    <p className="text-neutral-300 whitespace-pre-wrap">{testimonial.review}</p>
+                    {testimonial.source?.toLowerCase() === 'google' && (
+                        <div className="flex items-center gap-2 text-sm text-neutral-400">
+                           <GoogleIcon /> <span>Avis de Google</span>
+                        </div>
+                    )}
                 </div>
-                {testimonial.source?.toLowerCase() === 'google' && <GoogleIcon />}
-            </div>
-            <StarRating rating={testimonial.rating} />
-            <p className="mt-4 text-neutral-300 flex-grow">{testimonial.review}</p>
-        </CardContent>
-    </Card>
-);
+            </DialogContent>
+        </Dialog>
+    );
+};
 
 export default function Testimonials() {
   const firestore = useFirestore();
