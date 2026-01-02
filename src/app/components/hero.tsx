@@ -103,7 +103,7 @@ export default function Hero() {
         </p>
       </div>
       <div className="flex flex-wrap justify-center gap-4 mt-4">
-        <Button asChild size="lg" className="rounded-full bg-gray-900 text-white hover:bg-gray-800">
+        <Button asChild size="lg" className="rounded-full">
           <Link href="#contact">{t('startProject')}</Link>
         </Button>
         <Button asChild size="lg" variant="outline" className="rounded-full">
