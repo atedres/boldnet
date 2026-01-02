@@ -39,7 +39,7 @@ const StarRating = ({ rating, className }: { rating: number, className?: string 
           <Star
             key={i}
             className={`h-4 w-4 ${className} ${
-              i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600 fill-gray-600'
+              i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 dark:text-gray-600 fill-gray-300 dark:fill-gray-600'
             }`}
           />
         ))}
@@ -55,7 +55,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
 
     return (
         <Dialog>
-            <Card className="bg-neutral-800/50 border-neutral-700 text-white flex flex-col h-full">
+            <Card className="bg-red-600 dark:bg-neutral-800/50 border-transparent dark:border-neutral-700 text-white flex flex-col h-full">
                 <CardContent className="p-6 flex-grow flex flex-col">
                     <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
@@ -68,24 +68,24 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
                             />
                             <div>
                                 <p className="font-semibold">{testimonial.name}</p>
-                                <p className="text-sm text-neutral-400">{testimonial.date}</p>
+                                <p className="text-sm text-red-100 dark:text-neutral-400">{testimonial.date}</p>
                             </div>
                         </div>
                         {testimonial.source?.toLowerCase() === 'google' && <GoogleIcon />}
                     </div>
                     <StarRating rating={testimonial.rating} />
-                    <p className="mt-4 text-neutral-300 flex-grow break-words">
+                    <p className="mt-4 text-red-50 dark:text-neutral-300 flex-grow break-words">
                         {displayedReview}
                         {isTruncated && (
                             <DialogTrigger asChild>
-                                <button className="text-primary hover:underline ml-1 font-semibold">Lire la suite</button>
+                                <button className="text-yellow-300 dark:text-primary hover:underline ml-1 font-semibold">Lire la suite</button>
                             </DialogTrigger>
                         )}
                     </p>
                 </CardContent>
             </Card>
 
-             <DialogContent className="sm:max-w-lg bg-[#181818] border-neutral-700 text-white">
+             <DialogContent className="sm:max-w-lg bg-background dark:bg-[#181818] border-neutral-200 dark:border-neutral-700 text-foreground dark:text-white">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-4">
                          <Image
@@ -97,15 +97,15 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
                         />
                         <div>
                             <p className="font-semibold text-lg">{testimonial.name}</p>
-                            <p className="text-sm text-neutral-400 font-normal">{testimonial.date}</p>
+                            <p className="text-sm text-muted-foreground dark:text-neutral-400 font-normal">{testimonial.date}</p>
                         </div>
                     </DialogTitle>
                 </DialogHeader>
                 <div className="py-4 space-y-4">
                     <StarRating rating={testimonial.rating} />
-                    <p className="text-neutral-300 break-all">{testimonial.review}</p>
+                    <p className="text-muted-foreground dark:text-neutral-300 break-all">{testimonial.review}</p>
                     {testimonial.source?.toLowerCase() === 'google' && (
-                        <div className="flex items-center gap-2 text-sm text-neutral-400">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground dark:text-neutral-400">
                            <GoogleIcon /> <span>Avis de Google</span>
                         </div>
                     )}
@@ -158,10 +158,10 @@ export default function Testimonials() {
   }
 
   return (
-    <section className="bg-[#121212] text-white py-16 md:py-24">
+    <section className="bg-white dark:bg-[#121212] text-foreground dark:text-white py-16 md:py-24">
       <div className="container mx-auto">
         <div className="text-center mb-12">
-            <span className="text-sm font-bold text-neutral-400 tracking-widest uppercase">Témoignages</span>
+            <span className="text-sm font-bold text-muted-foreground dark:text-neutral-400 tracking-widest uppercase">Témoignages</span>
             <h2 className="text-4xl md:text-5xl font-bold mt-2 font-headline">Ce que nos clients disent de nous</h2>
         </div>
 
@@ -186,15 +186,15 @@ export default function Testimonials() {
             ))}
           </CarouselContent>
             <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex items-center justify-center gap-4">
-                <Button variant="outline" size="icon" className="rounded-full bg-transparent border-neutral-600 text-neutral-400 hover:bg-neutral-800 hover:text-white" onClick={scrollPrev}>
+                <Button variant="outline" size="icon" className="rounded-full bg-transparent border-neutral-300 dark:border-neutral-600 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-foreground dark:hover:text-white" onClick={scrollPrev}>
                     &lt;
                 </Button>
-                 <div className="text-sm text-neutral-400">
-                    <span className="font-bold text-white">{String(current).padStart(2, '0')}</span>
+                 <div className="text-sm text-muted-foreground dark:text-neutral-400">
+                    <span className="font-bold text-foreground dark:text-white">{String(current).padStart(2, '0')}</span>
                     /
                     <span>{String(testimonials.length).padStart(2, '0')}</span>
                 </div>
-                <Button variant="outline" size="icon" className="rounded-full bg-transparent border-neutral-600 text-neutral-400 hover:bg-neutral-800 hover:text-white" onClick={scrollNext}>
+                <Button variant="outline" size="icon" className="rounded-full bg-transparent border-neutral-300 dark:border-neutral-600 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-foreground dark:hover:text-white" onClick={scrollNext}>
                     &gt;
                 </Button>
             </div>
