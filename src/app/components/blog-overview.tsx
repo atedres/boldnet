@@ -22,7 +22,7 @@ export default function BlogOverview({ content }: { content: any }) {
   const { data: posts, isLoading: isLoadingPosts } = useCollection(postsQuery);
 
   const renderPostCard = (post: any) => (
-    <Link href={`/blog/${post.slug}`} className="group flex flex-col gap-4 text-white">
+    <Link href={`/blog/${post.slug}`} className="group flex flex-col gap-4 text-foreground dark:text-white">
         <div className="overflow-hidden relative">
              {post.imageUrl ? (
                 <Image 
@@ -43,7 +43,7 @@ export default function BlogOverview({ content }: { content: any }) {
         </div>
        <div className="flex flex-col flex-grow">
             <h3 className="text-xl font-bold font-headline mb-3 flex-grow">{post.title}</h3>
-            <p className="text-neutral-400 line-clamp-3 mb-4">
+            <p className="text-muted-foreground dark:text-neutral-400 line-clamp-3 mb-4">
                 {post.excerpt}
             </p>
              <span className="font-semibold tracking-widest text-sm group-hover:text-primary transition-colors">
@@ -55,11 +55,11 @@ export default function BlogOverview({ content }: { content: any }) {
 
   const renderContent = () => {
     if (isLoadingPosts) {
-        return <p className="text-center text-white">Loading posts...</p>
+        return <p className="text-center">Loading posts...</p>
     }
 
     if (!posts || posts.length === 0) {
-        return <p className="text-center text-neutral-400">No blog posts available yet.</p>
+        return <p className="text-center text-muted-foreground">No blog posts available yet.</p>
     }
     
     return (
@@ -72,7 +72,7 @@ export default function BlogOverview({ content }: { content: any }) {
   return (
     <section 
         id="blog" 
-        className="w-full py-12 md:py-24 lg:py-32 bg-black text-white"
+        className="w-full py-12 md:py-24 lg:py-32 bg-background dark:bg-black text-foreground dark:text-white"
     >
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -80,7 +80,7 @@ export default function BlogOverview({ content }: { content: any }) {
             <h2 className="text-3xl font-bold tracking-tight sm:text-5xl font-headline">
               {content?.title || 'From the Blog'}
             </h2>
-            <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-neutral-400">
+            <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-muted-foreground dark:text-neutral-400">
               {content?.subtitle || 'Check out our latest articles and insights.'}
             </p>
           </div>
