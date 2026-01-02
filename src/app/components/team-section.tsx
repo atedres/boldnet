@@ -8,6 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import Autoplay from "embla-carousel-autoplay"
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import Image from 'next/image';
@@ -24,6 +25,10 @@ export default function TeamSection() {
     [firestore]
   );
   const { data: members, isLoading: isLoadingMembers } = useCollection(teamQuery);
+  
+  const plugin = React.useRef(
+    Autoplay({ delay: 3000, stopOnInteraction: true, stopOnMouseEnter: true })
+  )
 
   const renderMemberCard = (member: any) => (
     <Card key={member.id} className="border-none shadow-none bg-transparent">
@@ -52,35 +57,26 @@ export default function TeamSection() {
         return <p className="text-center text-muted-foreground">No team members available.</p>
     }
 
-    const useCarouselView = (isMobile && members.length > 1) || members.length > 3;
-
-    if (useCarouselView) {
-        return (
-             <Carousel 
-                opts={{
-                    align: "start",
-                    loop: true,
-                }}
-                className="w-full max-w-sm md:max-w-xl lg:max-w-4xl xl:max-w-6xl mx-auto">
-                <CarouselContent>
-                    {members.map((member) => (
-                        <CarouselItem key={member.id} className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
-                            <div className="p-1 h-full">
-                                {renderMemberCard(member)}
-                            </div>
-                        </CarouselItem>
-                    ))}
-                </CarouselContent>
-                <CarouselPrevious className="hidden sm:flex" />
-                <CarouselNext className="hidden sm:flex" />
-            </Carousel>
-        )
-    }
-
-    return (
-        <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch gap-8 mt-12">
-            {members.map(member => <div key={member.id} className="h-full">{renderMemberCard(member)}</div>)}
-        </div>
+     return (
+         <Carousel 
+            opts={{
+                align: "start",
+                loop: true,
+            }}
+            plugins={[plugin.current]}
+            className="w-full max-w-sm md:max-w-xl lg:max-w-4xl xl:max-w-6xl mx-auto">
+            <CarouselContent>
+                {members.map((member) => (
+                    <CarouselItem key={member.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
+                        <div className="p-1 h-full">
+                            {renderMemberCard(member)}
+                        </div>
+                    </CarouselItem>
+                ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden sm:flex" />
+            <CarouselNext className="hidden sm:flex" />
+        </Carousel>
     )
   }
   
