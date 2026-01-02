@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Layers, Trash2, Edit, Award, Zap, Target, ImageIcon, MessageSquare, GripVertical, Briefcase, Users, Workflow, EyeOff, Eye, Plus, Video } from 'lucide-react';
+import { Layers, Trash2, Edit, Award, Zap, Target, ImageIcon, MessageSquare, GripVertical, Briefcase, Users, Workflow, EyeOff, Eye, Plus, Video, Home } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { ImageUpload } from '@/components/ui/image-upload';
 import {
@@ -30,8 +30,18 @@ import {
   useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import HeroManagement from './hero-management';
+
 
 const sectionTemplates = [
+  {
+    type: 'hero',
+    name: 'Hero Section',
+    description: 'The main hero section of the homepage.',
+    icon: <Home className="w-8 h-8" />,
+    isStatic: true,
+    isHero: true,
+  },
   {
     type: 'feature-grid',
     name: 'Feature Grid',
@@ -329,17 +339,19 @@ function SortableSectionItem({ section, onEdit, onDelete, onToggleVisibility }: 
         setNodeRef,
         transform,
         transition,
-    } = useSortable({id: section.id});
+    } = useSortable({id: section.id, disabled: !!template?.isHero });
 
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
     };
+    
+    const isHeroSection = template?.isHero;
 
     return (
         <Card ref={setNodeRef} style={style} className="flex items-center gap-4 p-4 touch-none">
-            <button {...attributes} {...listeners} className="cursor-grab">
-              <GripVertical className="h-5 w-5 text-muted-foreground" />
+            <button {...attributes} {...listeners} className={isHeroSection ? "cursor-not-allowed text-muted-foreground/50" : "cursor-grab"}>
+              <GripVertical className="h-5 w-5" />
             </button>
             {template?.icon}
             <div className="flex-1">
@@ -347,17 +359,17 @@ function SortableSectionItem({ section, onEdit, onDelete, onToggleVisibility }: 
                 <p className="text-sm text-muted-foreground">Type: {section.type} | Order: {section.order}</p>
             </div>
             <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" onClick={onToggleVisibility}>
+                <Button variant="ghost" size="icon" onClick={onToggleVisibility} disabled={isHeroSection}>
                     {section.visible === false ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     <span className="sr-only">Toggle Visibility</span>
                 </Button>
-                 {!template?.isStatic && (
+                 {(!template?.isStatic || isHeroSection) && (
                     <Button variant="ghost" size="icon" onClick={onEdit}>
                         <Edit className="h-4 w-4" />
                         <span className="sr-only">Edit</span>
                     </Button>
                  )}
-                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={onDelete}>
+                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={onDelete} disabled={isHeroSection}>
                     <Trash2 className="h-4 w-4" />
                     <span className="sr-only">Delete</span>
                 </Button>
@@ -374,6 +386,7 @@ export default function SectionManagement() {
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingSection, setEditingSection] = useState<any | null>(null);
+  const [editingHero, setEditingHero] = useState(false);
   const [deletingSection, setDeletingSection] = useState<any | null>(null);
   
   const sortedSections = sections?.sort((a, b) => a.order - b.order);
@@ -386,6 +399,12 @@ export default function SectionManagement() {
   );
 
   const handleAddSection = async (template: typeof sectionTemplates[0]) => {
+    if (template.isHero) {
+        setEditingHero(true);
+        setIsAddDialogOpen(false);
+        return;
+    }
+    
     // Prevent adding static sections if they already exist
     if (template.isStatic && sections?.some(s => s.type === template.type)) {
         toast({
@@ -434,6 +453,14 @@ export default function SectionManagement() {
         toast({ variant: 'destructive', title: 'Error', description: 'Could not update visibility.' });
     }
   }
+  
+  const handleEditSection = (section: any) => {
+    if (section.type === 'hero') {
+      setEditingHero(true);
+    } else {
+      setEditingSection(section);
+    }
+  }
 
   async function handleDragEnd(event: DragEndEvent) {
     const {active, over} = event;
@@ -447,7 +474,7 @@ export default function SectionManagement() {
       const batch = writeBatch(firestore);
       newSortedSections.forEach((section, index) => {
         const docRef = doc(firestore, "sections", section.id);
-        batch.update(docRef, { order: index + 1 });
+        batch.update(docRef, { order: index });
       });
       
       try {
@@ -480,7 +507,7 @@ export default function SectionManagement() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
                     {sectionTemplates.map(template => (
                         <button key={template.type} onClick={() => handleAddSection(template)} className="text-left p-4 border rounded-lg hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                         disabled={template.isStatic && sections?.some(s => s.type === template.type)}>
+                         disabled={!template.isHero && template.isStatic && sections?.some(s => s.type === template.type)}>
                             <div className="flex items-center gap-4">
                                 {template.icon}
                                 <div className="flex-1">
@@ -513,7 +540,7 @@ export default function SectionManagement() {
                    <SortableSectionItem 
                         key={section.id} 
                         section={section}
-                        onEdit={() => setEditingSection(section)}
+                        onEdit={() => handleEditSection(section)}
                         onDelete={() => setDeletingSection(section)}
                         onToggleVisibility={() => handleToggleVisibility(section)}
                     />
@@ -523,6 +550,10 @@ export default function SectionManagement() {
           </DndContext>
         </CardContent>
       </Card>
+      
+      {editingHero && (
+        <HeroManagement onComplete={() => setEditingHero(false)} />
+      )}
       
       {editingSection && (
         <SectionForm 

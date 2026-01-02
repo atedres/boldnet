@@ -5,9 +5,10 @@ import Link from 'next/link';
 import { useLanguage } from '@/app/context/language-context';
 import { Zap } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { useCollection, useFirestore, useMemoFirebase, useDoc } from '@/firebase';
+import { collection, doc } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 
 export default function Hero() {
@@ -17,7 +18,11 @@ export default function Hero() {
     () => collection(firestore, 'services'),
     [firestore]
   );
+  const settingsDocRef = useMemoFirebase(() => doc(firestore, 'site_settings', 'main'), [firestore]);
+
   const { data: services } = useCollection(servicesCollection);
+  const { data: heroSettings, isLoading: isLoadingSettings } = useDoc(settingsDocRef);
+
 
   const [currentServiceIndex, setCurrentServiceIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
@@ -38,18 +43,52 @@ export default function Hero() {
 
   const displayedService = services && services.length > 0 ? services[currentServiceIndex].name : t('heroSubtitle');
 
+  const content = {
+      tagline: heroSettings?.heroContent?.tagline || t('tagline'),
+      title1: heroSettings?.heroContent?.title1 || t('heroTitleLine1'),
+      title2: heroSettings?.heroContent?.title2 || t('heroTitleLine2'),
+      description: heroSettings?.heroContent?.description || t('heroDescription'),
+      imageUrl: heroSettings?.heroContent?.imageUrl,
+  }
+
+  if (isLoadingSettings) {
+      return (
+        <section className="container flex flex-col items-center justify-center gap-6 pb-12 pt-16 md:py-24 text-center">
+            <div className="h-8 w-48 bg-muted rounded-full animate-pulse"></div>
+            <div className="mx-auto max-w-5xl space-y-4">
+                <div className="h-12 md:h-20 w-full bg-muted rounded-md animate-pulse"></div>
+                <div className="h-12 md:h-20 w-3/4 mx-auto bg-muted rounded-md animate-pulse"></div>
+            </div>
+             <div className="h-16 w-64 bg-muted rounded-full animate-pulse mt-6"></div>
+             <div className="h-7 w-full max-w-lg bg-muted rounded-md animate-pulse mt-6"></div>
+        </section>
+      )
+  }
 
   return (
-    <section className="container flex flex-col items-center justify-center gap-6 pb-12 pt-16 md:py-24 text-center">
+    <section className="relative container flex flex-col items-center justify-center gap-6 pb-12 pt-16 md:py-24 text-center isolate">
+      {content.imageUrl && (
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src={content.imageUrl}
+            alt="Hero background"
+            fill
+            className="object-cover opacity-20"
+            data-ai-hint="abstract background"
+          />
+           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
+        </div>
+      )}
+
       <div className="flex items-center gap-2 bg-muted px-4 py-1.5 rounded-full text-sm font-medium">
         <Zap className="h-4 w-4 text-primary" />
-        <span>{t('tagline')}</span>
+        <span>{content.tagline}</span>
       </div>
       <div className="mx-auto max-w-5xl">
         <h1 className="text-4xl font-extrabold leading-tight tracking-tight md:text-7xl font-headline">
-          {t('heroTitleLine1')}
+          {content.title1}
           <br />
-          {t('heroTitleLine2')}
+          {content.title2}
         </h1>
         <div className="mt-6 inline-block h-16">
             <div className={cn(
@@ -60,7 +99,7 @@ export default function Hero() {
             </div>
         </div>
         <p className="leading-7 [&:not(:first-child)]:mt-6 text-lg text-muted-foreground max-w-2xl mx-auto">
-          <span dangerouslySetInnerHTML={{ __html: t('heroDescription') }} />
+          <span dangerouslySetInnerHTML={{ __html: content.description }} />
         </p>
       </div>
       <div className="flex flex-wrap justify-center gap-4 mt-4">
