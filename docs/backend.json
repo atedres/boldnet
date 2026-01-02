@@ -282,8 +282,17 @@
       "properties": {
         "logoUrl": {
           "type": "string",
-          "description": "URL of the site logo.",
+          "description": "URL of the site logo for light mode.",
           "format": "uri"
+        },
+        "logoUrlDark": {
+          "type": "string",
+          "description": "URL of the site logo for dark mode.",
+          "format": "uri"
+        },
+        "useDarkLogo": {
+            "type": "boolean",
+            "description": "Flag to enable the dark mode logo."
         },
         "primaryColor": {
           "type": "string",

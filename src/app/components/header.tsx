@@ -8,6 +8,7 @@ import { useLanguage } from '@/app/context/language-context';
 import { doc } from 'firebase/firestore';
 import { useDoc, useFirestore, useMemoFirebase } from '@/firebase';
 import Image from 'next/image';
+import { useTheme } from 'next-themes';
 
 const DefaultLogo = () => (
     <svg
@@ -23,16 +24,25 @@ const DefaultLogo = () => (
 
 const SiteLogo = () => {
   const firestore = useFirestore();
+  const { resolvedTheme } = useTheme();
   const settingsDocRef = useMemoFirebase(() => doc(firestore, 'theme_settings', 'main'), [firestore]);
   const { data: themeSettings, isLoading } = useDoc(settingsDocRef);
 
   if (isLoading) {
-    // You can return a placeholder skeleton here
     return <div className="h-8 w-8 bg-muted rounded-md animate-pulse"></div>;
   }
   
-  if (themeSettings?.logoUrl) {
-    return <Image src={themeSettings.logoUrl} alt="BoldNet Digital Logo" width={32} height={32} className="h-8 w-8 object-contain" />;
+  const isDark = resolvedTheme === 'dark';
+  const useDarkLogo = themeSettings?.useDarkLogo;
+  const darkLogoUrl = themeSettings?.logoUrlDark;
+  const lightLogoUrl = themeSettings?.logoUrl;
+
+  if (isDark && useDarkLogo && darkLogoUrl) {
+    return <Image src={darkLogoUrl} alt="BoldNet Digital Logo" width={32} height={32} className="h-8 w-8 object-contain" />;
+  }
+
+  if (lightLogoUrl) {
+    return <Image src={lightLogoUrl} alt="BoldNet Digital Logo" width={32} height={32} className="h-8 w-8 object-contain" />;
   }
   
   return <DefaultLogo />;

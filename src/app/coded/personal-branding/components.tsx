@@ -2,6 +2,7 @@
 
 import { useDoc, useFirestore, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
+import { useTheme } from 'next-themes';
 import Image from 'next/image';
 
 const DefaultLogo = () => (
@@ -18,6 +19,7 @@ const DefaultLogo = () => (
 
 export const SiteLogo = () => {
   const firestore = useFirestore();
+  const { resolvedTheme } = useTheme();
   const settingsDocRef = useMemoFirebase(() => doc(firestore, 'theme_settings', 'main'), [firestore]);
   const { data: themeSettings, isLoading } = useDoc(settingsDocRef);
 
@@ -25,8 +27,17 @@ export const SiteLogo = () => {
     return <div className="h-full w-full bg-muted rounded-md animate-pulse"></div>;
   }
   
-  if (themeSettings?.logoUrl) {
-    return <Image src={themeSettings.logoUrl} alt="BoldNet Digital Logo" fill className="object-contain" />;
+  const isDark = resolvedTheme === 'dark';
+  const useDarkLogo = themeSettings?.useDarkLogo;
+  const darkLogoUrl = themeSettings?.logoUrlDark;
+  const lightLogoUrl = themeSettings?.logoUrl;
+
+  if (isDark && useDarkLogo && darkLogoUrl) {
+    return <Image src={darkLogoUrl} alt="BoldNet Digital Logo" fill className="object-contain" />;
+  }
+  
+  if (lightLogoUrl) {
+    return <Image src={lightLogoUrl} alt="BoldNet Digital Logo" fill className="object-contain" />;
   }
   
   return <DefaultLogo />;

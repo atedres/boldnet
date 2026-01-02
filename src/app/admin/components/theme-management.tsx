@@ -1,13 +1,15 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { doc, setDoc } from 'firebase/firestore';
-import { useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking } from '@/firebase';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
 
 export default function ThemeManagement() {
   const firestore = useFirestore();
@@ -17,12 +19,16 @@ export default function ThemeManagement() {
   const { data: themeSettings, isLoading } = useDoc(settingsDocRef);
 
   const [logoUrl, setLogoUrl] = useState('');
+  const [logoUrlDark, setLogoUrlDark] = useState('');
+  const [useDarkLogo, setUseDarkLogo] = useState(false);
   const [primaryColor, setPrimaryColor] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('');
 
   useEffect(() => {
     if (themeSettings) {
       setLogoUrl(themeSettings.logoUrl || '');
+      setLogoUrlDark(themeSettings.logoUrlDark || '');
+      setUseDarkLogo(themeSettings.useDarkLogo || false);
       setPrimaryColor(themeSettings.primaryColor || '');
       setBackgroundColor(themeSettings.backgroundColor || '');
     }
@@ -32,6 +38,8 @@ export default function ThemeManagement() {
     try {
         const settingsToSave = {
             logoUrl,
+            logoUrlDark,
+            useDarkLogo,
             primaryColor,
             backgroundColor
         };
@@ -49,6 +57,8 @@ export default function ThemeManagement() {
 
   const handleReset = () => {
       setLogoUrl('');
+      setLogoUrlDark('');
+      setUseDarkLogo(false);
       setPrimaryColor('0 84.2% 60.2%');
       setBackgroundColor('0 0% 100%');
       toast({title: "Reset", description: "Values have been reset. Click save to apply."})
@@ -69,10 +79,25 @@ export default function ThemeManagement() {
         </CardHeader>
         <CardContent className="space-y-6">
           <ImageUpload
-            label="Site Logo"
+            label="Site Logo (Light Mode)"
             value={logoUrl}
             onChange={setLogoUrl}
           />
+
+          <Separator />
+          
+          <ImageUpload
+            label="Site Logo (Dark Mode)"
+            value={logoUrlDark}
+            onChange={setLogoUrlDark}
+          />
+          <div className="flex items-center space-x-2">
+            <Switch id="use-dark-logo" checked={useDarkLogo} onCheckedChange={setUseDarkLogo} />
+            <Label htmlFor="use-dark-logo">Use separate logo for dark mode</Label>
+          </div>
+
+          <Separator />
+
           <div className="space-y-2">
             <Label htmlFor="primaryColor">Primary Color (HSL)</Label>
             <Input
