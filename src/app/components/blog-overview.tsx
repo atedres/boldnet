@@ -4,7 +4,7 @@ import { useLanguage } from '@/app/context/language-context';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import Image from 'next/image';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -21,7 +21,7 @@ export default function BlogOverview({ content }: { content: any }) {
   const { data: posts, isLoading: isLoadingPosts } = useCollection(postsQuery);
 
   const renderPostCard = (post: any) => (
-    <Card key={post.id} className="flex flex-col h-full overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group">
+    <Card key={post.id} className="flex flex-col h-full overflow-hidden rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 group bg-white">
        {post.imageUrl && (
         <div className="aspect-video relative overflow-hidden">
             <Image 
@@ -32,24 +32,20 @@ export default function BlogOverview({ content }: { content: any }) {
             />
         </div>
        )}
-        <CardHeader>
-            <CardTitle className="text-xl font-bold font-headline">{post.title}</CardTitle>
+       <CardContent className="p-6 flex flex-col flex-grow">
             {post.createdAt && (
-                <p className="text-sm text-muted-foreground">{format(post.createdAt.toDate(), 'PPP')}</p>
+                <p className="text-sm text-muted-foreground mb-2">{format(post.createdAt.toDate(), 'PPP')}</p>
             )}
-        </CardHeader>
-        <CardContent className="flex-grow">
-            <p className="text-muted-foreground line-clamp-3">
+            <h3 className="text-xl font-bold font-headline mb-3 flex-grow">{post.title}</h3>
+            <p className="text-muted-foreground line-clamp-3 mb-4">
                 {post.excerpt}
             </p>
-        </CardContent>
-        <CardFooter>
-            <Button variant="link" asChild className="p-0">
+            <Button variant="link" asChild className="p-0 self-start mt-auto">
                 <Link href={`/blog/${post.slug}`}>
                     Read More <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
             </Button>
-        </CardFooter>
+       </CardContent>
     </Card>
   );
 
