@@ -2,7 +2,7 @@
 import { useUser, FirebaseClientProvider, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code, Mail, Inbox, Star } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code, Mail, Inbox, Star, UserSquare } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -37,8 +37,9 @@ import LanguageSwitcher from '../components/language-switcher';
 import { ThemeSwitcher } from '../components/theme-switcher';
 import ContactSubmissionManagement from './components/contact-submission-management';
 import TestimonialManagement from './components/testimonial-management';
+import TeamManagement from './components/team-management';
 
-type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'contacts' | 'landing-pages' | 'coded-landing-pages' | 'testimonials';
+type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'contacts' | 'landing-pages' | 'coded-landing-pages' | 'testimonials' | 'team';
 
 function AdminDashboard() {
   const { user, isUserLoading } = useUser();
@@ -82,6 +83,7 @@ function AdminDashboard() {
     'landing-pages': t('adminLandingPages'),
     'coded-landing-pages': t('adminCodedPages'),
     testimonials: 'Témoignages',
+    team: 'Équipe'
   };
 
   const renderContent = () => {
@@ -106,6 +108,8 @@ function AdminDashboard() {
         return <CodedLandingPageManagement />;
       case 'testimonials':
         return <TestimonialManagement />;
+      case 'team':
+        return <TeamManagement />;
       case 'dashboard':
       default:
         return (
@@ -232,6 +236,14 @@ function AdminDashboard() {
                         Témoignages
                     </SidebarMenuButton>
                 </SidebarMenuItem>
+                 <SidebarMenuItem>
+                    <SidebarMenuButton 
+                        onClick={() => setActiveSection('team')}
+                        isActive={activeSection === 'team'}>
+                        <UserSquare />
+                        Équipe
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
               </CollapsibleContent>
             </Collapsible>
             
@@ -305,5 +317,3 @@ export default function Admin() {
     </FirebaseClientProvider>
   );
 }
-
-    

@@ -13,6 +13,7 @@ import ClientShowcase from './client-showcase';
 import FunnelDisplay from './funnel-display';
 import Testimonials from './testimonials';
 import { DynamicIcon } from '@/components/ui/dynamic-icon';
+import TeamSection from './team-section';
 
 // --- Helper Functions ---
 function getYouTubeEmbedUrl(url: string) {
@@ -183,6 +184,7 @@ const sectionComponents = {
   'client-showcase': ClientShowcase,
   'funnel-display': FunnelDisplay,
   'testimonials': Testimonials,
+  'team': TeamSection,
 };
 
 export default function DynamicSections() {
@@ -222,5 +224,3 @@ export default function DynamicSections() {
     </>
   );
 }
-
-    

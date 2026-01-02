@@ -55,7 +55,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
 
     return (
         <Dialog>
-            <Card className="group bg-card dark:bg-neutral-800/50 border dark:border-neutral-700 text-card-foreground dark:text-white flex flex-col h-full transition-colors duration-300 hover:bg-red-600 hover:text-white">
+            <Card className="group bg-card dark:bg-card border dark:border-neutral-700 text-card-foreground dark:text-white flex flex-col h-full transition-colors duration-300 hover:bg-red-600 hover:text-white">
                 <CardContent className="p-6 flex-grow flex flex-col">
                     <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
@@ -68,7 +68,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
                             />
                             <div>
                                 <p className="font-semibold">{testimonial.name}</p>
-                                <p className="text-sm text-muted-foreground dark:text-neutral-400 group-hover:text-red-100">{testimonial.date}</p>
+                                <p className="text-sm text-muted-foreground dark:text-neutral-400 group-hover:text-red-100">{testimonial.position}</p>
                             </div>
                         </div>
                         {testimonial.source?.toLowerCase() === 'google' && <GoogleIcon />}
@@ -97,7 +97,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
                         />
                         <div>
                             <p className="font-semibold text-lg">{testimonial.name}</p>
-                            <p className="text-sm text-muted-foreground dark:text-neutral-400 font-normal">{testimonial.date}</p>
+                            <p className="text-sm text-muted-foreground dark:text-neutral-400 font-normal">{testimonial.position}</p>
                         </div>
                     </DialogTitle>
                 </DialogHeader>
@@ -158,7 +158,7 @@ export default function Testimonials() {
   }
 
   return (
-    <section className="bg-white dark:bg-[#121212] text-foreground dark:text-white py-16 md:py-24">
+    <section className="bg-background text-foreground dark:bg-black dark:text-white py-16 md:py-24">
       <div className="container mx-auto">
         <div className="text-center mb-12">
             <span className="text-sm font-bold text-muted-foreground dark:text-neutral-400 tracking-widest uppercase">Témoignages</span>

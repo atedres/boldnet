@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Layers, Trash2, Edit, Award, Zap, Target, ImageIcon, MessageSquare, GripVertical, Briefcase, Users, Workflow, EyeOff, Eye, Plus, Video, Home, Star } from 'lucide-react';
+import { Layers, Trash2, Edit, Award, Zap, Target, ImageIcon, MessageSquare, GripVertical, Briefcase, Users, Workflow, EyeOff, Eye, Plus, Video, Home, Star, UserSquare } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { ImageUpload } from '@/components/ui/image-upload';
 import {
@@ -125,6 +125,14 @@ const sectionTemplates = [
     name: 'Testimonials',
     description: 'Displays the client testimonials carousel.',
     icon: <Star className="w-8 h-8" />,
+    defaultContent: {},
+    isStatic: true,
+  },
+   {
+    type: 'team',
+    name: 'Team Section',
+    description: 'Displays the team members.',
+    icon: <UserSquare className="w-8 h-8" />,
     defaultContent: {},
     isStatic: true,
   },
@@ -589,5 +597,3 @@ export default function SectionManagement() {
     </div>
   );
 }
-
-    

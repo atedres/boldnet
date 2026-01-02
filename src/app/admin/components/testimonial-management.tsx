@@ -65,7 +65,7 @@ function TestimonialForm({ testimonialToEdit, onComplete }: { testimonialToEdit?
   const [rating, setRating] = useState<number>(testimonialToEdit?.rating || 5);
   const [avatarUrl, setAvatarUrl] = useState(testimonialToEdit?.avatarUrl || '');
   const [source, setSource] = useState(testimonialToEdit?.source || 'Manual');
-  const [date, setDate] = useState(testimonialToEdit?.date || 'il y a 1 semaine');
+  const [position, setPosition] = useState(testimonialToEdit?.position || '');
 
   const firestore = useFirestore();
   const { toast } = useToast();
@@ -85,7 +85,7 @@ function TestimonialForm({ testimonialToEdit, onComplete }: { testimonialToEdit?
       return;
     }
 
-    const testimonialData = { name, review, rating, avatarUrl, source, date };
+    const testimonialData = { name, review, rating, avatarUrl, source, position };
 
     if (testimonialToEdit) {
       const docRef = doc(firestore, 'testimonials', testimonialToEdit.id);
@@ -124,6 +124,15 @@ function TestimonialForm({ testimonialToEdit, onComplete }: { testimonialToEdit?
             onChange={(e) => setName(e.target.value)}
           />
         </div>
+         <div className="grid gap-2">
+          <Label htmlFor="position">Position (ex: CEO)</Label>
+          <Input
+            id="position"
+            placeholder="CEO, Fondateur..."
+            value={position}
+            onChange={(e) => setPosition(e.target.value)}
+          />
+        </div>
         <div className="grid gap-2">
           <Label htmlFor="review">Avis</Label>
           <Textarea
@@ -144,14 +153,10 @@ function TestimonialForm({ testimonialToEdit, onComplete }: { testimonialToEdit?
             ))}
           </RadioGroup>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
             <div className="grid gap-2">
                 <Label htmlFor="source">Source (ex: Google)</Label>
                 <Input id="source" value={source} onChange={e => setSource(e.target.value)} />
-            </div>
-            <div className="grid gap-2">
-                <Label htmlFor="date">Date (ex: il y a 2 mois)</Label>
-                <Input id="date" value={date} onChange={e => setDate(e.target.value)} />
             </div>
         </div>
 
@@ -235,6 +240,7 @@ export default function TestimonialManagement() {
                                          <TableRow>
                                              <TableHead className="w-[80px]">Avatar</TableHead>
                                              <TableHead>Nom</TableHead>
+                                             <TableHead>Position</TableHead>
                                              <TableHead>Note</TableHead>
                                              <TableHead>Avis</TableHead>
                                              <TableHead className="text-right">Actions</TableHead>
@@ -247,6 +253,7 @@ export default function TestimonialManagement() {
                                                     <Image src={testimonial.avatarUrl} alt={testimonial.name} width={40} height={40} className="rounded-full object-cover" />
                                                 </TableCell>
                                                 <TableCell className="font-medium">{testimonial.name}</TableCell>
+                                                <TableCell className="text-muted-foreground">{testimonial.position}</TableCell>
                                                 <TableCell>
                                                     <StarRating rating={testimonial.rating} />
                                                 </TableCell>
