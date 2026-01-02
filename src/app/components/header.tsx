@@ -10,6 +10,9 @@ import { useDoc, useFirestore, useMemoFirebase } from '@/firebase';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
+import { Menu } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useState } from 'react';
 
 const DefaultLogo = ({className}: {className?: string}) => (
     <svg
@@ -53,6 +56,7 @@ const SiteLogo = () => {
 
 export default function Header() {
     const { t } = useLanguage();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center justify-between">
@@ -81,6 +85,28 @@ export default function Header() {
           <Button asChild className="hidden md:flex rounded-full">
             <Link href="#contact">{t('discuss')}</Link>
           </Button>
+           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden">
+                    <Menu />
+                    <span className="sr-only">Open menu</span>
+                </Button>
+            </SheetTrigger>
+            <SheetContent side="left">
+                <div className="flex flex-col gap-6 pt-10">
+                    <Link href="/" className="flex items-center space-x-2 mb-4">
+                        <SiteLogo />
+                    </Link>
+                    <Link href="#services" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('ourServices')}</Link>
+                    <Link href="#clients" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('trustedBy')}</Link>
+                    <Link href="#funnel" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('highPerformanceFunnel')}</Link>
+                    <Link href="#contact" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('contactUs')}</Link>
+                     <Button asChild className="mt-4">
+                        <Link href="#contact" onClick={() => setIsMobileMenuOpen(false)}>{t('discuss')}</Link>
+                    </Button>
+                </div>
+            </SheetContent>
+        </Sheet>
         </div>
       </div>
     </header>
