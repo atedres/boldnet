@@ -100,6 +100,7 @@ function ClientForm({ clientToEdit, onComplete }: { clientToEdit?: any, onComple
             label="Client Logo"
             value={logoUrl}
             onChange={setLogoUrl}
+            cropShape="square"
         />
         <div className="grid gap-2">
           <Label htmlFor="websiteUrl">Website URL (optional)</Label>

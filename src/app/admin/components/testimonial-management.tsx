@@ -112,6 +112,8 @@ function TestimonialForm({ testimonialToEdit, onComplete }: { testimonialToEdit?
             label="Avatar du client"
             value={avatarUrl}
             onChange={setAvatarUrl}
+            cropShape="round"
+            aspectRatio={1}
         />
         <div className="grid gap-2">
           <Label htmlFor="name">Nom du client</Label>
@@ -292,5 +294,3 @@ export default function TestimonialManagement() {
         </>
     );
 }
-
-    

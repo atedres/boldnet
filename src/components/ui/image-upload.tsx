@@ -5,32 +5,36 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, UploadCloud, X } from 'lucide-react';
+import { Loader2, UploadCloud, X, Eye } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { ImageCropper } from './image-cropper';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 interface ImageUploadProps {
   value: string;
   onChange: (url: string) => void;
   label?: string;
   className?: string;
+  aspectRatio?: number;
+  cropShape?: 'rect' | 'round';
 }
 
-// Configuration for Cloudinary - These are public and safe to have in client-side code.
 const CLOUDINARY_CLOUD_NAME = 'ddbj70ziv';
 const CLOUDINARY_UPLOAD_PRESET = 'boldnet_unsigned';
 const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
-
-export function ImageUpload({ value, onChange, label, className }: ImageUploadProps) {
+export function ImageUpload({ value, onChange, label, className, aspectRatio, cropShape }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState<string | null>(null);
+  const [imageType, setImageType] = useState<'image/jpeg' | 'image/png'>('image/jpeg');
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const { toast } = useToast();
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Check for file size if necessary
     if (file.size > 5 * 1024 * 1024) { // 5MB limit
         toast({
             variant: 'destructive',
@@ -40,10 +44,25 @@ export function ImageUpload({ value, onChange, label, className }: ImageUploadPr
         return;
     }
 
-    setIsUploading(true);
+    if (file.type === 'image/png') {
+      setImageType('image/png');
+    } else {
+      setImageType('image/jpeg');
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImageToCrop(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+  
+  const handleUpload = async (blob: Blob) => {
+     setIsUploading(true);
+     setImageToCrop(null);
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', blob);
     formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
     try {
@@ -71,7 +90,7 @@ export function ImageUpload({ value, onChange, label, className }: ImageUploadPr
     } finally {
         setIsUploading(false);
     }
-  };
+  }
 
   const clearImage = () => {
     onChange('');
@@ -83,8 +102,17 @@ export function ImageUpload({ value, onChange, label, className }: ImageUploadPr
       <div className="w-full">
         {value ? (
           <div className="relative group w-full h-40 rounded-md overflow-hidden border border-input">
-            <Image src={value} alt="Uploaded image" layout="fill" objectFit="cover" />
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <Image src={value} alt="Uploaded image" layout="fill" objectFit="cover" className="cursor-pointer" onClick={() => setIsPreviewOpen(true)} />
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+              <Button
+                type="button"
+                variant="secondary"
+                size="icon"
+                onClick={() => setIsPreviewOpen(true)}
+                aria-label="Preview image"
+              >
+                <Eye className="h-4 w-4" />
+              </Button>
               <Button
                 type="button"
                 variant="destructive"
@@ -110,7 +138,7 @@ export function ImageUpload({ value, onChange, label, className }: ImageUploadPr
                   <p className="mb-2 text-sm text-muted-foreground">
                     <span className="font-semibold text-primary">Click to upload</span> or drag and drop
                   </p>
-                  <p className="text-xs text-muted-foreground">PNG, JPG, GIF, SVG up to 5MB</p>
+                  <p className="text-xs text-muted-foreground">PNG, JPG, GIF up to 5MB</p>
                 </>
               )}
             </div>
@@ -119,12 +147,36 @@ export function ImageUpload({ value, onChange, label, className }: ImageUploadPr
               type="file"
               className="hidden"
               onChange={handleFileChange}
-              accept="image/png, image/jpeg, image/gif, image/svg+xml"
+              accept="image/png, image/jpeg, image/gif"
               disabled={isUploading}
             />
           </label>
         )}
       </div>
+
+       {imageToCrop && (
+        <ImageCropper 
+          image={imageToCrop}
+          onCropComplete={handleUpload}
+          onCancel={() => setImageToCrop(null)}
+          aspect={aspectRatio}
+          cropShape={cropShape}
+          imageType={imageType}
+        />
+      )}
+
+      {isPreviewOpen && (
+        <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+          <DialogContent className="max-w-4xl h-auto">
+             <DialogHeader>
+              <DialogTitle>Aperçu de l'image</DialogTitle>
+            </DialogHeader>
+            <div className="relative w-full aspect-video mt-4">
+              <Image src={value} alt="Image preview" layout="fill" objectFit="contain" />
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
