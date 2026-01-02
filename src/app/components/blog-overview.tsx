@@ -65,13 +65,14 @@ export default function BlogOverview({ content }: { content: any }) {
     
     return (
         <div className={cn(
-            "grid md:grid-cols-2 lg:grid-cols-3 gap-8",
-            posts.length === 1 && "lg:grid-cols-1 justify-center",
-            posts.length === 2 && "lg:grid-cols-2"
-          )}>
+          "grid md:grid-cols-2 lg:grid-cols-3 gap-8",
+          (posts.length === 1 || posts.length === 2) && "lg:grid-cols-2",
+        )}>
             {posts.map(post => (
-                <div key={post.id} className={cn(posts.length === 1 && "lg:max-w-md")}>
+                <div key={post.id} className={cn(posts.length === 1 && "lg:col-span-2 flex justify-center")}>
+                   <div className="max-w-md">
                     {renderPostCard(post)}
+                   </div>
                 </div>
             ))}
         </div>
