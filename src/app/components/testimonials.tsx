@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselApi,
 } from '@/components/ui/carousel';
+import Autoplay from "embla-carousel-autoplay"
 import { Card, CardContent } from '@/components/ui/card';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
@@ -74,6 +75,10 @@ export default function Testimonials() {
     [firestore]
   );
   const { data: testimonials, isLoading } = useCollection(testimonialsCollection);
+  
+  const plugin = useRef(
+    Autoplay({ delay: 5000, stopOnInteraction: true })
+  )
 
   useEffect(() => {
     if (!api) return;
@@ -116,6 +121,9 @@ export default function Testimonials() {
                 align: 'start',
                 loop: true,
             }}
+            plugins={[plugin.current]}
+            onMouseEnter={plugin.current.stop}
+            onMouseLeave={plugin.current.reset}
             className="w-full relative"
         >
           <CarouselContent className="-ml-4">
