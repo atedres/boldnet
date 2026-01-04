@@ -17,12 +17,8 @@ export default function TeamSection() {
   
   const duplicatedMembers = useMemo(() => {
     if (!members || members.length === 0) return [];
-    // Ensure the list is long enough for a seamless loop
-    let duplicated = [...members];
-    while (duplicated.length < 10) { // arbitrary number to make it long
-        duplicated = [...duplicated, ...members];
-    }
-    return [...duplicated, ...duplicated]; // Duplicate the whole list for the animation
+    // Ensure the list is long enough for a seamless loop by duplicating it
+    return [...members, ...members];
   }, [members]);
 
   const renderMemberCard = (member: any, index: number) => (
