@@ -73,7 +73,7 @@ export default function Hero() {
             src={content.imageUrl}
             alt="Hero background"
             fill
-            className="object-cover opacity-20"
+            className="object-cover"
             data-ai-hint="abstract background"
           />
         </div>
