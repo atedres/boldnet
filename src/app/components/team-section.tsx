@@ -16,19 +16,17 @@ export default function TeamSection() {
   const { data: members, isLoading: isLoadingMembers } = useCollection(teamQuery);
   
   const duplicatedMembers = useMemo(() => {
-    if (!members) return [];
-    // Duplicate for a seamless loop
-    const items = members.length > 0 ? members : [];
-    if (items.length === 0) return [];
-    const baseItems = [...items, ...items, ...items, ...items];
-    while(baseItems.length < 20) { // ensure enough items for a long scroll
-        baseItems.push(...items);
+    if (!members || members.length === 0) return [];
+    // Ensure the list is long enough for a seamless loop
+    let duplicated = [...members];
+    while (duplicated.length < 10) { // arbitrary number to make it long
+        duplicated = [...duplicated, ...members];
     }
-    return baseItems;
+    return [...duplicated, ...duplicated]; // Duplicate the whole list for the animation
   }, [members]);
 
-  const renderMemberCard = (member: any) => (
-    <Card key={member.id} className="border-none shadow-none bg-transparent flex-shrink-0" style={{ width: '160px' }}>
+  const renderMemberCard = (member: any, index: number) => (
+    <Card key={`${member.id}-${index}`} className="border-none shadow-none bg-transparent flex-shrink-0" style={{ width: '160px' }}>
         <CardContent className="p-0 flex flex-col items-center text-center gap-4">
             <Image 
                 src={member.imageUrl}
@@ -55,16 +53,12 @@ export default function TeamSection() {
     }
 
      return (
-         <div className="relative marquee group">
-            <div className="marquee-content group-hover:[animation-play-state:paused]">
-                {duplicatedMembers.map((member, index) => (
-                    <div key={`${member.id}-${index}`} className="flex-shrink-0 mx-4" style={{ width: '160px' }}>
-                        {renderMemberCard(member)}
-                    </div>
-                ))}
+         <div className="relative marquee group overflow-hidden">
+            <div className="marquee-content flex flex-nowrap group-hover:[animation-play-state:paused]">
+                {duplicatedMembers.map((member, index) => renderMemberCard(member, index))}
             </div>
-             <div className="absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-background to-transparent"></div>
-             <div className="absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-background to-transparent"></div>
+             <div className="absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-background to-transparent z-10"></div>
+             <div className="absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-background to-transparent z-10"></div>
         </div>
     )
   }
