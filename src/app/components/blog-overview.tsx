@@ -64,13 +64,14 @@ export default function BlogOverview({ content }: { content: any }) {
     }
     
     return (
-        <div className={cn(
-          "grid md:grid-cols-2 lg:grid-cols-3 gap-8",
-          (posts.length === 1 || posts.length === 2) && "lg:grid-cols-2",
-        )}>
+        <div className="grid justify-items-center md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map(post => (
-                <div key={post.id} className={cn(posts.length === 1 && "lg:col-span-2 flex justify-center")}>
-                   <div className="max-w-md">
+                <div key={post.id} className={cn(
+                    "w-full max-w-md",
+                    posts.length === 1 && "md:col-span-2 lg:col-span-3 flex justify-center",
+                    posts.length === 2 && "md:col-span-1 lg:col-span-1"
+                )}>
+                   <div className={cn(posts.length === 1 ? "max-w-md" : "w-full")}>
                     {renderPostCard(post)}
                    </div>
                 </div>
