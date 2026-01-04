@@ -27,7 +27,7 @@ export default function TeamSection() {
                 className="rounded-full object-cover aspect-square w-32 h-32"
             />
             <div>
-                <h3 className="font-bold text-lg font-headline whitespace-nowrap">{member.name}</h3>
+                <h3 className="font-bold text-lg font-headline whitespace-nowrap tracking-wide">{member.name}</h3>
                 <p className="text-primary">{member.position}</p>
             </div>
         </CardContent>
