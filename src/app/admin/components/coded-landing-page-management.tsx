@@ -5,10 +5,11 @@ import { useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } 
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Plus, Code, Trash2, Link as LinkIcon } from 'lucide-react';
+import { Plus, Code, Trash2, Link as LinkIcon, Edit2 } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { format } from 'date-fns';
+import PersonalBrandingManagement from './personal-branding-management';
 
 export default function CodedLandingPageManagement() {
   const firestore = useFirestore();
@@ -16,6 +17,7 @@ export default function CodedLandingPageManagement() {
   const { data: pages, isLoading } = useCollection(codedPagesCollection);
   const { toast } = useToast();
   const [deletingPage, setDeletingPage] = useState<any | null>(null);
+  const [editingPage, setEditingPage] = useState<any | null>(null);
 
   const handleAddNew = async () => {
     try {
@@ -45,7 +47,6 @@ export default function CodedLandingPageManagement() {
   }
 
   const handleAddPersonalBrandingPage = async () => {
-    // Check if it already exists to avoid duplicates
     const pageExists = pages?.some(p => p.slug === 'personal-branding');
     if (pageExists) {
         toast({
@@ -77,6 +78,18 @@ export default function CodedLandingPageManagement() {
     toast({title: "Link Copied!", description: url});
   }
 
+  const handleEdit = (page: any) => {
+    if (page.slug === 'personal-branding') {
+        setEditingPage(page);
+    } else {
+        toast({ title: 'Not Editable', description: 'Only the Personal Branding page is editable for now.' });
+    }
+  };
+  
+  if (editingPage) {
+    return <PersonalBrandingManagement onBack={() => setEditingPage(null)} />
+  }
+
   return (
     <>
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-8">
@@ -88,7 +101,7 @@ export default function CodedLandingPageManagement() {
           </div>
            <div className="flex gap-2">
             <Button onClick={handleAddPersonalBrandingPage}><Plus className="mr-2 h-4 w-4" /> Add Personal Branding Page</Button>
-            <Button onClick={handleAddNew}><Plus className="mr-2 h-4 w-4" /> Add New</Button>
+            <Button onClick={handleAddNew} disabled><Plus className="mr-2 h-4 w-4" /> Add New</Button>
           </div>
         </CardHeader>
         <CardContent>
@@ -127,8 +140,9 @@ export default function CodedLandingPageManagement() {
                                         <LinkIcon className="h-4 w-4" />
                                         <span className="sr-only">Copy Link</span>
                                     </Button>
-                                    <Button variant="ghost" size="sm" disabled>
-                                        Modifier
+                                    <Button variant="ghost" size="icon" onClick={() => handleEdit(page)} disabled={page.slug !== 'personal-branding'}>
+                                        <Edit2 className="h-4 w-4" />
+                                        <span className="sr-only">Modifier</span>
                                     </Button>
                                     <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => setDeletingPage(page)}>
                                         <Trash2 className="h-4 w-4" />

@@ -39,8 +39,9 @@ import ContactSubmissionManagement from './components/contact-submission-managem
 import TestimonialManagement from './components/testimonial-management';
 import TeamManagement from './components/team-management';
 import BlogManagement from './components/blog-management';
+import PersonalBrandingManagement from './components/personal-branding-management';
 
-type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'contacts' | 'landing-pages' | 'coded-landing-pages' | 'testimonials' | 'team' | 'blog';
+type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'contacts' | 'landing-pages' | 'coded-landing-pages' | 'testimonials' | 'team' | 'blog' | 'personal-branding';
 
 function AdminDashboard() {
   const { user, isUserLoading } = useUser();
@@ -83,6 +84,7 @@ function AdminDashboard() {
     contacts: t('adminContacts'),
     'landing-pages': t('adminLandingPages'),
     'coded-landing-pages': t('adminCodedPages'),
+    'personal-branding': 'Personal Branding Page',
     testimonials: 'Témoignages',
     team: 'Équipe',
     blog: 'Blog'
@@ -108,6 +110,8 @@ function AdminDashboard() {
         return <LandingPageManagement />;
       case 'coded-landing-pages':
         return <CodedLandingPageManagement />;
+      case 'personal-branding':
+        return <PersonalBrandingManagement onBack={() => setActiveSection('coded-landing-pages')} />;
       case 'testimonials':
         return <TestimonialManagement />;
       case 'team':

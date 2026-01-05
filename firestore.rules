@@ -18,6 +18,7 @@
  * - /theme_settings/{settingsId}: Publicly readable theme customization.
  * - /landing_pages/{landingPageId}: Publicly readable, admin-writable landing pages.
  * - /coded_landing_pages/{codedLandingPageId}: Admin-only landing page metadata.
+ * - /personal_branding_pages/{pageId}: Publicly readable, admin-writable content for the personal branding page.
  * - /testimonials/{testimonialId}: Publicly readable client testimonials.
  * - /team_members/{memberId}: Publicly readable team member information.
  * - /blog_posts/{postId}: Publicly readable blog posts.
@@ -150,6 +151,15 @@ service cloud.firestore {
      */
     match /coded_landing_pages/{codedLandingPageId} {
       allow read, write: if isAdmin();
+    }
+    
+    /**
+     * @description Manages content for the Personal Branding landing page.
+     * @path /personal_branding_pages/{pageId}
+     */
+    match /personal_branding_pages/{pageId} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
 
     /**

@@ -379,6 +379,112 @@
       },
       "required": ["id", "title", "slug"]
     },
+    "PersonalBrandingPage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PersonalBrandingPage",
+      "type": "object",
+      "description": "Content for the Personal Branding landing page.",
+      "properties": {
+        "hero": {
+          "type": "object",
+          "properties": {
+            "backgroundImageUrl": { "type": "string", "format": "uri" },
+            "title": { "type": "string" },
+            "subtitle": { "type": "string" },
+            "ctaButtonText": { "type": "string" }
+          }
+        },
+        "team": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "professions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "image": { "type": "string", "format": "uri" }
+                }
+              }
+            }
+          }
+        },
+        "problem": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "mainPoint": { "type": "string" },
+            "listItems": { "type": "array", "items": { "type": "string" } },
+            "howToTitle": { "type": "string" },
+            "howToListItems": { "type": "array", "items": { "type": "string" } },
+            "question": { "type": "string" },
+            "ctaButtonText": { "type": "string" }
+          }
+        },
+        "benefits": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "mainBenefits": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "description": { "type": "string" },
+                  "image": { "type": "string", "format": "uri" }
+                }
+              }
+            },
+            "sideBenefitsTitle": { "type": "string" },
+            "sideBenefitsImage": { "type": "string", "format": "uri" },
+            "sideBenefitsItems": { "type": "array", "items": { "type": "string" } },
+            "conclusion": { "type": "string" },
+            "ctaButtonText": { "type": "string" }
+          }
+        },
+        "results": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "withoutTitle": { "type": "string" },
+            "withoutItems": { "type": "array", "items": { "type": "string" } },
+            "withoutImage": { "type": "string", "format": "uri" },
+            "withTitle": { "type": "string" },
+            "withItems": { "type": "array", "items": { "type": "string" } },
+            "withImage": { "type": "string", "format": "uri" },
+            "bonus": { "type": "string" },
+            "ctaButtonText": { "type": "string" }
+          }
+        },
+        "method": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "steps": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "description": { "type": "string" }
+                }
+              }
+            },
+            "ctaButtonText": { "type": "string" }
+          }
+        },
+        "finalCta": {
+          "type": "object",
+          "properties": {
+            "backgroundImageUrl": { "type": "string", "format": "uri" },
+            "title": { "type": "string" },
+            "subtitle": { "type": "string" }
+          }
+        }
+      }
+    },
     "Testimonial": {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "title": "Testimonial",
@@ -663,6 +769,22 @@
                     "description": "Unique identifier for the coded landing page."
                 }
             ]
+        }
+      },
+      {
+        "path": "/personal_branding_pages/{pageId}",
+        "definition": {
+          "entityName": "PersonalBrandingPage",
+          "schema": {
+            "$ref": "#/backend/entities/PersonalBrandingPage"
+          },
+          "description": "Stores content for the Personal Branding landing page. Publicly readable, admin write.",
+          "params": [
+            {
+              "name": "pageId",
+              "description": "Should be a single document, e.g., 'main'."
+            }
+          ]
         }
       },
       {
