@@ -131,15 +131,6 @@ const ExpertiseSection = ({ content }: { content: any }) => (
     </section>
 );
 
-const sideBenefits = [
-    { icon: <Zap className="w-6 h-6 text-red-600" />, text: "Plus de respect" },
-    { icon: <Target className="w-6 h-6 text-red-600" />, text: "Closing élevé" },
-    { icon: <Lightbulb className="w-6 h-6 text-red-600" />, text: "Justification de la valeur" },
-    { icon: <Users className="w-6 h-6 text-red-600" />, text: "Fidélisation client" },
-    { icon: <BarChart className="w-6 h-6 text-red-600" />, text: "Croissance organique" },
-    { icon: <CheckCircle className="w-6 h-6 text-red-600" />, text: "Plus de confiance" },
-];
-
 const BenefitsSection = ({ content }: { content: any }) => (
     <section className="py-16 md:py-24 bg-gray-50">
         <div className="container mx-auto px-4">
@@ -168,10 +159,10 @@ const BenefitsSection = ({ content }: { content: any }) => (
                             <div>
                                 <h3 className="text-2xl font-bold font-headline">{content?.sideBenefitsTitle || "On sera à tes côtés"}</h3>
                                 <div className="grid grid-cols-2 gap-4 mt-4">
-                                    {sideBenefits.map(sb => (
-                                        <div key={sb.text} className="flex items-center gap-3">
-                                            {sb.icon}
-                                            <span className="font-medium">{sb.text}</span>
+                                    {(content?.sideBenefitsItems || []).map((item: string, i: number) => (
+                                        <div key={i} className="flex items-center gap-3">
+                                            <CheckCircle className="w-6 h-6 text-red-600" />
+                                            <span className="font-medium">{item}</span>
                                         </div>
                                     ))}
                                 </div>

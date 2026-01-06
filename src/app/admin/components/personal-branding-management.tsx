@@ -222,6 +222,30 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                         </div>
                     </AccordionContent>
                 </AccordionItem>
+                
+                 {/* Method Section */}
+                <AccordionItem value="item-method">
+                    <AccordionTrigger>Method Section</AccordionTrigger>
+                    <AccordionContent className="space-y-4 p-4">
+                        <div className="grid gap-2">
+                            <Label>Title</Label>
+                            <Input value={formData.method?.title} onChange={(e) => handleFieldChange('method', 'title', e.target.value)} />
+                        </div>
+                        <Label>Steps</Label>
+                        {(formData.method?.steps || []).map((step: any, index: number) => (
+                             <div key={index} className="flex flex-col gap-2 border p-4 rounded-md">
+                                <Input placeholder="Step Title" value={step.title} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'title', e.target.value)} />
+                                <Textarea placeholder="Step Description" value={step.description} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'description', e.target.value)} />
+                                <Button size="sm" variant="destructive" className="self-end" onClick={() => handleRemoveListItem('method', 'steps', index)}><Trash2 className="w-4 h-4 mr-2" /> Remove Step</Button>
+                            </div>
+                        ))}
+                        <Button variant="outline" onClick={() => handleAddObjectInList('method', 'steps', { title: "", description: "" })}><Plus className="w-4 h-4 mr-2" /> Add Step</Button>
+                        <div className="grid gap-2">
+                            <Label>CTA Button Text</Label>
+                            <Input value={formData.method?.ctaButtonText} onChange={(e) => handleFieldChange('method', 'ctaButtonText', e.target.value)} />
+                        </div>
+                    </AccordionContent>
+                </AccordionItem>
 
                  {/* Add more accordions for other sections here in a similar fashion... */}
                  
