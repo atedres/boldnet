@@ -221,7 +221,7 @@ const MethodSection = ({ content }: { content: any }) => (
     <section className="py-16 md:py-24 bg-[#fff4f2] text-gray-800">
         <div className="container mx-auto px-4">
             <div className="text-center">
-                <h2 className="text-3xl md:text-4xl font-bold font-headline">{content?.title || "NOTRE MÉTHODE"}</h2>
+                
                 <div className="inline-block w-24 h-1 bg-red-600 mt-2"></div>
             </div>
             <div className="relative mt-12 max-w-2xl mx-auto">
@@ -231,7 +231,7 @@ const MethodSection = ({ content }: { content: any }) => (
                     {(content?.steps || []).map((item: any, index: number) => (
                         <div key={index} className="relative flex items-start gap-6">
                             <div className="relative z-10 flex-shrink-0 w-16 h-16 rounded-full bg-white text-primary flex items-center justify-center border-4 border-[#fff4f2]">
-                                {React.cloneElement(methodIcons[index % methodIcons.length], { className: 'w-8 h-8' })}
+                                {React.cloneElement(methodIcons[index % methodIcons.length], { className: 'w-8 h-8 text-primary' })}
                             </div>
                             <div className="bg-white p-6 rounded-lg shadow-sm flex-1">
                                 <h3 className="text-xl font-bold text-primary">ÉTAPE {index + 1}</h3>
