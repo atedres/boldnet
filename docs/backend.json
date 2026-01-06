@@ -129,9 +129,13 @@
           "description": "Email address of the person submitting the form.",
           "format": "email"
         },
+        "phone": {
+            "type": "string",
+            "description": "Phone number of the person submitting the form (optional)."
+        },
         "message": {
           "type": "string",
-          "description": "Message from the person submitting the form."
+          "description": "Message from the person submitting the form. Can contain domain and need."
         },
         "submittedAt": {
           "type": "string",
@@ -493,6 +497,26 @@
               }
             }
           }
+        },
+        "timelineMethod": {
+            "type": "object",
+            "properties": {
+                "title": { "type": "string" },
+                "ctaButtonText": { "type": "string" },
+                "steps": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "stepTitle": { "type": "string" },
+                            "title": { "type": "string" },
+                            "description": { "type": "string" },
+                            "iconName": { "type": "string" },
+                            "position": { "type": "string", "enum": ["left", "right"]}
+                        }
+                    }
+                }
+            }
         },
         "finalCta": {
           "type": "object",

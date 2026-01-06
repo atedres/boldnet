@@ -4,13 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, Lightbulb, BarChart, ArrowRight, PenTool, Video, Image as ImageIcon, Speaker, MessageSquare, Globe, Compass, Target } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import { SiteLogo } from './components';
 import { FirebaseClientProvider, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { DynamicIcon } from '@/components/ui/dynamic-icon';
+import { PersonalBrandingContactForm } from './PersonalBrandingContactForm';
 
 const SectionTitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
   <h2 className={cn("text-3xl md:text-4xl font-bold text-center font-headline", className)}>{children}</h2>
@@ -20,7 +21,7 @@ const SectionSubtitle = ({ children, className }: { children: React.ReactNode, c
     <p className={`text-lg md:text-xl text-center text-muted-foreground max-w-3xl mx-auto ${className}`}>{children}</p>
 );
 
-const HeroSection = ({ content }: { content: any }) => (
+const HeroSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => void }) => (
   <section className="relative w-full h-[80vh] md:h-screen text-white overflow-hidden bg-black">
     <div className="absolute inset-0 z-0">
         <Image
@@ -51,8 +52,8 @@ const HeroSection = ({ content }: { content: any }) => (
       <p className="mt-4 text-xl md:text-2xl max-w-3xl font-light">
         {content?.subtitle || "On crée la plateforme qui va permettre à votre présence d'être une institution qui vend pour vous."}
       </p>
-      <Button asChild size="lg" className="mt-8 rounded-full bg-white text-red-600 hover:bg-gray-200 font-bold text-lg px-10 py-6">
-        <Link href="#contact">{content?.ctaButtonText || "MA CONSULTATION GRATUITE"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
+      <Button onClick={onCtaClick} size="lg" className="mt-8 rounded-full bg-white text-red-600 hover:bg-gray-200 font-bold text-lg px-10 py-6">
+        {content?.ctaButtonText || "MA CONSULTATION GRATUITE"} <ArrowRight className="ml-2 h-5 w-5" />
       </Button>
     </div>
   </section>
@@ -85,7 +86,7 @@ const ProfessionsSection = ({ content }: { content: any }) => (
     </section>
 );
 
-const ProblemSection = ({ content }: { content: any }) => (
+const ProblemSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => void }) => (
     <section className="py-16 md:py-24 bg-red-700 text-white">
         <div className="container mx-auto px-4 text-center">
             <SectionTitle className="mb-8">{content?.title || "Le problème quand on a pas de personal branding"}</SectionTitle>
@@ -104,8 +105,8 @@ const ProblemSection = ({ content }: { content: any }) => (
                 </CardContent>
             </Card>
             <p className="mt-8 font-semibold text-lg">{content?.question || "Pourquoi c'est plus facile de faire confiance à un inconnu sur le web qu'à son propre père?"}</p>
-            <Button asChild size="lg" className="mt-8 rounded-full bg-white text-red-600 hover:bg-gray-200 font-bold text-lg px-10 py-6">
-                <Link href="#contact">{content?.ctaButtonText || "JE VEUX PASSER PRO"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
+            <Button onClick={onCtaClick} size="lg" className="mt-8 rounded-full bg-white text-red-600 hover:bg-gray-200 font-bold text-lg px-10 py-6">
+                {content?.ctaButtonText || "JE VEUX PASSER PRO"} <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
         </div>
     </section>
@@ -131,7 +132,7 @@ const ExpertiseSection = ({ content }: { content: any }) => (
     </section>
 );
 
-const BeneficiariesSection = ({ content }: { content: any }) => {
+const BeneficiariesSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => void }) => {
     if (!content?.items?.length) return null;
 
     return (
@@ -172,8 +173,8 @@ const BeneficiariesSection = ({ content }: { content: any }) => {
                             <p className="text-lg font-semibold text-red-600">{content.conclusion}</p>
                         )}
                         {content.ctaButtonText && (
-                             <Button asChild size="lg" className="rounded-full bg-red-600 text-white hover:bg-red-700 font-bold text-lg px-10 py-6 mt-6">
-                                <Link href="#contact">{content.ctaButtonText} <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                             <Button onClick={onCtaClick} size="lg" className="rounded-full bg-red-600 text-white hover:bg-red-700 font-bold text-lg px-10 py-6 mt-6">
+                                {content.ctaButtonText} <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                         )}
                     </div>
@@ -183,7 +184,7 @@ const BeneficiariesSection = ({ content }: { content: any }) => {
     );
 };
 
-const ResultsSection = ({ content }: { content: any }) => (
+const ResultsSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => void }) => (
     <section className="py-16 md:py-24 bg-red-700 text-white">
         <div className="container mx-auto px-4">
             <SectionTitle className="mb-16">{content?.title || "LES RÉSULTATS?"}</SectionTitle>
@@ -229,15 +230,15 @@ const ResultsSection = ({ content }: { content: any }) => (
 
             <div className="max-w-4xl mx-auto text-center mt-16">
                 <p className="font-bold text-xl md:text-2xl"><span className="bg-white text-red-600 px-3 py-1 rounded-md">Bonus:</span> {content?.bonus || "Votre impact grandit aussi. Plus de personnes profitent de votre expertise et de vos services."}</p>
-                <Button asChild size="lg" className="mt-8 rounded-full bg-white text-red-600 hover:bg-gray-200 font-bold text-lg px-10 py-6">
-                    <Link href="#contact">{content?.ctaButtonText || "COMMENÇONS!"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                <Button onClick={onCtaClick} size="lg" className="mt-8 rounded-full bg-white text-red-600 hover:bg-gray-200 font-bold text-lg px-10 py-6">
+                    {content?.ctaButtonText || "COMMENÇONS!"} <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
             </div>
         </div>
     </section>
 )
 
-const MethodSection = ({ content }: { content: any }) => {
+const MethodSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => void }) => {
     return (
         <section className="py-16 md:py-24 bg-[#fff4f2]">
             <div className="container mx-auto px-4">
@@ -277,8 +278,8 @@ const MethodSection = ({ content }: { content: any }) => {
                 </div>
                  <div className="text-center mt-12 max-w-2xl mx-auto">
                     <p className="text-lg font-semibold text-red-600">{content?.conclusion}</p>
-                    <Button asChild size="lg" className="rounded-full bg-red-600 text-white hover:bg-red-700 font-bold text-lg px-10 py-6 mt-6">
-                        <Link href="#contact">{content?.ctaButtonText || "MA CONSULTATION GRATUITE"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                    <Button onClick={onCtaClick} size="lg" className="rounded-full bg-red-600 text-white hover:bg-red-700 font-bold text-lg px-10 py-6 mt-6">
+                        {content?.ctaButtonText || "MA CONSULTATION GRATUITE"} <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                 </div>
             </div>
@@ -286,7 +287,7 @@ const MethodSection = ({ content }: { content: any }) => {
     );
 };
 
-const TimelineMethodSection = ({ content }: { content: any }) => {
+const TimelineMethodSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => void }) => {
     const defaultSteps = [
         { stepTitle: 'ÉTAPE 1', title: 'DÉCOUVERTE', description: 'On explore votre histoire.. vos objectifs et votre public.', iconName: 'Compass', position: 'right' },
         { stepTitle: 'ÉTAPE 2', title: 'STRATÉGIE', description: 'On crée votre positionnement et votre contenu pour attirer les bons clients.', iconName: 'Target', position: 'left' },
@@ -299,11 +300,6 @@ const TimelineMethodSection = ({ content }: { content: any }) => {
         <section className="py-16 md:py-24 bg-red-700 text-white relative overflow-hidden">
              <div className="absolute inset-0 z-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '1.5rem 1.5rem' }}></div>
             <div className="container mx-auto px-4 relative z-10">
-                <div className="flex items-center justify-center mb-16">
-                    <div className="h-px flex-grow bg-white/30"></div>
-                    <h2 className="text-3xl md:text-4xl font-bold font-headline uppercase mx-4 flex-shrink-0 tracking-widest">{content?.title || "NOTRE MÉTHODE"}</h2>
-                    <div className="h-px flex-grow bg-white/30"></div>
-                </div>
                 
                 <div className="relative max-w-2xl mx-auto">
                     {/* The connecting line */}
@@ -330,8 +326,8 @@ const TimelineMethodSection = ({ content }: { content: any }) => {
                 </div>
 
                 <div className="text-center mt-12">
-                    <Button asChild size="lg" className="rounded-full bg-white text-red-600 hover:bg-gray-200 font-bold text-lg px-10 py-6">
-                        <Link href="#contact">{content?.ctaButtonText || "EN SAVOIR PLUS"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                    <Button onClick={onCtaClick} size="lg" className="rounded-full bg-white text-red-600 hover:bg-gray-200 font-bold text-lg px-10 py-6">
+                        {content?.ctaButtonText || "EN SAVOIR PLUS"} <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                 </div>
             </div>
@@ -360,6 +356,10 @@ function PersonalBrandingContent() {
     const firestore = useFirestore();
     const pageDocRef = useMemoFirebase(() => doc(firestore, 'personal_branding_pages', 'main'), [firestore]);
     const { data: pageContent, isLoading } = useDoc(pageDocRef);
+    const [isFormOpen, setIsFormOpen] = useState(false);
+
+    const handleOpenForm = () => setIsFormOpen(true);
+    const handleCloseForm = () => setIsFormOpen(false);
 
     if (isLoading) {
         return (
@@ -373,16 +373,17 @@ function PersonalBrandingContent() {
   return (
     <div className="bg-white">
       <main>
-        <HeroSection content={pageContent?.hero} />
+        <HeroSection content={pageContent?.hero} onCtaClick={handleOpenForm} />
         <ProfessionsSection content={pageContent?.team} />
-        <ProblemSection content={pageContent?.problem} />
+        <ProblemSection content={pageContent?.problem} onCtaClick={handleOpenForm} />
         <ExpertiseSection content={pageContent?.expertise} />
-        <MethodSection content={pageContent?.method} />
-        <ResultsSection content={pageContent?.results} />
-        <BeneficiariesSection content={pageContent?.beneficiaries} />
-        <TimelineMethodSection content={pageContent?.timelineMethod} />
+        <ResultsSection content={pageContent?.results} onCtaClick={handleOpenForm} />
+        <BeneficiariesSection content={pageContent?.beneficiaries} onCtaClick={handleOpenForm} />
+        <TimelineMethodSection content={pageContent?.timelineMethod} onCtaClick={handleOpenForm} />
+        <MethodSection content={pageContent?.method} onCtaClick={handleOpenForm} />
         <FinalCtaSection content={pageContent?.finalCta} />
       </main>
+      {isFormOpen && <PersonalBrandingContactForm onOpenChange={setIsFormOpen} />}
     </div>
   );
 }
