@@ -87,7 +87,7 @@ const ProfessionsSection = ({ content }: { content: any }) => (
 const ProblemSection = ({ content }: { content: any }) => (
     <section className="py-16 md:py-24 bg-red-700 text-white">
         <div className="container mx-auto px-4 text-center">
-            <SectionTitle>{content?.title || "Le problème quand on a pas de personal branding"}</SectionTitle>
+            <SectionTitle className="mb-8">{content?.title || "Le problème quand on a pas de personal branding"}</SectionTitle>
             <div className="max-w-2xl mx-auto text-left mt-8 space-y-4 text-lg">
                 <p>{content?.mainPoint || "Mais aussi :"}</p>
                 <ul className="space-y-2 list-disc list-inside">
