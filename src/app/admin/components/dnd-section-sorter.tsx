@@ -18,7 +18,7 @@ import {
   useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -112,5 +112,3 @@ export function DndSectionSorter({ items, onOrderChange }: DndSectionSorterProps
     </Card>
   );
 }
-
-    
