@@ -32,7 +32,6 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                 team: { title: "", backgroundImage: "", professions: [] },
                 problem: { title: "", mainPoint: "", listItems: [], howToTitle: "", howToListItems: [], question: "", ctaButtonText: ""},
                 expertise: { title: "", subtitle: "", backgroundImageUrl: ""},
-                benefits: { title: "", mainBenefits: [], sideBenefitsTitle: "", sideBenefitsImage: "", sideBenefitsItems: [], conclusion: "", ctaButtonText: "" },
                 beneficiaries: { title: "", items: [], conclusion: "", ctaButtonText: "" },
                 results: { title: "", withoutTitle: "", withoutItems: [], withoutImage: "", withTitle: "", withItems: [], withImage: "", bonus: "", ctaButtonText: ""},
                 method: { conclusion: "", ctaButtonText: "", steps: [] },
@@ -385,14 +384,6 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                             <Label>CTA Button Text</Label>
                             <Input value={formData.results?.ctaButtonText} onChange={(e) => handleFieldChange('results', 'ctaButtonText', e.target.value)} />
                         </div>
-                    </AccordionContent>
-                </AccordionItem>
-                
-                 {/* Benefits Section */}
-                <AccordionItem value="item-benefits">
-                    <AccordionTrigger>Benefits Section</AccordionTrigger>
-                    <AccordionContent className="space-y-4 p-4">
-                        {/* Fields for Benefits section */}
                     </AccordionContent>
                 </AccordionItem>
 

@@ -433,28 +433,6 @@
                 "subtitle": { "type": "string" }
             }
         },
-        "benefits": {
-          "type": "object",
-          "properties": {
-            "title": { "type": "string" },
-            "mainBenefits": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "title": { "type": "string" },
-                  "description": { "type": "string" },
-                  "image": { "type": "string", "format": "uri" }
-                }
-              }
-            },
-            "sideBenefitsTitle": { "type": "string" },
-            "sideBenefitsImage": { "type": "string", "format": "uri" },
-            "sideBenefitsItems": { "type": "array", "items": { "type": "string" } },
-            "conclusion": { "type": "string" },
-            "ctaButtonText": { "type": "string" }
-          }
-        },
         "beneficiaries": {
             "type": "object",
             "properties": {
@@ -469,7 +447,9 @@
                             "imageUrl": { "type": "string", "format": "uri" }
                         }
                     }
-                }
+                },
+                "conclusion": { "type": "string" },
+                "ctaButtonText": { "type": "string" }
             }
         },
         "results": {

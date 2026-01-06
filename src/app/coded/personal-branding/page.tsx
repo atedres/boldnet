@@ -131,56 +131,6 @@ const ExpertiseSection = ({ content }: { content: any }) => (
     </section>
 );
 
-const BenefitsSection = ({ content }: { content: any }) => (
-    <section className="py-16 md:py-24 bg-gray-50">
-        <div className="container mx-auto px-4">
-            <SectionTitle className="text-gray-800">{content?.title || "C'est quoi que ça va m'apporter"}</SectionTitle>
-            <div className="mt-12 space-y-16">
-                {(content?.mainBenefits || []).map((b: any, index: number) => (
-                     <div key={index} className={`grid md:grid-cols-2 gap-10 items-center`}>
-                        <div className={``}>
-                            <Image src={b.image || "https://picsum.photos/seed/benefit/500/300"} alt={b.title} width={500} height={300} className="rounded-lg shadow-lg object-cover" />
-                        </div>
-                        <div className="space-y-4">
-                            <span className="flex items-center justify-center w-12 h-12 rounded-full bg-red-600 text-white font-bold text-xl">{index + 1}</span>
-                            <h3 className="text-2xl font-bold font-headline mt-2">{b.title}</h3>
-                            <p className="text-muted-foreground">{b.description}</p>
-                        </div>
-                    </div>
-                ))}
-            </div>
-             <div className="mt-20">
-                <Card className="max-w-3xl mx-auto p-8 border-2 border-red-200">
-                    <CardContent className="p-0">
-                        <div className="flex flex-col md:flex-row items-center gap-8">
-                            <div className="flex-shrink-0">
-                                <Image src={content?.sideBenefitsImage || "https://picsum.photos/seed/shield/150/150"} alt="Shield" width={150} height={150} />
-                            </div>
-                            <div>
-                                <h3 className="text-2xl font-bold font-headline">{content?.sideBenefitsTitle || "On sera à tes côtés"}</h3>
-                                <div className="grid grid-cols-2 gap-4 mt-4">
-                                    {(content?.sideBenefitsItems || []).map((item: string, i: number) => (
-                                        <div key={i} className="flex items-center gap-3">
-                                            <CheckCircle className="w-6 h-6 text-red-600" />
-                                            <span className="font-medium">{item}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-                <p className="text-center mt-8 text-lg font-semibold max-w-3xl mx-auto">{content?.conclusion || "Quand vous êtes la charge N°1 de votre prospect et que vous êtes recommandé par son propre entourage, on vous laissera le reste."}</p>
-                 <div className="text-center mt-6">
-                    <Button asChild size="lg" className="rounded-full bg-red-600 text-white hover:bg-red-700 font-bold text-lg px-10 py-6">
-                        <Link href="#contact">{content?.ctaButtonText || "JE VEUX PASSER PRO"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
-                    </Button>
-                </div>
-            </div>
-        </div>
-    </section>
-);
-
 const BeneficiariesSection = ({ content }: { content: any }) => {
     if (!content?.items?.length) return null;
 
@@ -377,7 +327,6 @@ function PersonalBrandingContent() {
         <ExpertiseSection content={pageContent?.expertise} />
         <MethodSection content={pageContent?.method} />
         <ResultsSection content={pageContent?.results} />
-        <BenefitsSection content={pageContent?.benefits} />
         <BeneficiariesSection content={pageContent?.beneficiaries} />
         <FinalCtaSection content={pageContent?.finalCta} />
       </main>
