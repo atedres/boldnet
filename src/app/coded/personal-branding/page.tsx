@@ -12,7 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 const SectionTitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-  <h2 className={cn("text-3xl md:text-4xl font-bold text-center font-headline tracking-tight", className)}>{children}</h2>
+  <h2 className={cn("text-3xl md:text-4xl font-bold text-center font-headline tracking-wider", className)}>{children}</h2>
 );
 
 const SectionSubtitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
@@ -68,7 +68,7 @@ const ProfessionsSection = ({ content }: { content: any }) => (
             />
         )}
         <div className="container mx-auto px-4 relative z-10">
-            <SectionTitle className="text-gray-800">
+            <SectionTitle>
                 <span className="text-red-600">Vous êtes</span> expert dans votre domaine:
             </SectionTitle>
             <div className="grid grid-cols-3 gap-6 md:gap-8 mt-12 max-w-4xl mx-auto">
