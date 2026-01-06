@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { ImageUpload } from '@/components/ui/image-upload';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, ChevronDown } from 'lucide-react';
 import { IconSelect } from '@/components/ui/icon-select';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
@@ -120,7 +120,7 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
             const newData = { ...prevData };
             const steps = [...(newData.method?.steps || [])];
             const subSteps = [...(steps[stepIndex]?.subSteps || [])];
-            subSteps.splice(subStepIndex, 1);
+            subSteps.splice(subIndex, 1);
             steps[stepIndex] = { ...steps[stepIndex], subSteps: subSteps };
             newData.method = { ...newData.method, steps: steps };
             return newData;
@@ -192,8 +192,9 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                                 <Card>
                                     <CardHeader className="flex flex-row items-center justify-between p-4">
                                         <CollapsibleTrigger asChild>
-                                            <button className="flex-1 text-left">
+                                            <button className="flex-1 text-left flex items-center justify-between">
                                                 <CardTitle className="text-base">{prof.name || `Profession ${index + 1}`}</CardTitle>
+                                                <ChevronDown className="h-4 w-4" />
                                             </button>
                                         </CollapsibleTrigger>
                                         <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleRemoveListItem('team', 'professions', index)}><Trash2 className="w-4 h-4" /></Button>
@@ -275,34 +276,35 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                 
                 {/* Method Section */}
                 <AccordionItem value="item-method">
-                    <AccordionTrigger>Method Section</AccordionTrigger>
+                    <AccordionTrigger>Section Méthode</AccordionTrigger>
                     <AccordionContent className="space-y-4 p-4">
                          <div className="grid gap-2">
-                            <Label>Conclusion Text</Label>
+                            <Label>Texte de conclusion</Label>
                             <Input value={formData.method?.conclusion} onChange={(e) => handleFieldChange('method', 'conclusion', e.target.value)} />
                         </div>
                         <div className="grid gap-2">
-                            <Label>CTA Button Text</Label>
+                            <Label>Texte du bouton CTA</Label>
                             <Input value={formData.method?.ctaButtonText} onChange={(e) => handleFieldChange('method', 'ctaButtonText', e.target.value)} />
                         </div>
-                         <Label>Steps</Label>
+                         <Label>Étapes</Label>
                          <div className="space-y-2">
                             {(formData.method?.steps || []).map((step: any, index: number) => (
                                 <Collapsible key={index} asChild>
                                     <Card>
                                         <CardHeader className="flex flex-row items-center justify-between p-4">
                                             <CollapsibleTrigger asChild>
-                                                <button className="flex-1 text-left">
+                                                <button className="flex-1 text-left flex justify-between items-center">
                                                     <CardTitle className="text-base">{step.title || `Étape ${index + 1}`}</CardTitle>
+                                                     <ChevronDown className="h-4 w-4" />
                                                 </button>
                                             </CollapsibleTrigger>
                                             <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleRemoveListItem('method', 'steps', index)}><Trash2 className="w-4 h-4" /></Button>
                                         </CardHeader>
                                         <CollapsibleContent>
                                             <CardContent className="pt-0 p-4 space-y-4">
-                                                <Input placeholder="Step Title" value={step.title} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'title', e.target.value)} />
-                                                <Textarea placeholder="Step Description" value={step.description} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'description', e.target.value)} />
-                                                <ImageUpload label="Image (optional for step 1 & 2)" value={step.imageUrl} onChange={(url) => handleObjectInListChange('method', 'steps', index, 'imageUrl', url)} />
+                                                <Input placeholder="Titre de l'étape" value={step.title} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'title', e.target.value)} />
+                                                <Textarea placeholder="Description de l'étape" value={step.description} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'description', e.target.value)} />
+                                                <ImageUpload label="Image (optionnel pour étape 1 & 2)" value={step.imageUrl} onChange={(url) => handleObjectInListChange('method', 'steps', index, 'imageUrl', url)} />
                                                 
                                                 <Label>Sous-étapes (pour l'étape 3)</Label>
                                                 {(step.subSteps || []).map((subStep: any, subIndex: number) => (
