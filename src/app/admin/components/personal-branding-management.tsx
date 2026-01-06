@@ -133,9 +133,9 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                     </AccordionContent>
                 </AccordionItem>
                 
-                {/* Team Section */}
+                {/* Professions Section */}
                 <AccordionItem value="item-2">
-                    <AccordionTrigger>Team Section</AccordionTrigger>
+                    <AccordionTrigger>Professions Section</AccordionTrigger>
                     <AccordionContent className="space-y-4 p-4">
                          <div className="grid gap-2">
                             <Label>Title</Label>

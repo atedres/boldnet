@@ -25,7 +25,7 @@ const HeroSection = ({ content }: { content: any }) => (
             src={content?.backgroundImageUrl || "https://picsum.photos/seed/hero-bg/1200/800"}
             alt="Background"
             fill
-            className="opacity-40 object-cover"
+            className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-red-900/50 to-transparent"></div>
     </div>
@@ -56,7 +56,7 @@ const HeroSection = ({ content }: { content: any }) => (
   </section>
 );
 
-const TeamSection = ({ content }: { content: any }) => (
+const ProfessionsSection = ({ content }: { content: any }) => (
     <section className="py-16 md:py-24 bg-gray-50">
         <div className="container mx-auto px-4">
             <SectionTitle className="text-red-600">{content?.title || "Vous et notre équipe. À nous deux on va tout révolutionner."}</SectionTitle>
@@ -263,7 +263,7 @@ function PersonalBrandingContent() {
     <div className="bg-white">
       <main>
         <HeroSection content={pageContent?.hero} />
-        <TeamSection content={pageContent?.team} />
+        <ProfessionsSection content={pageContent?.team} />
         <ProblemSection content={pageContent?.problem} />
         <BenefitsSection content={pageContent?.benefits} />
         <ResultsSection content={pageContent?.results} />
