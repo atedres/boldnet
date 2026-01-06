@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Zap, Target, Lightbulb, Users, BarChart, ArrowRight } from 'lucide-react';
+import { CheckCircle, Zap, Target, Lightbulb, BarChart, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -290,9 +290,9 @@ function PersonalBrandingContent() {
         <ProfessionsSection content={pageContent?.team} />
         <ProblemSection content={pageContent?.problem} />
         <ExpertiseSection content={pageContent?.expertise} />
+        <MethodSection content={pageContent?.method} />
         <BenefitsSection content={pageContent?.benefits} />
         <ResultsSection content={pageContent?.results} />
-        <MethodSection content={pageContent?.method} />
         <FinalCtaSection content={pageContent?.finalCta} />
       </main>
     </div>
