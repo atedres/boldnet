@@ -181,10 +181,50 @@ const BenefitsSection = ({ content }: { content: any }) => (
     </section>
 );
 
+const BeneficiariesSection = ({ content }: { content: any }) => {
+    if (!content?.items?.length) return null;
+
+    return (
+        <section className="py-16 md:py-24 bg-[#fff4f2]">
+            <div className="container mx-auto px-4 max-w-2xl">
+                 <div className="flex items-center justify-center mb-12">
+                    <div className="h-px flex-grow bg-red-200"></div>
+                    <SectionTitle className="text-red-600 mx-4 flex-shrink-0">{content?.title || 'QUI PEUT EN BÉNÉFICIER?'}</SectionTitle>
+                    <div className="h-px flex-grow bg-red-200"></div>
+                </div>
+                <div className="space-y-12">
+                    {(content.items || []).map((item: any, index: number) => (
+                        <div key={index} className="relative">
+                            <div className="relative rounded-2xl overflow-hidden shadow-lg">
+                                 <Image 
+                                    src={item.imageUrl || "https://picsum.photos/seed/beneficiary/600/400"}
+                                    alt={item.name}
+                                    width={600}
+                                    height={400}
+                                    className="w-full object-cover"
+                                 />
+                            </div>
+                            <div 
+                                className="absolute top-4 left-4 bg-red-600 text-white font-bold text-lg px-6 py-2 rounded-lg"
+                                style={{ clipPath: 'polygon(0 0, 100% 0, 100% 75%, 85% 100%, 0 100%)' }}
+                            >
+                                {item.name}
+                            </div>
+                            <div className="absolute bottom-4 right-4 bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md max-w-[60%]">
+                                <p className="text-gray-700 text-sm md:text-base">{item.description}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+};
+
 const ResultsSection = ({ content }: { content: any }) => (
     <section className="py-16 md:py-24 bg-red-700 text-white">
         <div className="container mx-auto px-4">
-            <SectionTitle className="mb-8">{content?.title || "LES RÉSULTATS?"}</SectionTitle>
+            <SectionTitle className="mb-16">{content?.title || "LES RÉSULTATS?"}</SectionTitle>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12 relative">
                 {/* Connecting Lines */}
                 <div className="absolute top-6 left-1/2 -translate-x-1/2 w-[calc(100%-8rem)] h-20 border-t-2 border-l-2 border-r-2 border-white/50 rounded-t-full"></div>
@@ -245,7 +285,7 @@ const MethodSection = ({ content }: { content: any }) => {
                              <div className="absolute -top-6 right-4 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10">
                                 {index + 1}
                             </div>
-                            <div className={cn("flex flex-col md:flex-row gap-6 items-center")}>
+                            <div className={cn("flex flex-row gap-6 items-center")}>
                                 {step.imageUrl && (
                                     <div className="w-24 md:w-40 flex-shrink-0">
                                         <Image src={step.imageUrl} alt={step.title} width={400} height={300} className="rounded-lg object-contain"/>
@@ -326,6 +366,7 @@ function PersonalBrandingContent() {
         <MethodSection content={pageContent?.method} />
         <ResultsSection content={pageContent?.results} />
         <BenefitsSection content={pageContent?.benefits} />
+        <BeneficiariesSection content={pageContent?.beneficiaries} />
         <FinalCtaSection content={pageContent?.finalCta} />
       </main>
     </div>

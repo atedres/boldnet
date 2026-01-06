@@ -455,6 +455,23 @@
             "ctaButtonText": { "type": "string" }
           }
         },
+        "beneficiaries": {
+            "type": "object",
+            "properties": {
+                "title": { "type": "string" },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": { "type": "string" },
+                            "description": { "type": "string" },
+                            "imageUrl": { "type": "string", "format": "uri" }
+                        }
+                    }
+                }
+            }
+        },
         "results": {
           "type": "object",
           "properties": {
@@ -472,8 +489,8 @@
         "method": {
           "type": "object",
           "properties": {
-            "title": { "type": "string" },
             "conclusion": { "type": "string" },
+            "ctaButtonText": { "type": "string" },
             "steps": {
               "type": "array",
               "items": {
@@ -494,8 +511,7 @@
                   }
                 }
               }
-            },
-            "ctaButtonText": { "type": "string" }
+            }
           }
         },
         "finalCta": {

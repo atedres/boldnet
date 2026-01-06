@@ -33,8 +33,9 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                 problem: { title: "", mainPoint: "", listItems: [], howToTitle: "", howToListItems: [], question: "", ctaButtonText: ""},
                 expertise: { title: "", subtitle: "", backgroundImageUrl: ""},
                 benefits: { title: "", mainBenefits: [], sideBenefitsTitle: "", sideBenefitsImage: "", sideBenefitsItems: [], conclusion: "", ctaButtonText: "" },
+                beneficiaries: { title: "", items: [] },
                 results: { title: "", withoutTitle: "", withoutItems: [], withoutImage: "", withTitle: "", withItems: [], withImage: "", bonus: "", ctaButtonText: ""},
-                method: { title: "", conclusion: "", steps: [], ctaButtonText: "" },
+                method: { conclusion: "", ctaButtonText: "", steps: [] },
                 finalCta: { title: "", subtitle: "", backgroundImageUrl: "" }
             });
         }
@@ -384,6 +385,40 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                             <Label>CTA Button Text</Label>
                             <Input value={formData.results?.ctaButtonText} onChange={(e) => handleFieldChange('results', 'ctaButtonText', e.target.value)} />
                         </div>
+                    </AccordionContent>
+                </AccordionItem>
+                
+                 {/* Benefits Section */}
+                <AccordionItem value="item-benefits">
+                    <AccordionTrigger>Benefits Section</AccordionTrigger>
+                    <AccordionContent className="space-y-4 p-4">
+                        {/* Fields for Benefits section */}
+                    </AccordionContent>
+                </AccordionItem>
+
+                 {/* Beneficiaries Section */}
+                <AccordionItem value="item-beneficiaries">
+                    <AccordionTrigger>Beneficiaries Section</AccordionTrigger>
+                    <AccordionContent className="space-y-4 p-4">
+                        <div className="grid gap-2">
+                            <Label>Title</Label>
+                            <Input value={formData.beneficiaries?.title} onChange={(e) => handleFieldChange('beneficiaries', 'title', e.target.value)} />
+                        </div>
+                        <Label>Items</Label>
+                        {(formData.beneficiaries?.items || []).map((item: any, index: number) => (
+                            <Card key={index} className="p-4">
+                                <div className="flex justify-between items-center mb-2">
+                                <h4 className="font-semibold">Item {index + 1}</h4>
+                                <Button size="icon" variant="destructive" onClick={() => handleRemoveListItem('beneficiaries', 'items', index)}><Trash2 className="w-4 h-4" /></Button>
+                                </div>
+                                <div className="space-y-4">
+                                    <Input placeholder="Name (e.g., Dentistes)" value={item.name} onChange={(e) => handleObjectInListChange('beneficiaries', 'items', index, 'name', e.target.value)} />
+                                    <Textarea placeholder="Description" value={item.description} onChange={(e) => handleObjectInListChange('beneficiaries', 'items', index, 'description', e.target.value)} />
+                                    <ImageUpload label="Image" value={item.imageUrl} onChange={(url) => handleObjectInListChange('beneficiaries', 'items', index, 'imageUrl', url)} />
+                                </div>
+                            </Card>
+                        ))}
+                        <Button variant="outline" onClick={() => handleAddObjectInList('beneficiaries', 'items', { name: "", description: "", imageUrl: "" })}><Plus className="w-4 h-4 mr-2" /> Add Beneficiary</Button>
                     </AccordionContent>
                 </AccordionItem>
                  
