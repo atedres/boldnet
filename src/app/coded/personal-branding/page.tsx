@@ -324,8 +324,8 @@ function PersonalBrandingContent() {
         <ProblemSection content={pageContent?.problem} />
         <ExpertiseSection content={pageContent?.expertise} />
         <MethodSection content={pageContent?.method} />
-        <BenefitsSection content={pageContent?.benefits} />
         <ResultsSection content={pageContent?.results} />
+        <BenefitsSection content={pageContent?.benefits} />
         <FinalCtaSection content={pageContent?.finalCta} />
       </main>
     </div>
