@@ -218,32 +218,32 @@ const ResultsSection = ({ content }: { content: any }) => (
 const methodIcons = [<Zap/>, <Target/>, <Lightbulb/>, <BarChart/>];
 
 const MethodSection = ({ content }: { content: any }) => (
-    <section className="py-16 md:py-24 bg-red-700 text-white">
+    <section className="py-16 md:py-24 bg-[#fff4f2] text-gray-800">
         <div className="container mx-auto px-4">
             <div className="text-center">
                 <h2 className="text-3xl md:text-4xl font-bold font-headline">{content?.title || "NOTRE MÉTHODE"}</h2>
-                <div className="inline-block w-24 h-1 bg-white mt-2"></div>
+                <div className="inline-block w-24 h-1 bg-red-600 mt-2"></div>
             </div>
             <div className="relative mt-12 max-w-2xl mx-auto">
                 {/* Connecting line */}
-                <div className="absolute left-9 top-9 bottom-9 w-0.5 bg-white/30" aria-hidden="true"></div>
+                <div className="absolute left-9 top-9 bottom-9 w-0.5 bg-red-200/70" aria-hidden="true"></div>
                 <div className="space-y-12">
                     {(content?.steps || []).map((item: any, index: number) => (
                         <div key={index} className="relative flex items-start gap-6">
-                            <div className="relative z-10 flex-shrink-0 w-16 h-16 rounded-full bg-white text-red-600 flex items-center justify-center border-4 border-red-700">
+                            <div className="relative z-10 flex-shrink-0 w-16 h-16 rounded-full bg-white text-primary flex items-center justify-center border-4 border-[#fff4f2]">
                                 {React.cloneElement(methodIcons[index % methodIcons.length], { className: 'w-8 h-8' })}
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold">ÉTAPE {index + 1}</h3>
+                                <h3 className="text-xl font-bold text-primary">ÉTAPE {index + 1}</h3>
                                 <h4 className="text-2xl font-headline mt-1">{item.title}</h4>
-                                <p className="mt-2 text-red-200">{item.description}</p>
+                                <p className="mt-2 text-muted-foreground">{item.description}</p>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
              <div className="text-center mt-12">
-                <Button asChild size="lg" className="rounded-full bg-white text-red-600 hover:bg-gray-200 font-bold text-lg px-10 py-6">
+                <Button asChild size="lg" className="rounded-full bg-red-600 text-white hover:bg-red-700 font-bold text-lg px-10 py-6">
                     <Link href="#contact">{content?.ctaButtonText || "DEVENIR VISIBLE"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
                 </Button>
             </div>
