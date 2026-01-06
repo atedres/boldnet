@@ -219,14 +219,10 @@ const MethodSection = ({ content }: { content: any }) => {
     return (
         <section className="py-16 md:py-24 bg-[#fff4f2]">
             <div className="container mx-auto px-4">
-                 <h2 className="text-4xl md:text-5xl font-extrabold font-headline text-center uppercase tracking-wider mb-12">
-                    {content?.title || "NOTRE MÉTHODE"}
-                    <span className="block w-24 h-1 bg-red-600 mx-auto mt-4"></span>
-                </h2>
                 <div className="space-y-8 max-w-4xl mx-auto">
                     {(content?.steps || []).map((step: any, index: number) => (
                         <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative border-none">
-                             <div className="absolute top-0 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10 -translate-y-1/2 right-0">
+                             <div className="absolute -top-6 right-0 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10">
                                 {index + 1}
                             </div>
                             <div className={cn("flex flex-row gap-4 items-center")}>
