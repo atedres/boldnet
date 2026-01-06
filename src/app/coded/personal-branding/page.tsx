@@ -227,13 +227,13 @@ const MethodSection = ({ content }: { content: any }) => (
             <div className="relative mt-12 max-w-2xl mx-auto">
                 {/* Connecting line */}
                 <div className="absolute left-9 top-9 bottom-9 w-0.5 bg-red-200/70" aria-hidden="true"></div>
-                <div className="space-y-12">
+                <div className="space-y-8">
                     {(content?.steps || []).map((item: any, index: number) => (
                         <div key={index} className="relative flex items-start gap-6">
                             <div className="relative z-10 flex-shrink-0 w-16 h-16 rounded-full bg-white text-primary flex items-center justify-center border-4 border-[#fff4f2]">
                                 {React.cloneElement(methodIcons[index % methodIcons.length], { className: 'w-8 h-8' })}
                             </div>
-                            <div>
+                            <div className="bg-white p-6 rounded-lg shadow-sm flex-1">
                                 <h3 className="text-xl font-bold text-primary">ÉTAPE {index + 1}</h3>
                                 <h4 className="text-2xl font-headline mt-1">{item.title}</h4>
                                 <p className="mt-2 text-muted-foreground">{item.description}</p>
