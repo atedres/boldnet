@@ -31,7 +31,11 @@ const HeroSection = ({ content }: { content: any }) => (
     </div>
     <div className="relative z-10 container mx-auto flex flex-col items-center justify-center h-full text-center px-4">
       <div className="w-24 h-24 mb-6 relative">
-        {content?.logoUrl ? <Image src={content.logoUrl} alt="Page Logo" fill className="object-contain" /> : <SiteLogo />}
+        {content?.logoSvg ? (
+          <div className="w-full h-full text-white" dangerouslySetInnerHTML={{ __html: content.logoSvg }} />
+        ) : (
+          <SiteLogo />
+        )}
       </div>
       <h1 className="text-4xl md:text-6xl font-extrabold font-headline leading-tight tracking-wider uppercase">
         {content?.title || "On ne crée pas de personal brands"}

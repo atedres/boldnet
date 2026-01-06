@@ -26,7 +26,7 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
         } else {
             // Set default structure if no data exists
             setFormData({
-                hero: { title: "", subtitle: "", ctaButtonText: "", backgroundImageUrl: "", logoUrl: ""},
+                hero: { title: "", subtitle: "", ctaButtonText: "", backgroundImageUrl: "", logoSvg: ""},
                 team: { title: "", professions: [] },
                 problem: { title: "", mainPoint: "", listItems: [], howToTitle: "", howToListItems: [], question: "", ctaButtonText: ""},
                 benefits: { title: "", mainBenefits: [], sideBenefitsTitle: "", sideBenefitsImage: "", sideBenefitsItems: [], conclusion: "", ctaButtonText: "" },
@@ -100,7 +100,15 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                     <AccordionTrigger>Hero Section</AccordionTrigger>
                     <AccordionContent className="space-y-4 p-4">
                         <ImageUpload label="Background Image" value={formData.hero?.backgroundImageUrl} onChange={(url) => handleFieldChange('hero', 'backgroundImageUrl', url)} />
-                        <ImageUpload label="Logo" value={formData.hero?.logoUrl} onChange={(url) => handleFieldChange('hero', 'logoUrl', url)} />
+                        <div className="grid gap-2">
+                            <Label>Logo SVG Code</Label>
+                            <Textarea 
+                                value={formData.hero?.logoSvg} 
+                                onChange={(e) => handleFieldChange('hero', 'logoSvg', e.target.value)} 
+                                placeholder="<svg>...</svg>"
+                                className="h-32 font-mono"
+                            />
+                        </div>
                         <div className="grid gap-2">
                             <Label>Title</Label>
                             <Input value={formData.hero?.title} onChange={(e) => handleFieldChange('hero', 'title', e.target.value)} />
