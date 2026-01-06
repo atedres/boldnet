@@ -225,13 +225,13 @@ const MethodSection = ({ content }: { content: any }) => {
                 </h2>
                 <div className="space-y-8 max-w-4xl mx-auto">
                     {(content?.steps || []).map((step: any, index: number) => (
-                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative overflow-hidden border-none">
-                            <div className="absolute top-0 right-0 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10 translate-x-1/2 -translate-y-1/2">
+                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative border-none">
+                            <div className="absolute top-0 right-0 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10 -translate-y-1/2">
                                 {index + 1}
                             </div>
-                            <div className={cn("flex flex-row gap-6 md:gap-8 items-center")}>
+                            <div className={cn("flex flex-col md:flex-row gap-6 md:gap-8 items-center")}>
                                 {step.imageUrl && (
-                                    <div className="w-40 flex-shrink-0 hidden md:block">
+                                    <div className="w-full md:w-40 flex-shrink-0">
                                         <Image src={step.imageUrl} alt={step.title} width={400} height={300} className="rounded-lg object-contain"/>
                                     </div>
                                 )}
@@ -244,10 +244,10 @@ const MethodSection = ({ content }: { content: any }) => {
                                         <div className={cn("grid gap-4 mt-6", "grid-cols-3")}>
                                             {step.subSteps.map((sub: any, subIndex: number) => (
                                                 <div key={subIndex} className="text-center">
-                                                    <div className="w-12 h-12 mx-auto rounded-lg bg-red-100 flex items-center justify-center">
-                                                        <DynamicIcon iconName={sub.iconName || 'PenTool'} className="w-6 h-6 text-red-600" />
+                                                    <div className="w-12 h-12 mx-auto flex items-center justify-center">
+                                                        <DynamicIcon iconName={sub.iconName || 'PenTool'} className="w-8 h-8 text-red-600" />
                                                     </div>
-                                                    <p className="mt-2 text-sm font-semibold">{sub.name}</p>
+                                                    <p className="mt-2 text-sm font-semibold text-muted-foreground">{sub.name}</p>
                                                 </div>
                                             ))}
                                         </div>
@@ -323,6 +323,3 @@ export default function PersonalBrandingPage() {
         </FirebaseClientProvider>
     )
 }
-
-    
-    
