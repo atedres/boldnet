@@ -138,7 +138,7 @@ const BenefitsSection = ({ content }: { content: any }) => (
             <div className="mt-12 space-y-16">
                 {(content?.mainBenefits || []).map((b: any, index: number) => (
                      <div key={index} className={`grid md:grid-cols-2 gap-10 items-center`}>
-                        <div className={`${index % 2 === 1 ? 'md:order-last' : ''}`}>
+                        <div className={``}>
                             <Image src={b.image || "https://picsum.photos/seed/benefit/500/300"} alt={b.title} width={500} height={300} className="rounded-lg shadow-lg object-cover" />
                         </div>
                         <div className="space-y-4">
@@ -221,17 +221,17 @@ const MethodSection = ({ content }: { content: any }) => {
             <div className="container mx-auto px-4">
                 <div className="space-y-8 max-w-4xl mx-auto">
                     {(content?.steps || []).map((step: any, index: number) => (
-                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative border-none">
-                            <div className="absolute top-0 right-0 -translate-y-1/2 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10">
+                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative">
+                            <div className="absolute top-0 right-0 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10 -translate-y-1/2">
                                 {index + 1}
                             </div>
-                            <div className={cn("grid gap-6 md:gap-8", step.imageUrl && "md:grid-cols-2 items-center")}>
+                            <div className={cn("flex flex-col sm:flex-row gap-6 md:gap-8 items-center")}>
                                 {step.imageUrl && (
-                                    <div>
+                                    <div className="w-full sm:w-1/3 flex-shrink-0">
                                         <Image src={step.imageUrl} alt={step.title} width={400} height={300} className="rounded-lg object-contain"/>
                                     </div>
                                 )}
-                                <div className={cn(!step.imageUrl && "text-center")}>
+                                <div className={cn("flex-grow", !step.imageUrl && "text-center")}>
                                     <h3 className="text-2xl font-bold font-headline text-red-600">{step.title}</h3>
                                     
                                     {step.description && <p className="mt-2 text-muted-foreground">{step.description}</p>}
