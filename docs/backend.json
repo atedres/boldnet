@@ -400,6 +400,7 @@
           "type": "object",
           "properties": {
             "title": { "type": "string" },
+            "backgroundImageUrl": { "type": "string", "format": "uri" },
             "professions": {
               "type": "array",
               "items": {

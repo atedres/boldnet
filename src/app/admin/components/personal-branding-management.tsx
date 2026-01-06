@@ -27,7 +27,7 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
             // Set default structure if no data exists
             setFormData({
                 hero: { title: "", subtitle: "", ctaButtonText: "", backgroundImageUrl: "", logoSvg: "", logoSize: 96},
-                team: { title: "", professions: [] },
+                team: { title: "", backgroundImage: "", professions: [] },
                 problem: { title: "", mainPoint: "", listItems: [], howToTitle: "", howToListItems: [], question: "", ctaButtonText: ""},
                 benefits: { title: "", mainBenefits: [], sideBenefitsTitle: "", sideBenefitsImage: "", sideBenefitsItems: [], conclusion: "", ctaButtonText: "" },
                 results: { title: "", withoutTitle: "", withoutItems: [], withoutImage: "", withTitle: "", withItems: [], withImage: "", bonus: "", ctaButtonText: ""},
@@ -141,6 +141,7 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                             <Label>Title</Label>
                             <Input value={formData.team?.title} onChange={(e) => handleFieldChange('team', 'title', e.target.value)} />
                         </div>
+                        <ImageUpload label="Background Image" value={formData.team?.backgroundImageUrl} onChange={(url) => handleFieldChange('team', 'backgroundImageUrl', url)} />
                         <Label>Professions</Label>
                         {(formData.team?.professions || []).map((prof: any, index: number) => (
                              <Card key={index} className="p-4">

@@ -9,9 +9,10 @@ import { SiteLogo } from './components';
 import { FirebaseClientProvider, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 
 const SectionTitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-  <h2 className={`text-3xl md:text-4xl font-bold text-center font-headline tracking-tight ${className}`}>{children}</h2>
+  <h2 className={cn("text-3xl md:text-4xl font-bold text-center font-headline tracking-tight", className)}>{children}</h2>
 );
 
 const SectionSubtitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
@@ -57,14 +58,25 @@ const HeroSection = ({ content }: { content: any }) => (
 );
 
 const ProfessionsSection = ({ content }: { content: any }) => (
-    <section className="py-16 md:py-24 bg-gray-50">
-        <div className="container mx-auto px-4">
-            <SectionTitle className="text-red-600">{content?.title || "Vous et notre équipe. À nous deux on va tout révolutionner."}</SectionTitle>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mt-12">
-                {(content?.professions || []).map((p: any) => (
-                    <div key={p.name} className="flex flex-col items-center gap-4 text-center">
-                        <Image src={p.image || "https://picsum.photos/seed/placeholder/150/150"} alt={p.name} width={150} height={150} className="rounded-full object-cover aspect-square" />
-                        <h3 className="font-semibold text-lg">{p.name}</h3>
+    <section className="py-16 md:py-24 relative">
+         {content?.backgroundImageUrl && (
+            <Image
+                src={content.backgroundImageUrl}
+                alt="Professions background"
+                fill
+                className="object-cover z-0 opacity-10"
+            />
+        )}
+        <div className="container mx-auto px-4 relative z-10">
+            <SectionTitle className="text-gray-800">
+                <span className="text-red-600">Vous êtes</span> expert dans votre domaine:
+            </SectionTitle>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mt-12 max-w-4xl mx-auto">
+                {(content?.professions || []).map((p: any, index: number) => (
+                    <div key={index} className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-lg group">
+                        <Image src={p.image || "https://picsum.photos/seed/prof${index}/300/400"} alt={p.name} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                        <h3 className="absolute bottom-4 left-4 text-white font-bold text-xl drop-shadow-md">{p.name}</h3>
                     </div>
                 ))}
             </div>
