@@ -184,7 +184,7 @@ const BenefitsSection = ({ content }: { content: any }) => (
 const ResultsSection = ({ content }: { content: any }) => (
     <section className="py-16 md:py-24 bg-red-700 text-white">
         <div className="container mx-auto px-4">
-            <SectionTitle>{content?.title || "LES RÉSULTATS?"}</SectionTitle>
+            <SectionTitle className="mb-8">{content?.title || "LES RÉSULTATS?"}</SectionTitle>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12 relative">
                 {/* Connecting Lines */}
                 <div className="absolute top-6 left-1/2 -translate-x-1/2 w-[calc(100%-8rem)] h-20 border-t-2 border-l-2 border-r-2 border-white/50 rounded-t-full"></div>
@@ -245,7 +245,7 @@ const MethodSection = ({ content }: { content: any }) => {
                              <div className="absolute -top-6 right-4 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10">
                                 {index + 1}
                             </div>
-                            <div className={cn("flex flex-row gap-4 items-center")}>
+                            <div className={cn("flex flex-col md:flex-row gap-6 items-center")}>
                                 {step.imageUrl && (
                                     <div className="w-24 md:w-40 flex-shrink-0">
                                         <Image src={step.imageUrl} alt={step.title} width={400} height={300} className="rounded-lg object-contain"/>
@@ -259,11 +259,11 @@ const MethodSection = ({ content }: { content: any }) => {
                                     {step.subSteps && step.subSteps.length > 0 && (
                                         <div className={cn("grid gap-2 mt-6", "grid-cols-3")}>
                                             {step.subSteps.map((sub: any, subIndex: number) => (
-                                                <div key={subIndex} className="text-center">
+                                                <div key={subIndex} className="text-center p-2">
                                                     <div className="w-12 h-12 mx-auto flex items-center justify-center">
                                                         <DynamicIcon iconName={sub.iconName || 'PenTool'} className="w-8 h-8 text-red-600" />
                                                     </div>
-                                                    <p className="mt-2 text-sm font-semibold text-muted-foreground">{sub.name}</p>
+                                                    <p className="mt-2 text-sm font-semibold text-gray-600">{sub.name}</p>
                                                 </div>
                                             ))}
                                         </div>
