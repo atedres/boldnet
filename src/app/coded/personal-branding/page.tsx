@@ -225,13 +225,13 @@ const MethodSection = ({ content }: { content: any }) => {
                 </h2>
                 <div className="space-y-8 max-w-4xl mx-auto">
                     {(content?.steps || []).map((step: any, index: number) => (
-                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative border-none">
-                            <div className="absolute top-0 right-0 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10 -translate-y-1/2">
+                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative border-none overflow-visible">
+                             <div className="absolute top-0 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10 -translate-y-1/2 right-0">
                                 {index + 1}
                             </div>
-                            <div className={cn("flex flex-col md:flex-row gap-6 md:gap-8 items-center")}>
+                            <div className={cn("flex flex-row gap-4 items-center")}>
                                 {step.imageUrl && (
-                                    <div className="w-full md:w-40 flex-shrink-0">
+                                    <div className="w-24 md:w-40 flex-shrink-0">
                                         <Image src={step.imageUrl} alt={step.title} width={400} height={300} className="rounded-lg object-contain"/>
                                     </div>
                                 )}
