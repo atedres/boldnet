@@ -77,15 +77,55 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
     };
     
     const handleObjectInListChange = (section: string, listName: string, index: number, field: string, value: any) => {
-        const newList = [...(formData[section]?.[listName] || [])];
-        newList[index] = {...newList[index], [field]: value};
-        handleFieldChange(section, listName, newList);
+        setFormData((prevData: any) => {
+            const newData = { ...prevData };
+            const newList = [...(newData[section]?.[listName] || [])];
+            newList[index] = { ...newList[index], [field]: value };
+            newData[section] = { ...newData[section], [listName]: newList };
+            return newData;
+        });
     };
     
     const handleAddObjectInList = (section: string, listName: string, defaultObject: any) => {
         const newList = [...(formData[section]?.[listName] || []), defaultObject];
         handleFieldChange(section, listName, newList);
     };
+    
+    const handleSubStepChange = (stepIndex: number, subStepIndex: number, field: 'name' | 'iconName', value: string) => {
+        setFormData((prevData: any) => {
+            const newData = { ...prevData };
+            const steps = [...(newData.method?.steps || [])];
+            const subSteps = [...(steps[stepIndex]?.subSteps || [])];
+            subSteps[subStepIndex] = { ...subSteps[subStepIndex], [field]: value };
+            steps[stepIndex] = { ...steps[stepIndex], subSteps: subSteps };
+            newData.method = { ...newData.method, steps: steps };
+            return newData;
+        });
+    };
+
+    const handleAddSubStep = (stepIndex: number) => {
+        setFormData((prevData: any) => {
+            const newData = { ...prevData };
+            const steps = [...(newData.method?.steps || [])];
+            const subSteps = [...(steps[stepIndex]?.subSteps || []), { name: "", iconName: "PenTool" }];
+            steps[stepIndex] = { ...steps[stepIndex], subSteps: subSteps };
+            newData.method = { ...newData.method, steps: steps };
+            return newData;
+        });
+    };
+
+    const handleRemoveSubStep = (stepIndex: number, subStepIndex: number) => {
+        setFormData((prevData: any) => {
+            const newData = { ...prevData };
+            const steps = [...(newData.method?.steps || [])];
+            const subSteps = [...(steps[stepIndex]?.subSteps || [])];
+            subSteps.splice(subStepIndex, 1);
+            steps[stepIndex] = { ...steps[stepIndex], subSteps: subSteps };
+            newData.method = { ...newData.method, steps: steps };
+            return newData;
+        });
+    };
+
 
     if (isLoading) return <p>Loading page content...</p>;
 
@@ -248,14 +288,14 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                                     <Label>Sous-étapes (pour l'étape 3)</Label>
                                     {(step.subSteps || []).map((subStep: any, subIndex: number) => (
                                         <div key={subIndex} className="flex gap-2 items-center border-t pt-2">
-                                            <IconSelect value={subStep.iconName} onChange={(val) => handleObjectInListChange('method', 'steps', index, 'subSteps', step.subSteps.map((ss:any, i:number) => i === subIndex ? {...ss, iconName: val} : ss))} />
-                                            <Input placeholder="Nom de la sous-étape" value={subStep.name} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'subSteps', step.subSteps.map((ss:any, i:number) => i === subIndex ? {...ss, name: e.target.value} : ss))} />
-                                            <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleObjectInListChange('method', 'steps', index, 'subSteps', step.subSteps.filter((_:any, i:number) => i !== subIndex))}>
+                                            <IconSelect value={subStep.iconName} onChange={(val) => handleSubStepChange(index, subIndex, 'iconName', val)} />
+                                            <Input placeholder="Nom de la sous-étape" value={subStep.name} onChange={(e) => handleSubStepChange(index, subIndex, 'name', e.target.value)} />
+                                            <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleRemoveSubStep(index, subIndex)}>
                                                 <Trash2 className="w-4 h-4" />
                                             </Button>
                                         </div>
                                     ))}
-                                    <Button variant="outline" size="sm" onClick={() => handleObjectInListChange('method', 'steps', index, 'subSteps', [...(step.subSteps || []), { name: "", iconName: "PenTool" }])}>
+                                    <Button variant="outline" size="sm" onClick={() => handleAddSubStep(index)}>
                                         <Plus className="w-4 h-4 mr-2" /> Ajouter une sous-étape
                                     </Button>
 
