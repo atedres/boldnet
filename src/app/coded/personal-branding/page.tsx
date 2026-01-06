@@ -124,7 +124,7 @@ const ExpertiseSection = ({ content }: { content: any }) => (
         </div>
         <div className="relative z-10 container mx-auto px-4 text-center">
             <p className="text-xl md:text-2xl font-light">{content?.title || "C'est ainsi que nous faisons de vous:"}</p>
-            <h2 className="mt-4 text-3xl md:text-5xl font-extrabold font-headline tracking-wider flex items-center justify-center gap-6">
+            <h2 className="mt-4 text-3xl md:text-5xl font-extrabold font-headline flex items-center justify-center gap-6">
                 <ArrowRight className="text-red-600 h-10 w-10 transform -rotate-45" />
                 <span className="tracking-wider">{content?.subtitle || "l'expert incontournable dans votre domaine"}</span>
             </h2>
