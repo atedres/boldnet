@@ -71,7 +71,7 @@ const ProfessionsSection = ({ content }: { content: any }) => (
             <SectionTitle className="text-gray-800">
                 <span className="text-red-600">Vous êtes</span> expert dans votre domaine:
             </SectionTitle>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 mt-12 max-w-4xl mx-auto">
+            <div className="grid grid-cols-3 gap-6 md:gap-8 mt-12 max-w-4xl mx-auto">
                 {(content?.professions || []).map((p: any, index: number) => (
                     <div key={index} className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-xl group">
                         <Image src={p.image || "https://picsum.photos/seed/prof${index}/300/400"} alt={p.name} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
