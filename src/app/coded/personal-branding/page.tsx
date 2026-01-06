@@ -68,8 +68,8 @@ const ProfessionsSection = ({ content }: { content: any }) => (
             />
         )}
         <div className="container mx-auto px-4 relative z-10">
-            <SectionTitle>
-                <span className="text-red-600">Vous êtes</span> expert dans votre domaine:
+            <SectionTitle className="text-red-600">
+                Vous êtes expert dans votre domaine:
             </SectionTitle>
             <div className="grid grid-cols-3 gap-6 md:gap-8 mt-12 max-w-4xl mx-auto">
                 {(content?.professions || []).map((p: any, index: number) => (
