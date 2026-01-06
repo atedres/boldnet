@@ -225,7 +225,7 @@ const MethodSection = ({ content }: { content: any }) => {
                 </h2>
                 <div className="space-y-8 max-w-4xl mx-auto">
                     {(content?.steps || []).map((step: any, index: number) => (
-                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative border-none overflow-visible">
+                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative border-none">
                              <div className="absolute top-0 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10 -translate-y-1/2 right-0">
                                 {index + 1}
                             </div>
@@ -241,7 +241,7 @@ const MethodSection = ({ content }: { content: any }) => {
                                     {step.description && <p className="mt-2 text-muted-foreground">{step.description}</p>}
 
                                     {step.subSteps && step.subSteps.length > 0 && (
-                                        <div className={cn("grid gap-4 mt-6", "grid-cols-3")}>
+                                        <div className={cn("grid gap-2 mt-6", "grid-cols-3")}>
                                             {step.subSteps.map((sub: any, subIndex: number) => (
                                                 <div key={subIndex} className="text-center">
                                                     <div className="w-12 h-12 mx-auto flex items-center justify-center">
