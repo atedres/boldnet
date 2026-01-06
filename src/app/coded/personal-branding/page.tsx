@@ -94,7 +94,7 @@ const ProblemSection = ({ content }: { content: any }) => (
                     {(content?.listItems || []).map((item: string, i: number) => <li key={i}>{item}</li>)}
                 </ul>
             </div>
-            <Card className="max-w-2xl mx-auto mt-8 bg-red-100/10 text-white p-6 text-left border-red-300">
+            <Card className="max-w-2xl mx-auto mt-8 bg-white text-gray-800 p-6 text-left border-red-300">
                 <CardContent className="p-0">
                     <h4 className="font-bold text-xl mb-4">{content?.howToTitle || "Comment faire :"}</h4>
                     <ul className="space-y-2 list-disc list-inside">
