@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { doc, setDoc } from 'firebase/firestore';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
@@ -14,6 +14,31 @@ import { Plus, Trash2, ChevronDown } from 'lucide-react';
 import { IconSelect } from '@/components/ui/icon-select';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DndSectionSorter, SectionItem } from './dnd-section-sorter';
+
+const SECTION_CONFIG: Record<string, { label: string }> = {
+    hero: { label: 'Hero Section' },
+    team: { label: 'Professions Section' },
+    problem: { label: 'Problem Section' },
+    expertise: { label: 'Expertise Section' },
+    results: { label: 'Results Section' },
+    beneficiaries: { label: 'Beneficiaries Section' },
+    timelineMethod: { label: 'Timeline Method Section' },
+    method: { label: 'Method Section' },
+    finalCta: { label: 'Final CTA Section' },
+};
+
+const DEFAULT_SECTION_ORDER = [
+    'hero',
+    'team',
+    'problem',
+    'expertise',
+    'results',
+    'beneficiaries',
+    'timelineMethod',
+    'method',
+    'finalCta',
+];
 
 export default function PersonalBrandingManagement({ onBack }: { onBack: () => void }) {
     const firestore = useFirestore();
@@ -22,10 +47,12 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
     const { data: pageData, isLoading } = useDoc(pageDocRef);
 
     const [formData, setFormData] = useState<any>({});
+    const [sectionOrder, setSectionOrder] = useState<string[]>(DEFAULT_SECTION_ORDER);
 
     useEffect(() => {
         if (pageData) {
             setFormData(pageData);
+            setSectionOrder(pageData.sectionOrder || DEFAULT_SECTION_ORDER);
         } else {
             // Set default structure if no data exists
             setFormData({
@@ -39,12 +66,21 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                 timelineMethod: { title: "", ctaButtonText: "", steps: [] },
                 finalCta: { title: "", subtitle: "", backgroundImageUrl: "" }
             });
+            setSectionOrder(DEFAULT_SECTION_ORDER);
         }
     }, [pageData]);
+    
+    const sectionItems: SectionItem[] = useMemo(() => {
+        return sectionOrder.map(key => ({
+            id: key,
+            label: SECTION_CONFIG[key]?.label || key,
+        }));
+    }, [sectionOrder]);
 
-    const handleSave = async () => {
+    const handleSave = async (newOrder?: string[]) => {
+        const orderToSave = newOrder || sectionOrder;
         try {
-            await setDoc(pageDocRef, formData, { merge: true });
+            await setDoc(pageDocRef, { ...formData, sectionOrder: orderToSave }, { merge: true });
             toast({ title: 'Page Saved', description: 'Personal Branding page content has been updated.' });
         } catch (error) {
             console.error(error);
@@ -52,6 +88,11 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
         }
     };
     
+    const handleOrderChange = (newOrder: string[]) => {
+        setSectionOrder(newOrder);
+        handleSave(newOrder); 
+    };
+
     const handleFieldChange = (section: string, field: string, value: any) => {
         setFormData((prev: any) => ({
             ...prev,
@@ -136,13 +177,18 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
         <div className="w-full max-w-4xl mx-auto flex flex-col gap-8">
             <div className="flex justify-between items-center">
                  <Button onClick={onBack} variant="outline">Back to Coded Pages</Button>
-                 <Button onClick={handleSave}>Save Page</Button>
+                 <Button onClick={() => handleSave()}>Save Page</Button>
             </div>
+            
+            <DndSectionSorter
+                items={sectionItems}
+                onOrderChange={handleOrderChange}
+            />
            
-            <Accordion type="single" collapsible className="w-full" defaultValue="item-1">
+            <Accordion type="single" collapsible className="w-full">
                 {/* Hero Section */}
                 <AccordionItem value="item-1">
-                    <AccordionTrigger>Hero Section</AccordionTrigger>
+                    <AccordionTrigger>{SECTION_CONFIG.hero.label}</AccordionTrigger>
                     <AccordionContent className="space-y-4 p-4">
                         <ImageUpload label="Background Image" value={formData.hero?.backgroundImageUrl} onChange={(url) => handleFieldChange('hero', 'backgroundImageUrl', url)} />
                         <div className="grid gap-2">
@@ -180,7 +226,7 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                 
                 {/* Professions Section */}
                 <AccordionItem value="item-2">
-                    <AccordionTrigger>Professions Section</AccordionTrigger>
+                    <AccordionTrigger>{SECTION_CONFIG.team.label}</AccordionTrigger>
                     <AccordionContent className="space-y-4 p-4">
                          <div className="grid gap-2">
                             <Label>Title</Label>
@@ -217,7 +263,7 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
 
                  {/* Problem Section */}
                 <AccordionItem value="item-3">
-                    <AccordionTrigger>Problem Section</AccordionTrigger>
+                    <AccordionTrigger>{SECTION_CONFIG.problem.label}</AccordionTrigger>
                     <AccordionContent className="space-y-4 p-4">
                         <div className="grid gap-2">
                             <Label>Title</Label>
@@ -262,7 +308,7 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                 
                  {/* Expertise Section */}
                 <AccordionItem value="item-expertise">
-                    <AccordionTrigger>Expertise Section</AccordionTrigger>
+                    <AccordionTrigger>{SECTION_CONFIG.expertise.label}</AccordionTrigger>
                     <AccordionContent className="space-y-4 p-4">
                         <ImageUpload label="Background Image" value={formData.expertise?.backgroundImageUrl} onChange={(url) => handleFieldChange('expertise', 'backgroundImageUrl', url)} />
                         <div className="grid gap-2">
@@ -275,65 +321,10 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                         </div>
                     </AccordionContent>
                 </AccordionItem>
-                
-                {/* Method Section */}
-                <AccordionItem value="item-method">
-                    <AccordionTrigger>Section Méthode</AccordionTrigger>
-                    <AccordionContent className="space-y-4 p-4">
-                        <Label>Étapes</Label>
-                        <div className="space-y-2">
-                           {(formData.method?.steps || []).map((step: any, index: number) => (
-                               <Card key={index} className="overflow-visible">
-                                   <Collapsible>
-                                       <CollapsibleTrigger asChild>
-                                           <div className="flex items-center justify-between p-4 cursor-pointer">
-                                                <CardTitle className="text-base">{step.title || `Étape ${index + 1}`}</CardTitle>
-                                                <ChevronDown className="h-4 w-4" />
-                                           </div>
-                                       </CollapsibleTrigger>
-                                       <CollapsibleContent>
-                                           <CardContent className="pt-0 p-4 space-y-4">
-                                               <Input placeholder="Titre de l'étape" value={step.title} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'title', e.target.value)} />
-                                               <Textarea placeholder="Description de l'étape" value={step.description} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'description', e.target.value)} />
-                                               <ImageUpload label="Image (optionnel pour étape 1 & 2)" value={step.imageUrl} onChange={(url) => handleObjectInListChange('method', 'steps', index, 'imageUrl', url)} />
-                                               
-                                               <Label>Sous-étapes (pour l'étape 3)</Label>
-                                               {(step.subSteps || []).map((subStep: any, subIndex: number) => (
-                                                   <div key={subIndex} className="flex gap-2 items-center border-t pt-2">
-                                                       <IconSelect value={subStep.iconName} onChange={(val) => handleSubStepChange(index, subIndex, 'iconName', val)} />
-                                                       <Input placeholder="Nom de la sous-étape" value={subStep.name} onChange={(e) => handleSubStepChange(index, subIndex, 'name', e.target.value)} />
-                                                       <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleRemoveSubStep(index, subIndex)}>
-                                                           <Trash2 className="w-4 h-4" />
-                                                       </Button>
-                                                   </div>
-                                               ))}
-                                               <Button variant="outline" size="sm" onClick={() => handleAddSubStep(index)}>
-                                                   <Plus className="w-4 h-4 mr-2" /> Ajouter une sous-étape
-                                               </Button>
-                                           </CardContent>
-                                       </CollapsibleContent>
-                                   </Collapsible>
-                                   <div className="flex justify-end p-2">
-                                        <Button size="sm" variant="destructive" onClick={() => handleRemoveListItem('method', 'steps', index)}>Supprimer l'étape</Button>
-                                   </div>
-                               </Card>
-                           ))}
-                       </div>
-                       <Button variant="outline" onClick={() => handleAddObjectInList('method', 'steps', { title: "", description: "", imageUrl: "", subSteps: [] })}><Plus className="w-4 h-4 mr-2" /> Ajouter une étape</Button>
-                        <div className="grid gap-2 pt-4 border-t">
-                            <Label>Texte de conclusion</Label>
-                            <Input value={formData.method?.conclusion || ''} onChange={(e) => handleFieldChange('method', 'conclusion', e.target.value)} placeholder="Texte de conclusion..."/>
-                        </div>
-                        <div className="grid gap-2">
-                           <Label>Texte du bouton CTA</Label>
-                           <Input value={formData.method?.ctaButtonText || ''} onChange={(e) => handleFieldChange('method', 'ctaButtonText', e.target.value)} placeholder="Texte du bouton..."/>
-                       </div>
-                    </AccordionContent>
-                </AccordionItem>
 
                  {/* Results Section */}
                 <AccordionItem value="item-results">
-                    <AccordionTrigger>Results Section</AccordionTrigger>
+                    <AccordionTrigger>{SECTION_CONFIG.results.label}</AccordionTrigger>
                     <AccordionContent className="space-y-4 p-4">
                         <div className="grid gap-2">
                             <Label>Title</Label>
@@ -391,7 +382,7 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
 
                  {/* Beneficiaries Section */}
                 <AccordionItem value="item-beneficiaries">
-                    <AccordionTrigger>Beneficiaries Section</AccordionTrigger>
+                    <AccordionTrigger>{SECTION_CONFIG.beneficiaries.label}</AccordionTrigger>
                     <AccordionContent className="space-y-4 p-4">
                         <div className="grid gap-2">
                             <Label>Title</Label>
@@ -423,10 +414,10 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                        </div>
                     </AccordionContent>
                 </AccordionItem>
-
+                
                  {/* Timeline Method Section */}
                 <AccordionItem value="item-timeline-method">
-                    <AccordionTrigger>Timeline Method Section</AccordionTrigger>
+                    <AccordionTrigger>{SECTION_CONFIG.timelineMethod.label}</AccordionTrigger>
                     <AccordionContent className="space-y-4 p-4">
                         <div className="grid gap-2">
                             <Label>Title</Label>
@@ -461,11 +452,84 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                         <Button variant="outline" onClick={() => handleAddObjectInList('timelineMethod', 'steps', { stepTitle: "", title: "", description: "", iconName: "Compass", position: "left" })}><Plus className="w-4 h-4 mr-2" /> Add Step</Button>
                     </AccordionContent>
                 </AccordionItem>
-                 
+
+                {/* Method Section */}
+                <AccordionItem value="item-method">
+                    <AccordionTrigger>{SECTION_CONFIG.method.label}</AccordionTrigger>
+                    <AccordionContent className="space-y-4 p-4">
+                        <Label>Étapes</Label>
+                        <div className="space-y-2">
+                           {(formData.method?.steps || []).map((step: any, index: number) => (
+                               <Card key={index} className="overflow-visible">
+                                   <Collapsible>
+                                       <CollapsibleTrigger asChild>
+                                           <div className="flex items-center justify-between p-4 cursor-pointer">
+                                                <CardTitle className="text-base">{step.title || `Étape ${index + 1}`}</CardTitle>
+                                                <ChevronDown className="h-4 w-4" />
+                                           </div>
+                                       </CollapsibleTrigger>
+                                       <CollapsibleContent>
+                                           <CardContent className="pt-0 p-4 space-y-4">
+                                               <Input placeholder="Titre de l'étape" value={step.title} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'title', e.target.value)} />
+                                               <Textarea placeholder="Description de l'étape" value={step.description} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'description', e.target.value)} />
+                                               <ImageUpload label="Image (optionnel pour étape 1 & 2)" value={step.imageUrl} onChange={(url) => handleObjectInListChange('method', 'steps', index, 'imageUrl', url)} />
+                                               
+                                               <Label>Sous-étapes (pour l'étape 3)</Label>
+                                               {(step.subSteps || []).map((subStep: any, subIndex: number) => (
+                                                   <div key={subIndex} className="flex gap-2 items-center border-t pt-2">
+                                                       <IconSelect value={subStep.iconName} onChange={(val) => handleSubStepChange(index, subIndex, 'iconName', val)} />
+                                                       <Input placeholder="Nom de la sous-étape" value={subStep.name} onChange={(e) => handleSubStepChange(index, subIndex, 'name', e.target.value)} />
+                                                       <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleRemoveSubStep(index, subIndex)}>
+                                                           <Trash2 className="w-4 h-4" />
+                                                       </Button>
+                                                   </div>
+                                               ))}
+                                               <Button variant="outline" size="sm" onClick={() => handleAddSubStep(index)}>
+                                                   <Plus className="w-4 h-4 mr-2" /> Ajouter une sous-étape
+                                               </Button>
+                                           </CardContent>
+                                       </CollapsibleContent>
+                                   </Collapsible>
+                                   <div className="flex justify-end p-2">
+                                        <Button size="sm" variant="destructive" onClick={() => handleRemoveListItem('method', 'steps', index)}>Supprimer l'étape</Button>
+                                   </div>
+                               </Card>
+                           ))}
+                       </div>
+                       <Button variant="outline" onClick={() => handleAddObjectInList('method', 'steps', { title: "", description: "", imageUrl: "", subSteps: [] })}><Plus className="w-4 h-4 mr-2" /> Ajouter une étape</Button>
+                        <div className="grid gap-2 pt-4 border-t">
+                            <Label>Texte de conclusion</Label>
+                            <Input value={formData.method?.conclusion || ''} onChange={(e) => handleFieldChange('method', 'conclusion', e.target.value)} placeholder="Texte de conclusion..."/>
+                        </div>
+                        <div className="grid gap-2">
+                           <Label>Texte du bouton CTA</Label>
+                           <Input value={formData.method?.ctaButtonText || ''} onChange={(e) => handleFieldChange('method', 'ctaButtonText', e.target.value)} placeholder="Texte du bouton..."/>
+                       </div>
+                    </AccordionContent>
+                </AccordionItem>
+                
+                 {/* Final CTA Section */}
+                <AccordionItem value="item-finalCta">
+                    <AccordionTrigger>{SECTION_CONFIG.finalCta.label}</AccordionTrigger>
+                    <AccordionContent className="space-y-4 p-4">
+                        <ImageUpload label="Background Image" value={formData.finalCta?.backgroundImageUrl} onChange={(url) => handleFieldChange('finalCta', 'backgroundImageUrl', url)} />
+                        <div className="grid gap-2">
+                            <Label>Title</Label>
+                            <Input value={formData.finalCta?.title} onChange={(e) => handleFieldChange('finalCta', 'title', e.target.value)} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>Subtitle</Label>
+                            <Input value={formData.finalCta?.subtitle} onChange={(e) => handleFieldChange('finalCta', 'subtitle', e.target.value)} />
+                        </div>
+                    </AccordionContent>
+                </AccordionItem>
+
             </Accordion>
             <div className="text-right mt-4">
-                 <Button onClick={handleSave}>Save Page</Button>
+                 <Button onClick={() => handleSave()}>Save Page</Button>
             </div>
         </div>
     );
 }
+
+    

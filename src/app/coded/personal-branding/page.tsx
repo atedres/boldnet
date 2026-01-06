@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, Lightbulb, BarChart, ArrowRight, PenTool, Video, Image as ImageIcon, Speaker, MessageSquare, Globe, Compass, Target } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { SiteLogo } from './components';
 import { FirebaseClientProvider, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
@@ -352,6 +352,30 @@ const FinalCtaSection = ({ content }: { content: any }) => (
     </section>
 )
 
+const sectionComponents: Record<string, React.FC<any>> = {
+    hero: HeroSection,
+    team: ProfessionsSection,
+    problem: ProblemSection,
+    expertise: ExpertiseSection,
+    results: ResultsSection,
+    beneficiaries: BeneficiariesSection,
+    timelineMethod: TimelineMethodSection,
+    method: MethodSection,
+    finalCta: FinalCtaSection,
+};
+
+const DEFAULT_SECTION_ORDER = [
+    'hero',
+    'team',
+    'problem',
+    'expertise',
+    'results',
+    'beneficiaries',
+    'timelineMethod',
+    'method',
+    'finalCta',
+];
+
 function PersonalBrandingContent() {
     const firestore = useFirestore();
     const pageDocRef = useMemoFirebase(() => doc(firestore, 'personal_branding_pages', 'main'), [firestore]);
@@ -359,7 +383,9 @@ function PersonalBrandingContent() {
     const [isFormOpen, setIsFormOpen] = useState(false);
 
     const handleOpenForm = () => setIsFormOpen(true);
-    const handleCloseForm = () => setIsFormOpen(false);
+
+    const sectionOrder = useMemo(() => pageContent?.sectionOrder || DEFAULT_SECTION_ORDER, [pageContent]);
+
 
     if (isLoading) {
         return (
@@ -370,18 +396,22 @@ function PersonalBrandingContent() {
             </div>
         )
     }
+
   return (
     <div className="bg-white">
       <main>
-        <HeroSection content={pageContent?.hero} onCtaClick={handleOpenForm} />
-        <ProfessionsSection content={pageContent?.team} />
-        <ProblemSection content={pageContent?.problem} onCtaClick={handleOpenForm} />
-        <ExpertiseSection content={pageContent?.expertise} />
-        <ResultsSection content={pageContent?.results} onCtaClick={handleOpenForm} />
-        <BeneficiariesSection content={pageContent?.beneficiaries} onCtaClick={handleOpenForm} />
-        <TimelineMethodSection content={pageContent?.timelineMethod} onCtaClick={handleOpenForm} />
-        <MethodSection content={pageContent?.method} onCtaClick={handleOpenForm} />
-        <FinalCtaSection content={pageContent?.finalCta} />
+        {sectionOrder.map((sectionKey: string) => {
+            const Component = sectionComponents[sectionKey];
+            if (!Component || !pageContent?.[sectionKey]) {
+                return null;
+            }
+            const content = pageContent[sectionKey];
+            
+            // The FinalCtaSection is the only one without a CTA button.
+            const onCtaClick = sectionKey !== 'finalCta' ? handleOpenForm : undefined;
+
+            return <Component key={sectionKey} content={content} onCtaClick={onCtaClick} />;
+        })}
       </main>
       {isFormOpen && <PersonalBrandingContactForm onOpenChange={setIsFormOpen} />}
     </div>
@@ -395,3 +425,5 @@ export default function PersonalBrandingPage() {
         </FirebaseClientProvider>
     )
 }
+
+    
