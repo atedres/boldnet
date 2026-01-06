@@ -143,17 +143,20 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                         </div>
                         <ImageUpload label="Background Image" value={formData.team?.backgroundImageUrl} onChange={(url) => handleFieldChange('team', 'backgroundImageUrl', url)} />
                         <Label>Professions</Label>
+                        <Accordion type="multiple" className="space-y-2">
                         {(formData.team?.professions || []).map((prof: any, index: number) => (
-                             <Card key={index} className="p-4">
-                                <CardContent className="space-y-4 p-0">
+                             <AccordionItem key={index} value={`prof-${index}`} className="border rounded-md px-4 bg-background">
+                                <AccordionTrigger>{prof.name || `Profession ${index + 1}`}</AccordionTrigger>
+                                <AccordionContent className="pt-4 space-y-4">
                                     <ImageUpload label={`Image ${index+1}`} value={prof.image} onChange={(url) => handleObjectInListChange('team', 'professions', index, 'image', url)} />
                                     <Input placeholder="Name" value={prof.name} onChange={(e) => handleObjectInListChange('team', 'professions', index, 'name', e.target.value)} />
-                                </CardContent>
-                                <CardFooter className="p-0 pt-4">
-                                     <Button size="icon" variant="destructive" onClick={() => handleRemoveListItem('team', 'professions', index)}><Trash2 className="w-4 h-4" /></Button>
-                                </CardFooter>
-                            </Card>
+                                    <div className="text-right">
+                                         <Button size="icon" variant="destructive" onClick={() => handleRemoveListItem('team', 'professions', index)}><Trash2 className="w-4 h-4" /></Button>
+                                    </div>
+                                </AccordionContent>
+                            </AccordionItem>
                         ))}
+                        </Accordion>
                         <Button variant="outline" onClick={() => handleAddObjectInList('team', 'professions', { name: "", image: "" })}><Plus className="w-4 h-4 mr-2" /> Add Profession</Button>
                     </AccordionContent>
                 </AccordionItem>
