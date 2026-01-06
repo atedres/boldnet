@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Lightbulb, BarChart, ArrowRight, PenTool, Video, Image as ImageIcon, Speaker, MessageSquare, Globe } from 'lucide-react';
+import { CheckCircle, Lightbulb, BarChart, ArrowRight, PenTool, Video, Image as ImageIcon, Speaker, MessageSquare, Globe, Compass, Target } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -286,6 +286,58 @@ const MethodSection = ({ content }: { content: any }) => {
     );
 };
 
+const TimelineMethodSection = ({ content }: { content: any }) => {
+    const defaultSteps = [
+        { stepTitle: 'ÉTAPE 1', title: 'DÉCOUVERTE', description: 'On explore votre histoire.. vos objectifs et votre public.', iconName: 'Compass', position: 'right' },
+        { stepTitle: 'ÉTAPE 2', title: 'STRATÉGIE', description: 'On crée votre positionnement et votre contenu pour attirer les bons clients.', iconName: 'Target', position: 'left' },
+        { stepTitle: 'ÉTAPE 3', title: 'EXÉCUTION', description: 'Scénario.. tournage.. montage.. réseaux sociaux.. site web.. tout est fait pour vous.', iconName: 'Lightbulb', position: 'right' },
+        { stepTitle: 'ÉTAPE 4', title: 'RÉSULTATS', description: '• Visibilité\n• Prospects\n• Moins de pub\n• Plus de revenus\n• Votre réputation devient votre moteur.', iconName: 'BarChart3', position: 'left' },
+    ];
+    const steps = content?.steps?.length ? content.steps : defaultSteps;
+    
+    return (
+        <section className="py-16 md:py-24 bg-red-700 text-white relative overflow-hidden">
+             <div className="absolute inset-0 z-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '1.5rem 1.5rem' }}></div>
+            <div className="container mx-auto px-4 relative z-10">
+                <div className="flex items-center justify-center mb-16">
+                    <div className="h-px flex-grow bg-white/30"></div>
+                    <h2 className="text-3xl md:text-4xl font-bold font-headline uppercase mx-4 flex-shrink-0 tracking-widest">{content?.title || "NOTRE MÉTHODE"}</h2>
+                    <div className="h-px flex-grow bg-white/30"></div>
+                </div>
+                
+                <div className="relative max-w-2xl mx-auto">
+                    {/* The connecting line */}
+                    <div className="absolute left-1/2 -translate-x-1/2 top-12 bottom-12 w-1 bg-white/20 rounded-full hidden md:block"></div>
+
+                    {steps.map((step: any, index: number) => (
+                        <div key={index} className={cn("flex items-center w-full mb-8 md:mb-0", step.position === 'right' ? 'justify-start' : 'justify-end')}>
+                             <div className={cn("flex md:w-1/2 items-center", step.position === 'right' ? 'flex-row' : 'flex-row-reverse')}>
+                                {/* Icon Circle */}
+                                <div className="relative z-10 flex-shrink-0">
+                                    <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center shadow-lg">
+                                        <DynamicIcon iconName={step.iconName || 'HelpCircle'} className="w-12 h-12 text-red-600" />
+                                    </div>
+                                </div>
+                                {/* Content */}
+                                <div className={cn("p-4 w-full", step.position === 'right' ? 'text-left' : 'text-right')}>
+                                    <h3 className="font-bold text-lg uppercase tracking-wide">{step.stepTitle || `ÉTAPE ${index + 1}`}</h3>
+                                    <h4 className="font-bold text-xl uppercase text-red-200">{step.title}</h4>
+                                    <p className="mt-2 text-sm whitespace-pre-line">{step.description}</p>
+                                </div>
+                             </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="text-center mt-12">
+                    <Button asChild size="lg" className="rounded-full bg-white text-red-600 hover:bg-gray-200 font-bold text-lg px-10 py-6">
+                        <Link href="#contact">{content?.ctaButtonText || "EN SAVOIR PLUS"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                    </Button>
+                </div>
+            </div>
+        </section>
+    )
+}
 
 const FinalCtaSection = ({ content }: { content: any }) => (
     <section className="relative py-24 md:py-32 bg-gray-900 text-white">
@@ -328,6 +380,7 @@ function PersonalBrandingContent() {
         <MethodSection content={pageContent?.method} />
         <ResultsSection content={pageContent?.results} />
         <BeneficiariesSection content={pageContent?.beneficiaries} />
+        <TimelineMethodSection content={pageContent?.timelineMethod} />
         <FinalCtaSection content={pageContent?.finalCta} />
       </main>
     </div>

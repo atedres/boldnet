@@ -433,28 +433,6 @@
                 "subtitle": { "type": "string" }
             }
         },
-        "benefits": {
-          "type": "object",
-          "properties": {
-            "title": { "type": "string" },
-            "mainBenefits": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "title": { "type": "string" },
-                  "description": { "type": "string" },
-                  "image": { "type": "string", "format": "uri" }
-                }
-              }
-            },
-            "sideBenefitsTitle": { "type": "string" },
-            "sideBenefitsImage": { "type": "string", "format": "uri" },
-            "sideBenefitsItems": { "type": "array", "items": { "type": "string" } },
-            "conclusion": { "type": "string" },
-            "ctaButtonText": { "type": "string" }
-          }
-        },
         "beneficiaries": {
             "type": "object",
             "properties": {
@@ -515,6 +493,26 @@
               }
             }
           }
+        },
+        "timelineMethod": {
+            "type": "object",
+            "properties": {
+                "title": { "type": "string" },
+                "ctaButtonText": { "type": "string" },
+                "steps": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "stepTitle": { "type": "string" },
+                            "title": { "type": "string" },
+                            "description": { "type": "string" },
+                            "iconName": { "type": "string" },
+                            "position": { "type": "string", "enum": ["left", "right"]}
+                        }
+                    }
+                }
+            }
         },
         "finalCta": {
           "type": "object",

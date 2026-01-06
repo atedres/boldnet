@@ -13,6 +13,7 @@ import { ImageUpload } from '@/components/ui/image-upload';
 import { Plus, Trash2, ChevronDown } from 'lucide-react';
 import { IconSelect } from '@/components/ui/icon-select';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function PersonalBrandingManagement({ onBack }: { onBack: () => void }) {
     const firestore = useFirestore();
@@ -35,6 +36,7 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                 beneficiaries: { title: "", items: [], conclusion: "", ctaButtonText: "" },
                 results: { title: "", withoutTitle: "", withoutItems: [], withoutImage: "", withTitle: "", withItems: [], withImage: "", bonus: "", ctaButtonText: ""},
                 method: { conclusion: "", ctaButtonText: "", steps: [] },
+                timelineMethod: { title: "", ctaButtonText: "", steps: [] },
                 finalCta: { title: "", subtitle: "", backgroundImageUrl: "" }
             });
         }
@@ -419,6 +421,44 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                            <Label>Texte du bouton CTA</Label>
                            <Input value={formData.beneficiaries?.ctaButtonText || ''} onChange={(e) => handleFieldChange('beneficiaries', 'ctaButtonText', e.target.value)} placeholder="Texte du bouton..."/>
                        </div>
+                    </AccordionContent>
+                </AccordionItem>
+
+                 {/* Timeline Method Section */}
+                <AccordionItem value="item-timeline-method">
+                    <AccordionTrigger>Timeline Method Section</AccordionTrigger>
+                    <AccordionContent className="space-y-4 p-4">
+                        <div className="grid gap-2">
+                            <Label>Title</Label>
+                            <Input value={formData.timelineMethod?.title} onChange={(e) => handleFieldChange('timelineMethod', 'title', e.target.value)} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>CTA Button Text</Label>
+                            <Input value={formData.timelineMethod?.ctaButtonText} onChange={(e) => handleFieldChange('timelineMethod', 'ctaButtonText', e.target.value)} />
+                        </div>
+                        <Label>Steps</Label>
+                        {(formData.timelineMethod?.steps || []).map((step: any, index: number) => (
+                            <Card key={index} className="p-4">
+                                <div className="flex justify-between items-center mb-2">
+                                <h4 className="font-semibold">Step {index + 1}</h4>
+                                <Button size="icon" variant="destructive" onClick={() => handleRemoveListItem('timelineMethod', 'steps', index)}><Trash2 className="w-4 h-4" /></Button>
+                                </div>
+                                <div className="space-y-4">
+                                    <Input placeholder="Step Title (e.g., ÉTAPE 1)" value={step.stepTitle} onChange={(e) => handleObjectInListChange('timelineMethod', 'steps', index, 'stepTitle', e.target.value)} />
+                                    <Input placeholder="Title (e.g., DÉCOUVERTE)" value={step.title} onChange={(e) => handleObjectInListChange('timelineMethod', 'steps', index, 'title', e.target.value)} />
+                                    <Textarea placeholder="Description" value={step.description} onChange={(e) => handleObjectInListChange('timelineMethod', 'steps', index, 'description', e.target.value)} />
+                                    <IconSelect label="Icon" value={step.iconName} onChange={(val) => handleObjectInListChange('timelineMethod', 'steps', index, 'iconName', val)} />
+                                    <Select value={step.position} onValueChange={(val) => handleObjectInListChange('timelineMethod', 'steps', index, 'position', val)}>
+                                        <SelectTrigger><SelectValue placeholder="Position" /></SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="left">Left</SelectItem>
+                                            <SelectItem value="right">Right</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </Card>
+                        ))}
+                        <Button variant="outline" onClick={() => handleAddObjectInList('timelineMethod', 'steps', { stepTitle: "", title: "", description: "", iconName: "Compass", position: "left" })}><Plus className="w-4 h-4 mr-2" /> Add Step</Button>
                     </AccordionContent>
                 </AccordionItem>
                  
