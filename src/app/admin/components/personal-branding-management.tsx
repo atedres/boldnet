@@ -319,13 +319,13 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                            ))}
                        </div>
                        <Button variant="outline" onClick={() => handleAddObjectInList('method', 'steps', { title: "", description: "", imageUrl: "", subSteps: [] })}><Plus className="w-4 h-4 mr-2" /> Ajouter une étape</Button>
-                       <div className="grid gap-2 pt-4 border-t">
+                        <div className="grid gap-2 pt-4 border-t">
                             <Label>Texte de conclusion</Label>
-                            <Input value={formData.method?.conclusion} onChange={(e) => handleFieldChange('method', 'conclusion', e.target.value)} />
+                            <Input value={formData.method?.conclusion || ''} onChange={(e) => handleFieldChange('method', 'conclusion', e.target.value)} placeholder="Texte de conclusion..."/>
                         </div>
-                       <div className="grid gap-2">
+                        <div className="grid gap-2">
                            <Label>Texte du bouton CTA</Label>
-                           <Input value={formData.method?.ctaButtonText} onChange={(e) => handleFieldChange('method', 'ctaButtonText', e.target.value)} />
+                           <Input value={formData.method?.ctaButtonText || ''} onChange={(e) => handleFieldChange('method', 'ctaButtonText', e.target.value)} placeholder="Texte du bouton..."/>
                        </div>
                     </AccordionContent>
                 </AccordionItem>
