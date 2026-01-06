@@ -425,6 +425,14 @@
             "ctaButtonText": { "type": "string" }
           }
         },
+        "expertise": {
+            "type": "object",
+            "properties": {
+                "backgroundImageUrl": { "type": "string", "format": "uri" },
+                "title": { "type": "string" },
+                "subtitle": { "type": "string" }
+            }
+        },
         "benefits": {
           "type": "object",
           "properties": {

@@ -29,6 +29,7 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                 hero: { title: "", subtitle: "", ctaButtonText: "", backgroundImageUrl: "", logoSvg: "", logoSize: 96},
                 team: { title: "", backgroundImage: "", professions: [] },
                 problem: { title: "", mainPoint: "", listItems: [], howToTitle: "", howToListItems: [], question: "", ctaButtonText: ""},
+                expertise: { title: "", subtitle: "", backgroundImageUrl: ""},
                 benefits: { title: "", mainBenefits: [], sideBenefitsTitle: "", sideBenefitsImage: "", sideBenefitsItems: [], conclusion: "", ctaButtonText: "" },
                 results: { title: "", withoutTitle: "", withoutItems: [], withoutImage: "", withTitle: "", withItems: [], withImage: "", bonus: "", ctaButtonText: ""},
                 method: { title: "", steps: [], ctaButtonText: "" },
@@ -202,6 +203,22 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                         <div className="grid gap-2">
                             <Label>CTA Button Text</Label>
                             <Input value={formData.problem?.ctaButtonText} onChange={(e) => handleFieldChange('problem', 'ctaButtonText', e.target.value)} />
+                        </div>
+                    </AccordionContent>
+                </AccordionItem>
+                
+                 {/* Expertise Section */}
+                <AccordionItem value="item-expertise">
+                    <AccordionTrigger>Expertise Section</AccordionTrigger>
+                    <AccordionContent className="space-y-4 p-4">
+                        <ImageUpload label="Background Image" value={formData.expertise?.backgroundImageUrl} onChange={(url) => handleFieldChange('expertise', 'backgroundImageUrl', url)} />
+                        <div className="grid gap-2">
+                            <Label>Title</Label>
+                            <Input value={formData.expertise?.title} onChange={(e) => handleFieldChange('expertise', 'title', e.target.value)} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>Subtitle</Label>
+                            <Input value={formData.expertise?.subtitle} onChange={(e) => handleFieldChange('expertise', 'subtitle', e.target.value)} />
                         </div>
                     </AccordionContent>
                 </AccordionItem>

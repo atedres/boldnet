@@ -69,7 +69,7 @@ const ProfessionsSection = ({ content }: { content: any }) => (
         )}
         <div className="container mx-auto px-4 relative z-10">
             <SectionTitle className="text-red-600">
-                Vous êtes expert dans votre domaine:
+                {content?.title || "Vous êtes expert dans votre domaine:"}
             </SectionTitle>
             <div className="grid grid-cols-3 gap-6 md:gap-8 mt-12 max-w-4xl mx-auto">
                 {(content?.professions || []).map((p: any, index: number) => (
@@ -106,6 +106,27 @@ const ProblemSection = ({ content }: { content: any }) => (
             <Button asChild size="lg" className="mt-8 rounded-full bg-white text-red-600 hover:bg-gray-200 font-bold text-lg px-10 py-6">
                 <Link href="#contact">{content?.ctaButtonText || "JE VEUX PASSER PRO"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
             </Button>
+        </div>
+    </section>
+);
+
+const ExpertiseSection = ({ content }: { content: any }) => (
+    <section className="relative py-24 md:py-32 bg-gray-800 text-white">
+        <div className="absolute inset-0 z-0">
+            <Image
+                src={content?.backgroundImageUrl || "https://picsum.photos/seed/expertise/1200/500"}
+                alt="Expertise background"
+                fill
+                className="object-cover opacity-30"
+            />
+            <div className="absolute inset-0 bg-black/50" />
+        </div>
+        <div className="relative z-10 container mx-auto px-4 text-center">
+            <p className="text-xl md:text-2xl font-light">{content?.title || "C'est ainsi que nous faisons de vous:"}</p>
+            <h2 className="mt-4 text-3xl md:text-5xl font-extrabold font-headline tracking-tight flex items-center justify-center gap-4">
+                <ArrowRight className="text-red-600 h-10 w-10 transform -rotate-45" />
+                <span>{content?.subtitle || "l'expert incontournable dans votre domaine"}</span>
+            </h2>
         </div>
     </section>
 );
@@ -277,6 +298,7 @@ function PersonalBrandingContent() {
         <HeroSection content={pageContent?.hero} />
         <ProfessionsSection content={pageContent?.team} />
         <ProblemSection content={pageContent?.problem} />
+        <ExpertiseSection content={pageContent?.expertise} />
         <BenefitsSection content={pageContent?.benefits} />
         <ResultsSection content={pageContent?.results} />
         <MethodSection content={pageContent?.method} />
