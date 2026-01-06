@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 import { DynamicIcon } from '@/components/ui/dynamic-icon';
 
 const SectionTitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-  <h2 className={cn("text-3xl md:text-4xl font-bold text-center font-headline tracking-wider", className)}>{children}</h2>
+  <h2 className={cn("text-3xl md:text-4xl font-bold text-center font-headline", className)}>{children}</h2>
 );
 
 const SectionSubtitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
@@ -125,7 +125,6 @@ const ExpertiseSection = ({ content }: { content: any }) => (
         <div className="relative z-10 container mx-auto px-4 text-center">
             <p className="text-xl md:text-2xl font-light">{content?.title || "C'est ainsi que nous faisons de vous:"}</p>
             <h2 className="mt-4 text-3xl md:text-5xl font-extrabold font-headline flex items-center justify-center gap-6">
-                <ArrowRight className="text-red-600 h-10 w-10 transform -rotate-45" />
                 <span className="tracking-wider">{content?.subtitle || "l'expert incontournable dans votre domaine"}</span>
             </h2>
         </div>
@@ -223,7 +222,7 @@ const MethodSection = ({ content }: { content: any }) => {
                 <div className="space-y-8 max-w-4xl mx-auto">
                     {(content?.steps || []).map((step: any, index: number) => (
                         <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative overflow-hidden">
-                            <div className="absolute -top-4 -right-4 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold">
+                            <div className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10">
                                 {index + 1}
                             </div>
                             <div className={cn("grid gap-6 md:gap-8", step.imageUrl && "md:grid-cols-2 items-center")}>
