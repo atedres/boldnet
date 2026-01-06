@@ -184,31 +184,51 @@ const BenefitsSection = ({ content }: { content: any }) => (
 const ResultsSection = ({ content }: { content: any }) => (
     <section className="py-16 md:py-24 bg-red-700 text-white">
         <div className="container mx-auto px-4">
-            <SectionTitle>{content?.title || "Les résultats"}</SectionTitle>
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12">
-                <Card className="bg-black/20 p-6 rounded-lg border border-red-500">
-                    <CardHeader className="p-0">
-                        <CardTitle className="font-bold text-xl rounded-full px-4 py-2 bg-black text-white inline-block">{content?.withoutTitle || "Sans Marque"}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-0 mt-4 space-y-2 text-red-200">
-                        {(content?.withoutItems || []).map((item: string, i: number) => <p key={i}>‣ {item}</p>)}
-                        <Image src={content?.withoutImage || "https://picsum.photos/seed/sans-marque/400/200"} alt="Sans Marque" width={400} height={200} className="mt-4 rounded-lg object-cover" />
-                    </CardContent>
-                </Card>
-                 <Card className="bg-white/90 p-6 rounded-lg text-gray-800">
-                    <CardHeader className="p-0">
-                        <CardTitle className="font-bold text-xl rounded-full px-4 py-2 bg-white text-red-600 border border-red-200 inline-block">{content?.withTitle || "Avec Marque"}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-0 mt-4 space-y-2">
-                        {(content?.withItems || []).map((item: string, i: number) => <p key={i}>✓ {item}</p>)}
-                        <Image src={content?.withImage || "https://picsum.photos/seed/avec-marque/400/200"} alt="Avec Marque" width={400} height={200} className="mt-4 rounded-lg object-cover" />
-                    </CardContent>
-                </Card>
+            <SectionTitle>{content?.title || "LES RÉSULTATS?"}</SectionTitle>
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12 relative">
+                {/* Connecting Lines */}
+                <div className="absolute top-6 left-1/2 -translate-x-1/2 w-[calc(100%-8rem)] h-20 border-t-2 border-l-2 border-r-2 border-white/50 rounded-t-full"></div>
+                <div className="absolute top-[6.5rem] left-1/4 h-[calc(100%-12rem)] w-px bg-white/50"></div>
+                <div className="absolute top-[6.5rem] right-1/4 h-[calc(100%-12rem)] w-px bg-white/50"></div>
+
+
+                <div className="relative z-10">
+                    <div className="text-center mb-4">
+                        <span className="font-bold text-xl rounded-full px-6 py-2 bg-black text-white inline-block shadow-lg">{content?.withoutTitle || "Avant Boldnet"}</span>
+                    </div>
+                    <Card className="bg-black/20 p-6 rounded-lg border border-red-500 text-center h-full">
+                        <CardContent className="p-0 mt-4 space-y-4 text-red-200">
+                             {(content?.withoutItems || []).map((item: string, i: number) => <p key={i} className="text-lg">{item}</p>)}
+                            <div className="relative aspect-video mt-4 rounded-lg overflow-hidden">
+                                <Image src={content?.withoutImage || "https://picsum.photos/seed/sans-marque/400/225"} alt="Sans Marque" layout="fill" className="object-cover" />
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                 <div className="relative z-10">
+                    <div className="text-center mb-4">
+                        <span className="font-bold text-xl rounded-full px-6 py-2 bg-white text-red-600 inline-block shadow-lg">{content?.withTitle || "Après Boldnet"}</span>
+                    </div>
+                     <Card className="bg-white/90 p-6 rounded-lg text-gray-800 text-center h-full">
+                        <CardContent className="p-0 mt-4 space-y-2">
+                            {(content?.withItems || []).map((item: string, i: number) => <p key={i} className="text-lg">✓ {item}</p>)}
+                             <div className="relative aspect-video mt-4 rounded-lg overflow-hidden">
+                                <Image src={content?.withImage || "https://picsum.photos/seed/avec-marque/400/225"} alt="Avec Marque" layout="fill" className="object-cover" />
+                                <div className="absolute top-2 right-2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center">
+                                    <SiteLogo />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+                <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-10 h-10 bg-white text-red-600 rounded-full flex items-center justify-center font-bold text-sm">VS</div>
             </div>
-            <div className="max-w-4xl mx-auto text-center mt-12">
-                <p className="font-bold text-xl"><span className="bg-white text-red-600 px-2 py-1 rounded-md">Bonus:</span> {content?.bonus || "Votre regard grandit aussi. Plus de personnes croient en votre expertise et en vos services."}</p>
+
+            <div className="max-w-4xl mx-auto text-center mt-16">
+                <p className="font-bold text-xl md:text-2xl"><span className="bg-white text-red-600 px-3 py-1 rounded-md">Bonus:</span> {content?.bonus || "Votre impact grandit aussi. Plus de personnes profitent de votre expertise et de vos services."}</p>
                 <Button asChild size="lg" className="mt-8 rounded-full bg-white text-red-600 hover:bg-gray-200 font-bold text-lg px-10 py-6">
-                    <Link href="#contact">{content?.ctaButtonText || "COMMENCER"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                    <Link href="#contact">{content?.ctaButtonText || "COMMENÇONS!"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
                 </Button>
             </div>
         </div>
@@ -221,7 +241,7 @@ const MethodSection = ({ content }: { content: any }) => {
             <div className="container mx-auto px-4">
                 <div className="space-y-8 max-w-4xl mx-auto">
                     {(content?.steps || []).map((step: any, index: number) => (
-                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative border-none overflow-visible">
+                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative overflow-visible border-none">
                              <div className="absolute -top-6 right-4 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10">
                                 {index + 1}
                             </div>

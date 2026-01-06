@@ -329,7 +329,63 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                     </AccordionContent>
                 </AccordionItem>
 
-                 {/* Add more accordions for other sections here in a similar fashion... */}
+                 {/* Results Section */}
+                <AccordionItem value="item-results">
+                    <AccordionTrigger>Results Section</AccordionTrigger>
+                    <AccordionContent className="space-y-4 p-4">
+                        <div className="grid gap-2">
+                            <Label>Title</Label>
+                            <Input value={formData.results?.title} onChange={(e) => handleFieldChange('results', 'title', e.target.value)} />
+                        </div>
+
+                        <Card className="p-4">
+                            <Label className="font-bold">"Before" Column</Label>
+                            <div className="grid gap-2 mt-2">
+                                <Label>Title</Label>
+                                <Input value={formData.results?.withoutTitle} onChange={(e) => handleFieldChange('results', 'withoutTitle', e.target.value)} />
+                            </div>
+                            <div className="grid gap-2 mt-2">
+                                <Label>List Items</Label>
+                                {(formData.results?.withoutItems || []).map((item: string, index: number) => (
+                                    <div key={index} className="flex gap-2 items-center">
+                                        <Input value={item} onChange={(e) => handleListItemChange('results', 'withoutItems', index, e.target.value)} />
+                                        <Button size="icon" variant="destructive" onClick={() => handleRemoveListItem('results', 'withoutItems', index)}><Trash2 className="w-4 h-4" /></Button>
+                                    </div>
+                                ))}
+                                <Button variant="outline" onClick={() => handleAddListItem('results', 'withoutItems')}><Plus className="w-4 h-4 mr-2" />Add Item</Button>
+                            </div>
+                            <ImageUpload label="Image" value={formData.results?.withoutImage} onChange={(url) => handleFieldChange('results', 'withoutImage', url)} />
+                        </Card>
+                        
+                        <Card className="p-4">
+                             <Label className="font-bold">"After" Column</Label>
+                             <div className="grid gap-2 mt-2">
+                                <Label>Title</Label>
+                                <Input value={formData.results?.withTitle} onChange={(e) => handleFieldChange('results', 'withTitle', e.target.value)} />
+                            </div>
+                             <div className="grid gap-2 mt-2">
+                                <Label>List Items</Label>
+                                {(formData.results?.withItems || []).map((item: string, index: number) => (
+                                    <div key={index} className="flex gap-2 items-center">
+                                        <Input value={item} onChange={(e) => handleListItemChange('results', 'withItems', index, e.target.value)} />
+                                        <Button size="icon" variant="destructive" onClick={() => handleRemoveListItem('results', 'withItems', index)}><Trash2 className="w-4 h-4" /></Button>
+                                    </div>
+                                ))}
+                                <Button variant="outline" onClick={() => handleAddListItem('results', 'withItems')}><Plus className="w-4 h-4 mr-2" />Add Item</Button>
+                            </div>
+                             <ImageUpload label="Image" value={formData.results?.withImage} onChange={(url) => handleFieldChange('results', 'withImage', url)} />
+                        </Card>
+
+                        <div className="grid gap-2">
+                            <Label>Bonus Text</Label>
+                            <Input value={formData.results?.bonus} onChange={(e) => handleFieldChange('results', 'bonus', e.target.value)} />
+                        </div>
+                         <div className="grid gap-2">
+                            <Label>CTA Button Text</Label>
+                            <Input value={formData.results?.ctaButtonText} onChange={(e) => handleFieldChange('results', 'ctaButtonText', e.target.value)} />
+                        </div>
+                    </AccordionContent>
+                </AccordionItem>
                  
             </Accordion>
             <div className="text-right mt-4">
@@ -338,5 +394,3 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
         </div>
     );
 }
-
-    
