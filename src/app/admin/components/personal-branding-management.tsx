@@ -33,7 +33,7 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                 problem: { title: "", mainPoint: "", listItems: [], howToTitle: "", howToListItems: [], question: "", ctaButtonText: ""},
                 expertise: { title: "", subtitle: "", backgroundImageUrl: ""},
                 benefits: { title: "", mainBenefits: [], sideBenefitsTitle: "", sideBenefitsImage: "", sideBenefitsItems: [], conclusion: "", ctaButtonText: "" },
-                beneficiaries: { title: "", items: [] },
+                beneficiaries: { title: "", items: [], conclusion: "", ctaButtonText: "" },
                 results: { title: "", withoutTitle: "", withoutItems: [], withoutImage: "", withTitle: "", withItems: [], withImage: "", bonus: "", ctaButtonText: ""},
                 method: { conclusion: "", ctaButtonText: "", steps: [] },
                 finalCta: { title: "", subtitle: "", backgroundImageUrl: "" }
@@ -419,6 +419,15 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                             </Card>
                         ))}
                         <Button variant="outline" onClick={() => handleAddObjectInList('beneficiaries', 'items', { name: "", description: "", imageUrl: "" })}><Plus className="w-4 h-4 mr-2" /> Add Beneficiary</Button>
+                        
+                        <div className="grid gap-2 pt-4 border-t mt-4">
+                            <Label>Texte de conclusion</Label>
+                            <Input value={formData.beneficiaries?.conclusion || ''} onChange={(e) => handleFieldChange('beneficiaries', 'conclusion', e.target.value)} placeholder="Texte de conclusion..."/>
+                        </div>
+                        <div className="grid gap-2">
+                           <Label>Texte du bouton CTA</Label>
+                           <Input value={formData.beneficiaries?.ctaButtonText || ''} onChange={(e) => handleFieldChange('beneficiaries', 'ctaButtonText', e.target.value)} placeholder="Texte du bouton..."/>
+                       </div>
                     </AccordionContent>
                 </AccordionItem>
                  

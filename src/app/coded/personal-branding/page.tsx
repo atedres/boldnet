@@ -186,13 +186,13 @@ const BeneficiariesSection = ({ content }: { content: any }) => {
 
     return (
         <section className="py-16 md:py-24 bg-[#fff4f2]">
-            <div className="container mx-auto px-4 max-w-2xl">
+            <div className="container mx-auto px-4">
                  <div className="flex items-center justify-center mb-12">
                     <div className="h-px flex-grow bg-red-200"></div>
                     <SectionTitle className="text-red-600 mx-4 flex-shrink-0">{content?.title || 'QUI PEUT EN BÉNÉFICIER?'}</SectionTitle>
                     <div className="h-px flex-grow bg-red-200"></div>
                 </div>
-                <div className="space-y-12">
+                <div className="space-y-12 max-w-2xl mx-auto">
                     {(content.items || []).map((item: any, index: number) => (
                         <div key={index} className="relative">
                             <div className="relative rounded-2xl overflow-hidden shadow-lg">
@@ -216,6 +216,18 @@ const BeneficiariesSection = ({ content }: { content: any }) => {
                         </div>
                     ))}
                 </div>
+                {(content.conclusion || content.ctaButtonText) && (
+                    <div className="text-center mt-12 max-w-2xl mx-auto">
+                        {content.conclusion && (
+                            <p className="text-lg font-semibold text-red-600">{content.conclusion}</p>
+                        )}
+                        {content.ctaButtonText && (
+                             <Button asChild size="lg" className="rounded-full bg-red-600 text-white hover:bg-red-700 font-bold text-lg px-10 py-6 mt-6">
+                                <Link href="#contact">{content.ctaButtonText} <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                            </Button>
+                        )}
+                    </div>
+                )}
             </div>
         </section>
     );
