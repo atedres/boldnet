@@ -35,11 +35,11 @@ export function ImageUpload({ value, onChange, label, className, aspectRatio, cr
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 20 * 1024 * 1024) { // 20MB limit
+    if (file.size > 50 * 1024 * 1024) { // 50MB limit
         toast({
             variant: 'destructive',
             title: 'File too large',
-            description: 'Image size cannot exceed 20MB.',
+            description: 'Image size cannot exceed 50MB.',
         });
         return;
     }
@@ -138,7 +138,7 @@ export function ImageUpload({ value, onChange, label, className, aspectRatio, cr
                   <p className="mb-2 text-sm text-muted-foreground">
                     <span className="font-semibold text-primary">Click to upload</span> or drag and drop
                   </p>
-                  <p className="text-xs text-muted-foreground">PNG, JPG, GIF, SVG up to 20MB</p>
+                  <p className="text-xs text-muted-foreground">PNG, JPG, GIF, SVG up to 50MB</p>
                 </>
               )}
             </div>
