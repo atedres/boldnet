@@ -30,7 +30,13 @@ const HeroSection = ({ content }: { content: any }) => (
         <div className="absolute inset-0 bg-gradient-to-t from-black via-red-900/50 to-transparent"></div>
     </div>
     <div className="relative z-10 container mx-auto flex flex-col items-center justify-center h-full text-center px-4">
-      <div className="w-24 h-24 mb-6 relative">
+      <div 
+        className="mb-6 relative"
+        style={{ 
+            width: content?.logoSize || 96, 
+            height: content?.logoSize || 96 
+        }}
+      >
         {content?.logoSvg ? (
           <div className="w-full h-full text-white" dangerouslySetInnerHTML={{ __html: content.logoSvg }} />
         ) : (

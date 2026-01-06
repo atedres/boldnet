@@ -390,6 +390,7 @@
           "properties": {
             "backgroundImageUrl": { "type": "string", "format": "uri" },
             "logoSvg": { "type": "string", "description": "SVG code for the logo." },
+            "logoSize": { "type": "number", "description": "Size of the logo in pixels." },
             "title": { "type": "string" },
             "subtitle": { "type": "string" },
             "ctaButtonText": { "type": "string" }
