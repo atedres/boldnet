@@ -225,13 +225,13 @@ const MethodSection = ({ content }: { content: any }) => {
                 </h2>
                 <div className="space-y-8 max-w-4xl mx-auto">
                     {(content?.steps || []).map((step: any, index: number) => (
-                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative border-none">
-                            <div className="absolute top-0 right-0 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10 -translate-y-1/2">
+                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative overflow-hidden border-none">
+                            <div className="absolute top-0 right-0 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10 translate-x-1/2 -translate-y-1/2">
                                 {index + 1}
                             </div>
                             <div className={cn("flex flex-row gap-6 md:gap-8 items-center")}>
                                 {step.imageUrl && (
-                                    <div className="w-40 flex-shrink-0">
+                                    <div className="w-40 flex-shrink-0 hidden md:block">
                                         <Image src={step.imageUrl} alt={step.title} width={400} height={300} className="rounded-lg object-contain"/>
                                     </div>
                                 )}
@@ -241,7 +241,7 @@ const MethodSection = ({ content }: { content: any }) => {
                                     {step.description && <p className="mt-2 text-muted-foreground">{step.description}</p>}
 
                                     {step.subSteps && step.subSteps.length > 0 && (
-                                        <div className={cn("grid gap-4 mt-6", step.subSteps.length > 3 ? "grid-cols-3" : "grid-cols-2")}>
+                                        <div className={cn("grid gap-4 mt-6", "grid-cols-3")}>
                                             {step.subSteps.map((sub: any, subIndex: number) => (
                                                 <div key={subIndex} className="text-center">
                                                     <div className="w-12 h-12 mx-auto rounded-lg bg-red-100 flex items-center justify-center">
@@ -258,7 +258,7 @@ const MethodSection = ({ content }: { content: any }) => {
                     ))}
                 </div>
                  <div className="text-center mt-12 max-w-2xl mx-auto">
-                    <p className="text-lg font-semibold text-red-600">{content?.conclusion || "Tout est pris en charge. Pour que vous puissiez vous concentrer sur ce que vous faites le mieux. nous faisons le reste."}</p>
+                    <p className="text-lg font-semibold text-red-600">{content?.conclusion}</p>
                     <Button asChild size="lg" className="rounded-full bg-red-600 text-white hover:bg-red-700 font-bold text-lg px-10 py-6 mt-6">
                         <Link href="#contact">{content?.ctaButtonText || "MA CONSULTATION GRATUITE"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
                     </Button>
@@ -324,4 +324,5 @@ export default function PersonalBrandingPage() {
     )
 }
 
+    
     

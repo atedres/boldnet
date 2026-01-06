@@ -10,7 +10,8 @@ import { DynamicIcon } from '@/components/ui/dynamic-icon';
 const iconList: (keyof typeof Icons)[] = [
   'PenTool', 'Code', 'BarChart3', 'Megaphone', 'Paintbrush', 'Camera', 'Video',
   'Server', 'Cloud', 'Database', 'ShieldCheck', 'Settings', 'Rocket', 'Target',
-  'Lightbulb', 'Users', 'Briefcase', 'MessageSquare', 'Zap', 'Globe', 'Award'
+  'Lightbulb', 'Users', 'Briefcase', 'MessageSquare', 'Zap', 'Globe', 'Award',
+  'Film', 'Scissors', 'Send', 'Globe2', 'ThumbsUp', 'Heart',
 ];
 
 interface IconSelectProps {
@@ -44,3 +45,5 @@ export function IconSelect({ value, onChange, label = 'Service Icon' }: IconSele
     </div>
   );
 }
+
+    

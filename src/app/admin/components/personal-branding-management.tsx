@@ -120,7 +120,7 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
             const newData = { ...prevData };
             const steps = [...(newData.method?.steps || [])];
             const subSteps = [...(steps[stepIndex]?.subSteps || [])];
-            subSteps.splice(subIndex, 1);
+            subSteps.splice(subStepIndex, 1);
             steps[stepIndex] = { ...steps[stepIndex], subSteps: subSteps };
             newData.method = { ...newData.method, steps: steps };
             return newData;
@@ -278,54 +278,54 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                 <AccordionItem value="item-method">
                     <AccordionTrigger>Section Méthode</AccordionTrigger>
                     <AccordionContent className="space-y-4 p-4">
-                         <div className="grid gap-2">
+                        <Label>Étapes</Label>
+                        <div className="space-y-2">
+                           {(formData.method?.steps || []).map((step: any, index: number) => (
+                               <Card key={index} className="overflow-visible">
+                                   <Collapsible>
+                                       <CollapsibleTrigger asChild>
+                                           <div className="flex items-center justify-between p-4 cursor-pointer">
+                                                <CardTitle className="text-base">{step.title || `Étape ${index + 1}`}</CardTitle>
+                                                <ChevronDown className="h-4 w-4" />
+                                           </div>
+                                       </CollapsibleTrigger>
+                                       <CollapsibleContent>
+                                           <CardContent className="pt-0 p-4 space-y-4">
+                                               <Input placeholder="Titre de l'étape" value={step.title} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'title', e.target.value)} />
+                                               <Textarea placeholder="Description de l'étape" value={step.description} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'description', e.target.value)} />
+                                               <ImageUpload label="Image (optionnel pour étape 1 & 2)" value={step.imageUrl} onChange={(url) => handleObjectInListChange('method', 'steps', index, 'imageUrl', url)} />
+                                               
+                                               <Label>Sous-étapes (pour l'étape 3)</Label>
+                                               {(step.subSteps || []).map((subStep: any, subIndex: number) => (
+                                                   <div key={subIndex} className="flex gap-2 items-center border-t pt-2">
+                                                       <IconSelect value={subStep.iconName} onChange={(val) => handleSubStepChange(index, subIndex, 'iconName', val)} />
+                                                       <Input placeholder="Nom de la sous-étape" value={subStep.name} onChange={(e) => handleSubStepChange(index, subIndex, 'name', e.target.value)} />
+                                                       <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleRemoveSubStep(index, subIndex)}>
+                                                           <Trash2 className="w-4 h-4" />
+                                                       </Button>
+                                                   </div>
+                                               ))}
+                                               <Button variant="outline" size="sm" onClick={() => handleAddSubStep(index)}>
+                                                   <Plus className="w-4 h-4 mr-2" /> Ajouter une sous-étape
+                                               </Button>
+                                           </CardContent>
+                                       </CollapsibleContent>
+                                   </Collapsible>
+                                   <div className="flex justify-end p-2">
+                                        <Button size="sm" variant="destructive" onClick={() => handleRemoveListItem('method', 'steps', index)}>Supprimer l'étape</Button>
+                                   </div>
+                               </Card>
+                           ))}
+                       </div>
+                       <Button variant="outline" onClick={() => handleAddObjectInList('method', 'steps', { title: "", description: "", imageUrl: "", subSteps: [] })}><Plus className="w-4 h-4 mr-2" /> Ajouter une étape</Button>
+                       <div className="grid gap-2 pt-4 border-t">
                             <Label>Texte de conclusion</Label>
                             <Input value={formData.method?.conclusion} onChange={(e) => handleFieldChange('method', 'conclusion', e.target.value)} />
                         </div>
-                        <div className="grid gap-2">
-                            <Label>Texte du bouton CTA</Label>
-                            <Input value={formData.method?.ctaButtonText} onChange={(e) => handleFieldChange('method', 'ctaButtonText', e.target.value)} />
-                        </div>
-                         <Label>Étapes</Label>
-                         <div className="space-y-2">
-                            {(formData.method?.steps || []).map((step: any, index: number) => (
-                                <Collapsible key={index} asChild>
-                                    <Card>
-                                        <CardHeader className="flex flex-row items-center justify-between p-4">
-                                            <CollapsibleTrigger asChild>
-                                                <button className="flex-1 text-left flex justify-between items-center">
-                                                    <CardTitle className="text-base">{step.title || `Étape ${index + 1}`}</CardTitle>
-                                                     <ChevronDown className="h-4 w-4" />
-                                                </button>
-                                            </CollapsibleTrigger>
-                                            <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleRemoveListItem('method', 'steps', index)}><Trash2 className="w-4 h-4" /></Button>
-                                        </CardHeader>
-                                        <CollapsibleContent>
-                                            <CardContent className="pt-0 p-4 space-y-4">
-                                                <Input placeholder="Titre de l'étape" value={step.title} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'title', e.target.value)} />
-                                                <Textarea placeholder="Description de l'étape" value={step.description} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'description', e.target.value)} />
-                                                <ImageUpload label="Image (optionnel pour étape 1 & 2)" value={step.imageUrl} onChange={(url) => handleObjectInListChange('method', 'steps', index, 'imageUrl', url)} />
-                                                
-                                                <Label>Sous-étapes (pour l'étape 3)</Label>
-                                                {(step.subSteps || []).map((subStep: any, subIndex: number) => (
-                                                    <div key={subIndex} className="flex gap-2 items-center border-t pt-2">
-                                                        <IconSelect value={subStep.iconName} onChange={(val) => handleSubStepChange(index, subIndex, 'iconName', val)} />
-                                                        <Input placeholder="Nom de la sous-étape" value={subStep.name} onChange={(e) => handleSubStepChange(index, subIndex, 'name', e.target.value)} />
-                                                        <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleRemoveSubStep(index, subIndex)}>
-                                                            <Trash2 className="w-4 h-4" />
-                                                        </Button>
-                                                    </div>
-                                                ))}
-                                                <Button variant="outline" size="sm" onClick={() => handleAddSubStep(index)}>
-                                                    <Plus className="w-4 h-4 mr-2" /> Ajouter une sous-étape
-                                                </Button>
-                                            </CardContent>
-                                        </CollapsibleContent>
-                                    </Card>
-                                </Collapsible>
-                            ))}
-                        </div>
-                        <Button variant="outline" onClick={() => handleAddObjectInList('method', 'steps', { title: "", description: "", imageUrl: "", subSteps: [] })}><Plus className="w-4 h-4 mr-2" /> Ajouter une étape</Button>
+                       <div className="grid gap-2">
+                           <Label>Texte du bouton CTA</Label>
+                           <Input value={formData.method?.ctaButtonText} onChange={(e) => handleFieldChange('method', 'ctaButtonText', e.target.value)} />
+                       </div>
                     </AccordionContent>
                 </AccordionItem>
 
@@ -338,3 +338,5 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
         </div>
     );
 }
+
+    
