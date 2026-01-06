@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Zap, Target, Lightbulb, BarChart, ArrowRight } from 'lucide-react';
+import { CheckCircle, Lightbulb, BarChart, ArrowRight, PenTool, Video, Image as ImageIcon, Speaker, MessageSquare, Globe } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -10,6 +10,7 @@ import { FirebaseClientProvider, useDoc, useFirestore, useMemoFirebase } from '@
 import { doc } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import { DynamicIcon } from '@/components/ui/dynamic-icon';
 
 const SectionTitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
   <h2 className={cn("text-3xl md:text-4xl font-bold text-center font-headline tracking-wider", className)}>{children}</h2>
@@ -125,7 +126,7 @@ const ExpertiseSection = ({ content }: { content: any }) => (
             <p className="text-xl md:text-2xl font-light">{content?.title || "C'est ainsi que nous faisons de vous:"}</p>
             <h2 className="mt-4 text-3xl md:text-5xl font-extrabold font-headline tracking-wider flex items-center justify-center gap-6">
                 <ArrowRight className="text-red-600 h-10 w-10 transform -rotate-45" />
-                <span>{content?.subtitle || "l'expert incontournable dans votre domaine"}</span>
+                <span className="tracking-wider">{content?.subtitle || "l'expert incontournable dans votre domaine"}</span>
             </h2>
         </div>
     </section>
@@ -215,41 +216,54 @@ const ResultsSection = ({ content }: { content: any }) => (
     </section>
 )
 
-const methodIcons = [<Zap/>, <Target/>, <Lightbulb/>, <BarChart/>];
+const MethodSection = ({ content }: { content: any }) => {
+    return (
+        <section className="py-16 md:py-24 bg-[#fff4f2]">
+            <div className="container mx-auto px-4">
+                <div className="space-y-8 max-w-4xl mx-auto">
+                    {(content?.steps || []).map((step: any, index: number) => (
+                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative overflow-hidden">
+                            <div className="absolute -top-4 -right-4 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold">
+                                {index + 1}
+                            </div>
+                            <div className={cn("grid gap-6 md:gap-8", step.imageUrl && "md:grid-cols-2 items-center")}>
+                                {step.imageUrl && (
+                                    <div>
+                                        <Image src={step.imageUrl} alt={step.title} width={400} height={300} className="rounded-lg object-contain"/>
+                                    </div>
+                                )}
+                                <div className={cn(!step.imageUrl && "text-center")}>
+                                    <h3 className="text-2xl font-bold font-headline text-red-600">{step.title}</h3>
+                                    
+                                    {step.description && <p className="mt-2 text-muted-foreground">{step.description}</p>}
 
-const MethodSection = ({ content }: { content: any }) => (
-    <section className="py-16 md:py-24 bg-[#fff4f2] text-gray-800">
-        <div className="container mx-auto px-4">
-            <div className="text-center">
-                
-                <div className="inline-block w-24 h-1 bg-red-600 mt-2"></div>
-            </div>
-            <div className="relative mt-12 max-w-2xl mx-auto">
-                {/* Connecting line */}
-                <div className="absolute left-9 top-9 bottom-9 w-0.5 bg-red-200/70" aria-hidden="true"></div>
-                <div className="space-y-8">
-                    {(content?.steps || []).map((item: any, index: number) => (
-                        <div key={index} className="relative flex items-start gap-6">
-                            <div className="relative z-10 flex-shrink-0 w-16 h-16 rounded-full bg-white text-primary flex items-center justify-center border-4 border-[#fff4f2]">
-                                {React.cloneElement(methodIcons[index % methodIcons.length], { className: 'w-8 h-8 text-primary' })}
+                                    {step.subSteps && step.subSteps.length > 0 && (
+                                        <div className={cn("grid gap-4 mt-6", step.subSteps.length > 3 ? "grid-cols-3" : "grid-cols-2")}>
+                                            {step.subSteps.map((sub: any, subIndex: number) => (
+                                                <div key={subIndex} className="text-center">
+                                                    <div className="w-12 h-12 mx-auto rounded-lg bg-red-100 flex items-center justify-center">
+                                                        <DynamicIcon iconName={sub.iconName || 'PenTool'} className="w-6 h-6 text-red-600" />
+                                                    </div>
+                                                    <p className="mt-2 text-sm font-semibold">{sub.name}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                            <div className="bg-white p-6 rounded-lg shadow-sm flex-1">
-                                <h3 className="text-xl font-bold text-primary">ÉTAPE {index + 1}</h3>
-                                <h4 className="text-2xl font-headline mt-1">{item.title}</h4>
-                                <p className="mt-2 text-muted-foreground">{item.description}</p>
-                            </div>
-                        </div>
+                        </Card>
                     ))}
                 </div>
+                <div className="text-center mt-12 max-w-2xl mx-auto">
+                    <p className="text-lg font-semibold">{content?.conclusion || "Tout est pris en charge. Pour que vous puissiez vous concentrer sur ce que vous faites de mieux.. nous faisons le reste."}</p>
+                    <Button asChild size="lg" className="rounded-full bg-red-600 text-white hover:bg-red-700 font-bold text-lg px-10 py-6 mt-6">
+                        <Link href="#contact">{content?.ctaButtonText || "MA CONSULTATION GRATUITE"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                    </Button>
+                </div>
             </div>
-             <div className="text-center mt-12">
-                <Button asChild size="lg" className="rounded-full bg-red-600 text-white hover:bg-red-700 font-bold text-lg px-10 py-6">
-                    <Link href="#contact">{content?.ctaButtonText || "DEVENIR VISIBLE"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
-                </Button>
-            </div>
-        </div>
-    </section>
-);
+        </section>
+    );
+};
 
 
 const FinalCtaSection = ({ content }: { content: any }) => (

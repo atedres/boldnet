@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { Plus, Trash2 } from 'lucide-react';
+import { IconSelect } from '@/components/ui/icon-select';
 
 export default function PersonalBrandingManagement({ onBack }: { onBack: () => void }) {
     const firestore = useFirestore();
@@ -32,7 +33,7 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                 expertise: { title: "", subtitle: "", backgroundImageUrl: ""},
                 benefits: { title: "", mainBenefits: [], sideBenefitsTitle: "", sideBenefitsImage: "", sideBenefitsItems: [], conclusion: "", ctaButtonText: "" },
                 results: { title: "", withoutTitle: "", withoutItems: [], withoutImage: "", withTitle: "", withItems: [], withImage: "", bonus: "", ctaButtonText: ""},
-                method: { title: "", steps: [], ctaButtonText: "" },
+                method: { title: "", conclusion: "", steps: [], ctaButtonText: "" },
                 finalCta: { title: "", subtitle: "", backgroundImageUrl: "" }
             });
         }
@@ -223,27 +224,48 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                     </AccordionContent>
                 </AccordionItem>
                 
-                 {/* Method Section */}
+                {/* Method Section */}
                 <AccordionItem value="item-method">
                     <AccordionTrigger>Method Section</AccordionTrigger>
                     <AccordionContent className="space-y-4 p-4">
-                        <div className="grid gap-2">
-                            <Label>Title</Label>
-                            <Input value={formData.method?.title} onChange={(e) => handleFieldChange('method', 'title', e.target.value)} />
+                         <div className="grid gap-2">
+                            <Label>Conclusion Text</Label>
+                            <Input value={formData.method?.conclusion} onChange={(e) => handleFieldChange('method', 'conclusion', e.target.value)} />
                         </div>
-                        <Label>Steps</Label>
-                        {(formData.method?.steps || []).map((step: any, index: number) => (
-                             <div key={index} className="flex flex-col gap-2 border p-4 rounded-md">
-                                <Input placeholder="Step Title" value={step.title} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'title', e.target.value)} />
-                                <Textarea placeholder="Step Description" value={step.description} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'description', e.target.value)} />
-                                <Button size="sm" variant="destructive" className="self-end" onClick={() => handleRemoveListItem('method', 'steps', index)}><Trash2 className="w-4 h-4 mr-2" /> Remove Step</Button>
-                            </div>
-                        ))}
-                        <Button variant="outline" onClick={() => handleAddObjectInList('method', 'steps', { title: "", description: "" })}><Plus className="w-4 h-4 mr-2" /> Add Step</Button>
                         <div className="grid gap-2">
                             <Label>CTA Button Text</Label>
                             <Input value={formData.method?.ctaButtonText} onChange={(e) => handleFieldChange('method', 'ctaButtonText', e.target.value)} />
                         </div>
+                         <Label>Steps</Label>
+                        {(formData.method?.steps || []).map((step: any, index: number) => (
+                             <AccordionItem key={index} value={`step-${index}`} className="border rounded-md px-4 bg-muted/20">
+                                <AccordionTrigger>{step.title || `Étape ${index + 1}`}</AccordionTrigger>
+                                <AccordionContent className="pt-4 space-y-4">
+                                    <Input placeholder="Step Title" value={step.title} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'title', e.target.value)} />
+                                    <Textarea placeholder="Step Description" value={step.description} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'description', e.target.value)} />
+                                    <ImageUpload label="Image (optional for step 1 & 2)" value={step.imageUrl} onChange={(url) => handleObjectInListChange('method', 'steps', index, 'imageUrl', url)} />
+                                    
+                                    <Label>Sous-étapes (pour l'étape 3)</Label>
+                                    {(step.subSteps || []).map((subStep: any, subIndex: number) => (
+                                        <div key={subIndex} className="flex gap-2 items-center border-t pt-2">
+                                            <IconSelect value={subStep.iconName} onChange={(val) => handleObjectInListChange('method', 'steps', index, 'subSteps', step.subSteps.map((ss:any, i:number) => i === subIndex ? {...ss, iconName: val} : ss))} />
+                                            <Input placeholder="Nom de la sous-étape" value={subStep.name} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'subSteps', step.subSteps.map((ss:any, i:number) => i === subIndex ? {...ss, name: e.target.value} : ss))} />
+                                            <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleObjectInListChange('method', 'steps', index, 'subSteps', step.subSteps.filter((_:any, i:number) => i !== subIndex))}>
+                                                <Trash2 className="w-4 h-4" />
+                                            </Button>
+                                        </div>
+                                    ))}
+                                    <Button variant="outline" size="sm" onClick={() => handleObjectInListChange('method', 'steps', index, 'subSteps', [...(step.subSteps || []), { name: "", iconName: "PenTool" }])}>
+                                        <Plus className="w-4 h-4 mr-2" /> Ajouter une sous-étape
+                                    </Button>
+
+                                    <div className="text-right pt-4">
+                                        <Button size="sm" variant="destructive" onClick={() => handleRemoveListItem('method', 'steps', index)}><Trash2 className="w-4 h-4 mr-2" /> Supprimer l'étape</Button>
+                                    </div>
+                                </AccordionContent>
+                            </AccordionItem>
+                        ))}
+                        <Button variant="outline" onClick={() => handleAddObjectInList('method', 'steps', { title: "", description: "" })}><Plus className="w-4 h-4 mr-2" /> Ajouter une étape</Button>
                     </AccordionContent>
                 </AccordionItem>
 

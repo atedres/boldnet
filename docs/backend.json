@@ -473,13 +473,25 @@
           "type": "object",
           "properties": {
             "title": { "type": "string" },
+            "conclusion": { "type": "string" },
             "steps": {
               "type": "array",
               "items": {
                 "type": "object",
                 "properties": {
                   "title": { "type": "string" },
-                  "description": { "type": "string" }
+                  "description": { "type": "string" },
+                  "imageUrl": { "type": "string", "format": "uri" },
+                  "subSteps": {
+                      "type": "array",
+                      "items": {
+                          "type": "object",
+                          "properties": {
+                              "name": { "type": "string" },
+                              "iconName": { "type": "string" }
+                          }
+                      }
+                  }
                 }
               }
             },
