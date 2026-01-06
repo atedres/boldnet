@@ -12,6 +12,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { ImageUpload } from '@/components/ui/image-upload';
 import { Plus, Trash2 } from 'lucide-react';
 import { IconSelect } from '@/components/ui/icon-select';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 export default function PersonalBrandingManagement({ onBack }: { onBack: () => void }) {
     const firestore = useFirestore();
@@ -185,20 +186,28 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                         </div>
                         <ImageUpload label="Background Image" value={formData.team?.backgroundImageUrl} onChange={(url) => handleFieldChange('team', 'backgroundImageUrl', url)} />
                         <Label>Professions</Label>
-                        <Accordion type="multiple" className="space-y-2">
+                        <div className="space-y-2">
                         {(formData.team?.professions || []).map((prof: any, index: number) => (
-                             <AccordionItem key={index} value={`prof-${index}`} className="border rounded-md px-4 bg-background">
-                                <AccordionTrigger>{prof.name || `Profession ${index + 1}`}</AccordionTrigger>
-                                <AccordionContent className="pt-4 space-y-4">
-                                    <ImageUpload label={`Image ${index+1}`} value={prof.image} onChange={(url) => handleObjectInListChange('team', 'professions', index, 'image', url)} />
-                                    <Input placeholder="Name" value={prof.name} onChange={(e) => handleObjectInListChange('team', 'professions', index, 'name', e.target.value)} />
-                                    <div className="text-right">
-                                         <Button size="icon" variant="destructive" onClick={() => handleRemoveListItem('team', 'professions', index)}><Trash2 className="w-4 h-4" /></Button>
-                                    </div>
-                                </AccordionContent>
-                            </AccordionItem>
+                             <Collapsible key={index} asChild>
+                                <Card>
+                                    <CardHeader className="flex flex-row items-center justify-between p-4">
+                                        <CollapsibleTrigger asChild>
+                                            <button className="flex-1 text-left">
+                                                <CardTitle className="text-base">{prof.name || `Profession ${index + 1}`}</CardTitle>
+                                            </button>
+                                        </CollapsibleTrigger>
+                                        <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleRemoveListItem('team', 'professions', index)}><Trash2 className="w-4 h-4" /></Button>
+                                    </CardHeader>
+                                    <CollapsibleContent>
+                                        <CardContent className="pt-0 p-4 space-y-4">
+                                            <ImageUpload label={`Image ${index+1}`} value={prof.image} onChange={(url) => handleObjectInListChange('team', 'professions', index, 'image', url)} />
+                                            <Input placeholder="Name" value={prof.name} onChange={(e) => handleObjectInListChange('team', 'professions', index, 'name', e.target.value)} />
+                                        </CardContent>
+                                    </CollapsibleContent>
+                                </Card>
+                            </Collapsible>
                         ))}
-                        </Accordion>
+                        </div>
                         <Button variant="outline" onClick={() => handleAddObjectInList('team', 'professions', { name: "", image: "" })}><Plus className="w-4 h-4 mr-2" /> Add Profession</Button>
                     </AccordionContent>
                 </AccordionItem>
@@ -277,35 +286,44 @@ export default function PersonalBrandingManagement({ onBack }: { onBack: () => v
                             <Input value={formData.method?.ctaButtonText} onChange={(e) => handleFieldChange('method', 'ctaButtonText', e.target.value)} />
                         </div>
                          <Label>Steps</Label>
-                        {(formData.method?.steps || []).map((step: any, index: number) => (
-                             <AccordionItem key={index} value={`step-${index}`} className="border rounded-md px-4 bg-muted/20">
-                                <AccordionTrigger>{step.title || `Étape ${index + 1}`}</AccordionTrigger>
-                                <AccordionContent className="pt-4 space-y-4">
-                                    <Input placeholder="Step Title" value={step.title} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'title', e.target.value)} />
-                                    <Textarea placeholder="Step Description" value={step.description} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'description', e.target.value)} />
-                                    <ImageUpload label="Image (optional for step 1 & 2)" value={step.imageUrl} onChange={(url) => handleObjectInListChange('method', 'steps', index, 'imageUrl', url)} />
-                                    
-                                    <Label>Sous-étapes (pour l'étape 3)</Label>
-                                    {(step.subSteps || []).map((subStep: any, subIndex: number) => (
-                                        <div key={subIndex} className="flex gap-2 items-center border-t pt-2">
-                                            <IconSelect value={subStep.iconName} onChange={(val) => handleSubStepChange(index, subIndex, 'iconName', val)} />
-                                            <Input placeholder="Nom de la sous-étape" value={subStep.name} onChange={(e) => handleSubStepChange(index, subIndex, 'name', e.target.value)} />
-                                            <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleRemoveSubStep(index, subIndex)}>
-                                                <Trash2 className="w-4 h-4" />
-                                            </Button>
-                                        </div>
-                                    ))}
-                                    <Button variant="outline" size="sm" onClick={() => handleAddSubStep(index)}>
-                                        <Plus className="w-4 h-4 mr-2" /> Ajouter une sous-étape
-                                    </Button>
-
-                                    <div className="text-right pt-4">
-                                        <Button size="sm" variant="destructive" onClick={() => handleRemoveListItem('method', 'steps', index)}><Trash2 className="w-4 h-4 mr-2" /> Supprimer l'étape</Button>
-                                    </div>
-                                </AccordionContent>
-                            </AccordionItem>
-                        ))}
-                        <Button variant="outline" onClick={() => handleAddObjectInList('method', 'steps', { title: "", description: "" })}><Plus className="w-4 h-4 mr-2" /> Ajouter une étape</Button>
+                         <div className="space-y-2">
+                            {(formData.method?.steps || []).map((step: any, index: number) => (
+                                <Collapsible key={index} asChild>
+                                    <Card>
+                                        <CardHeader className="flex flex-row items-center justify-between p-4">
+                                            <CollapsibleTrigger asChild>
+                                                <button className="flex-1 text-left">
+                                                    <CardTitle className="text-base">{step.title || `Étape ${index + 1}`}</CardTitle>
+                                                </button>
+                                            </CollapsibleTrigger>
+                                            <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleRemoveListItem('method', 'steps', index)}><Trash2 className="w-4 h-4" /></Button>
+                                        </CardHeader>
+                                        <CollapsibleContent>
+                                            <CardContent className="pt-0 p-4 space-y-4">
+                                                <Input placeholder="Step Title" value={step.title} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'title', e.target.value)} />
+                                                <Textarea placeholder="Step Description" value={step.description} onChange={(e) => handleObjectInListChange('method', 'steps', index, 'description', e.target.value)} />
+                                                <ImageUpload label="Image (optional for step 1 & 2)" value={step.imageUrl} onChange={(url) => handleObjectInListChange('method', 'steps', index, 'imageUrl', url)} />
+                                                
+                                                <Label>Sous-étapes (pour l'étape 3)</Label>
+                                                {(step.subSteps || []).map((subStep: any, subIndex: number) => (
+                                                    <div key={subIndex} className="flex gap-2 items-center border-t pt-2">
+                                                        <IconSelect value={subStep.iconName} onChange={(val) => handleSubStepChange(index, subIndex, 'iconName', val)} />
+                                                        <Input placeholder="Nom de la sous-étape" value={subStep.name} onChange={(e) => handleSubStepChange(index, subIndex, 'name', e.target.value)} />
+                                                        <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleRemoveSubStep(index, subIndex)}>
+                                                            <Trash2 className="w-4 h-4" />
+                                                        </Button>
+                                                    </div>
+                                                ))}
+                                                <Button variant="outline" size="sm" onClick={() => handleAddSubStep(index)}>
+                                                    <Plus className="w-4 h-4 mr-2" /> Ajouter une sous-étape
+                                                </Button>
+                                            </CardContent>
+                                        </CollapsibleContent>
+                                    </Card>
+                                </Collapsible>
+                            ))}
+                        </div>
+                        <Button variant="outline" onClick={() => handleAddObjectInList('method', 'steps', { title: "", description: "", imageUrl: "", subSteps: [] })}><Plus className="w-4 h-4 mr-2" /> Ajouter une étape</Button>
                     </AccordionContent>
                 </AccordionItem>
 
