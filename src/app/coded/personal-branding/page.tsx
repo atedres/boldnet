@@ -221,8 +221,8 @@ const MethodSection = ({ content }: { content: any }) => {
             <div className="container mx-auto px-4">
                 <div className="space-y-8 max-w-4xl mx-auto">
                     {(content?.steps || []).map((step: any, index: number) => (
-                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative border-none">
-                             <div className="absolute -top-6 right-0 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10">
+                        <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative border-none overflow-visible">
+                             <div className="absolute -top-6 right-4 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10">
                                 {index + 1}
                             </div>
                             <div className={cn("flex flex-row gap-4 items-center")}>
