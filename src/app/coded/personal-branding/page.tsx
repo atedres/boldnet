@@ -222,7 +222,7 @@ const MethodSection = ({ content }: { content: any }) => {
                 <div className="space-y-8 max-w-4xl mx-auto">
                     {(content?.steps || []).map((step: any, index: number) => (
                         <Card key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative border-none">
-                            <div className="absolute top-0 right-0 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10 -translate-y-1/2">
+                            <div className="absolute top-0 right-0 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10 transform -translate-y-1/2">
                                 {index + 1}
                             </div>
                             <div className={cn("flex flex-row gap-6 md:gap-8 items-center")}>
@@ -253,8 +253,8 @@ const MethodSection = ({ content }: { content: any }) => {
                         </Card>
                     ))}
                 </div>
-                <div className="text-center mt-12 max-w-2xl mx-auto">
-                    <p className="text-lg font-semibold">{content?.conclusion || "Tout est pris en charge. Pour que vous puissiez vous concentrer sur ce que vous faites de mieux.. nous faisons le reste."}</p>
+                 <div className="text-center mt-12 max-w-2xl mx-auto">
+                    <p className="text-lg font-semibold">{content?.conclusion || "Tout est pris en charge. Pour que vous puissiez vous concentrer sur ce que vous faites le mieux. nous faisons le reste."}</p>
                     <Button asChild size="lg" className="rounded-full bg-red-600 text-white hover:bg-red-700 font-bold text-lg px-10 py-6 mt-6">
                         <Link href="#contact">{content?.ctaButtonText || "MA CONSULTATION GRATUITE"} <ArrowRight className="ml-2 h-5 w-5" /></Link>
                     </Button>
@@ -319,3 +319,5 @@ export default function PersonalBrandingPage() {
         </FirebaseClientProvider>
     )
 }
+
+    
