@@ -22,7 +22,7 @@ const SectionSubtitle = ({ children, className }: { children: React.ReactNode, c
 );
 
 const HeroSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => void }) => (
-  <section className="relative w-full h-[80vh] md:h-screen text-white overflow-hidden bg-black">
+  <section className="relative w-full min-h-[80vh] md:min-h-screen text-white overflow-hidden bg-black flex items-center justify-center py-20">
     <div className="absolute inset-0 z-0">
         <Image
             src={content?.backgroundImageUrl || "https://picsum.photos/seed/hero-bg/1200/800"}
@@ -32,7 +32,7 @@ const HeroSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => 
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-red-900/50 to-transparent"></div>
     </div>
-    <div className="relative z-10 container mx-auto flex flex-col items-center justify-center h-full text-center px-4">
+    <div className="relative z-10 container mx-auto flex flex-col items-center justify-center text-center px-4">
       <div 
         className="mb-6 relative"
         style={{ 
@@ -73,7 +73,7 @@ const ProfessionsSection = ({ content }: { content: any }) => (
             <SectionTitle className="text-red-600">
                 {content?.title || "Vous êtes expert dans votre domaine:"}
             </SectionTitle>
-            <div className="grid grid-cols-3 gap-6 md:gap-8 mt-12 max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mt-12 max-w-4xl mx-auto">
                 {(content?.professions || []).map((p: any, index: number) => (
                     <div key={index} className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-xl group">
                         <Image src={p.image || "https://picsum.photos/seed/prof${index}/300/400"} alt={p.name} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
@@ -190,9 +190,9 @@ const ResultsSection = ({ content, onCtaClick }: { content: any, onCtaClick: () 
             <SectionTitle className="mb-16">{content?.title || "LES RÉSULTATS?"}</SectionTitle>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12 relative">
                 {/* Connecting Lines */}
-                <div className="absolute top-6 left-1/2 -translate-x-1/2 w-[calc(100%-8rem)] h-20 border-t-2 border-l-2 border-r-2 border-white/50 rounded-t-full"></div>
-                <div className="absolute top-[6.5rem] left-1/4 h-[calc(100%-12rem)] w-px bg-white/50"></div>
-                <div className="absolute top-[6.5rem] right-1/4 h-[calc(100%-12rem)] w-px bg-white/50"></div>
+                <div className="absolute top-6 left-1/2 -translate-x-1/2 w-[calc(100%-8rem)] h-20 border-t-2 border-l-2 border-r-2 border-white/50 rounded-t-full hidden md:block"></div>
+                <div className="absolute top-[6.5rem] left-1/4 h-[calc(100%-12rem)] w-px bg-white/50 hidden md:block"></div>
+                <div className="absolute top-[6.5rem] right-1/4 h-[calc(100%-12rem)] w-px bg-white/50 hidden md:block"></div>
 
 
                 <div className="relative z-10">
@@ -225,7 +225,7 @@ const ResultsSection = ({ content, onCtaClick }: { content: any, onCtaClick: () 
                         </CardContent>
                     </Card>
                 </div>
-                <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-10 h-10 bg-white text-red-600 rounded-full flex items-center justify-center font-bold text-sm">VS</div>
+                <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-10 h-10 bg-white text-red-600 rounded-full flex items-center justify-center font-bold text-sm hidden md:flex">VS</div>
             </div>
 
             <div className="max-w-4xl mx-auto text-center mt-16">
@@ -248,9 +248,9 @@ const MethodSection = ({ content, onCtaClick }: { content: any, onCtaClick: () =
                              <div className="absolute -top-6 right-4 w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full text-xl font-bold z-10">
                                 {index + 1}
                             </div>
-                            <div className={cn("flex flex-row gap-6 items-center")}>
+                            <div className={cn("flex flex-col md:flex-row gap-6 items-center")}>
                                 {step.imageUrl && (
-                                    <div className="w-24 md:w-40 flex-shrink-0">
+                                    <div className="w-full md:w-24 md:w-40 flex-shrink-0">
                                         <Image src={step.imageUrl} alt={step.title} width={400} height={300} className="rounded-lg object-contain"/>
                                     </div>
                                 )}
@@ -260,7 +260,7 @@ const MethodSection = ({ content, onCtaClick }: { content: any, onCtaClick: () =
                                     {step.description && <p className="mt-2 text-muted-foreground">{step.description}</p>}
 
                                     {step.subSteps && step.subSteps.length > 0 && (
-                                        <div className={cn("grid gap-2 mt-6", "grid-cols-3")}>
+                                        <div className={cn("grid gap-2 mt-6", "grid-cols-2 sm:grid-cols-3")}>
                                             {step.subSteps.map((sub: any, subIndex: number) => (
                                                 <div key={subIndex} className="text-center p-2">
                                                     <div className="w-12 h-12 mx-auto flex items-center justify-center">
