@@ -241,7 +241,7 @@ const QuoteForm = () => {
                                     <FormItem><FormLabel>{t('businessName')}</FormLabel><FormControl><Input placeholder={t('businessNamePlaceholder')} {...field} /></FormControl><FormMessage /></FormItem>
                                 )} />
                                 <FormField control={form.control} name="email" render={({ field }) => (
-                                    <FormItem><FormLabel>{t('email')}</FormLabel><FormControl><Input placeholder="votreemial@emial.com" {...field} /></FormControl><FormMessage /></FormItem>
+                                    <FormItem><FormLabel>{t('email')}</FormLabel><FormControl><Input placeholder="votreemail@email.com" {...field} /></FormControl><FormMessage /></FormItem>
                                 )} />
                                 <FormField control={form.control} name="phone" render={({ field }) => (
                                     <FormItem><FormLabel>{t('phone')} ({t('optional')})</FormLabel><FormControl><Input placeholder="+33 6 12 34 56 78" {...field} /></FormControl><FormMessage /></FormItem>
@@ -265,5 +265,3 @@ const QuoteForm = () => {
 }
 
 export default QuoteForm;
-
-    

@@ -126,7 +126,7 @@ export default function ContactSection() {
                   <FormItem>
                     <FormLabel>{t('email')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="votreemial@emial.com" {...field} />
+                      <Input placeholder="votreemail@email.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
