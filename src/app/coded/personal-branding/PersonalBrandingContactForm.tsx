@@ -105,10 +105,10 @@ export function PersonalBrandingContactForm({ onOpenChange }: { onOpenChange: (i
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                    <FormField control={form.control} name="name" render={({ field }) => (
-                        <FormItem><FormLabel>Nom complet</FormLabel><FormControl><Input placeholder="ex: Jean Dupont" {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel>Nom complet</FormLabel><FormControl><Input placeholder="Samir berrada" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="email" render={({ field }) => (
-                        <FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="ex: jean.dupont@email.com" {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="votreemial@emial.com" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                      <FormField control={form.control} name="phone" render={({ field }) => (
                         <FormItem><FormLabel>Téléphone (Optionnel)</FormLabel><FormControl><Input placeholder="ex: 06 12 34 56 78" {...field} /></FormControl><FormMessage /></FormItem>

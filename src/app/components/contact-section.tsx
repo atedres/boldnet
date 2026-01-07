@@ -113,7 +113,7 @@ export default function ContactSection() {
                   <FormItem>
                     <FormLabel>{t('name')}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t('yourName')} {...field} />
+                      <Input placeholder="Samir berrada" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -126,7 +126,7 @@ export default function ContactSection() {
                   <FormItem>
                     <FormLabel>{t('email')}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t('yourEmail')} {...field} />
+                      <Input placeholder="votreemial@emial.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
