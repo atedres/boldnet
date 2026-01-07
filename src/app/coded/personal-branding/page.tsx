@@ -22,7 +22,7 @@ const SectionSubtitle = ({ children, className }: { children: React.ReactNode, c
 );
 
 const HeroSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => void }) => (
-  <section className="relative w-full min-h-[80vh] md:min-h-screen text-white overflow-hidden bg-black flex items-center justify-center py-20">
+  <section className="relative w-full min-h-screen text-white overflow-hidden bg-black flex items-center justify-center py-20">
     <div className="absolute inset-0 z-0">
         <Image
             src={content?.backgroundImageUrl || "https://picsum.photos/seed/hero-bg/1200/800"}
@@ -301,6 +301,8 @@ const TimelineMethodSection = ({ content, onCtaClick }: { content: any, onCtaCli
              <div className="absolute inset-0 z-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '1.5rem 1.5rem' }}></div>
             <div className="container mx-auto px-4 relative z-10">
                 
+                <SectionTitle className="mb-16">{content?.title}</SectionTitle>
+
                 <div className="relative max-w-2xl mx-auto">
                     {/* The connecting line */}
                     <div className="absolute left-1/2 -translate-x-1/2 top-12 bottom-12 w-1 bg-white/20 rounded-full hidden md:block"></div>
