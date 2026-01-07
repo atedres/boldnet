@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { DynamicIcon } from '@/components/ui/dynamic-icon';
 import { PersonalBrandingContactForm } from './PersonalBrandingContactForm';
+import { DndSectionSorter, SectionItem } from '@/app/admin/components/dnd-section-sorter';
 
 const SectionTitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
   <h2 className={cn("text-3xl md:text-4xl font-bold text-center font-headline", className)}>{children}</h2>
@@ -228,7 +229,7 @@ const ResultsSection = ({ content, onCtaClick }: { content: any, onCtaClick: () 
                 <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-10 h-10 bg-white text-red-600 rounded-full flex items-center justify-center font-bold text-sm hidden md:flex">VS</div>
             </div>
 
-            <div className="max-w-4xl mx-auto text-center mt-16">
+            <div className="max-w-4xl mx-auto text-center mt-20">
                 <p className="font-bold text-xl md:text-2xl"><span className="bg-white text-red-600 px-3 py-1 rounded-md">Bonus:</span> {content?.bonus || "Votre impact grandit aussi. Plus de personnes profitent de votre expertise et de vos services."}</p>
                 <Button onClick={onCtaClick} size="lg" className="mt-8 rounded-full bg-white text-red-600 hover:bg-gray-200 font-bold text-lg px-10 py-6">
                     {content?.ctaButtonText || "COMMENÇONS!"} <ArrowRight className="ml-2 h-5 w-5" />
