@@ -301,7 +301,8 @@ const TimelineMethodSection = ({ content, onCtaClick }: { content: any, onCtaCli
              <div className="absolute inset-0 z-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '1.5rem 1.5rem' }}></div>
             <div className="container mx-auto px-4 relative z-10">
                 
-                <SectionTitle className="mb-16">{content?.title}</SectionTitle>
+                <SectionTitle className="mb-4">{content?.title}</SectionTitle>
+                <div className="w-24 h-1 bg-white/50 mx-auto mb-16"></div>
 
                 <div className="relative max-w-2xl mx-auto">
                     {/* The connecting line */}
@@ -427,5 +428,3 @@ export default function PersonalBrandingPage() {
         </FirebaseClientProvider>
     )
 }
-
-    
