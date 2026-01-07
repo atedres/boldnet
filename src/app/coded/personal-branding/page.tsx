@@ -23,7 +23,7 @@ const SectionSubtitle = ({ children, className }: { children: React.ReactNode, c
 );
 
 const HeroSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => void }) => (
-  <section className="relative w-full min-h-screen text-white overflow-hidden bg-black flex items-center justify-center py-20">
+  <section className="relative w-full flex items-center justify-center py-20 min-h-screen text-white overflow-hidden bg-black">
     <div className="absolute inset-0 z-0">
         <Image
             src={content?.backgroundImageUrl || "https://picsum.photos/seed/hero-bg/1200/800"}
@@ -162,7 +162,7 @@ const BeneficiariesSection = ({ content, onCtaClick }: { content: any, onCtaClic
                             >
                                 {item.name}
                             </div>
-                            <div className="absolute bottom-4 right-4 bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md max-w-[60%]">
+                            <div className="absolute bottom-4 right-4 md:max-w-[60%] sm:max-w-[90%] w-[calc(100%-2rem)] md:w-auto bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md">
                                 <p className="text-gray-700 text-sm md:text-base">{item.description}</p>
                             </div>
                         </div>
