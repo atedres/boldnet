@@ -119,15 +119,15 @@ export default function ServicesOverview() {
   return (
     <section 
         id="services" 
-        className="w-full py-12 md:py-24 lg:py-32 bg-red-50 dark:bg-red-900/20 text-foreground"
+        className="w-full py-12 md:py-24 lg:py-32 bg-red-700 text-white"
     >
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-5xl font-headline text-foreground">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-5xl font-headline text-white">
               {t('ourServices')}
             </h2>
-            <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-muted-foreground">
+            <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-red-200">
               {t('servicesDescription')}
             </p>
           </div>
