@@ -78,13 +78,13 @@ export default function Hero() {
           />
         </div>
       )}
-      <div className="container flex flex-col items-center justify-center gap-6 pb-12 pt-16 md:py-24">
+      <div className="container flex flex-col items-center justify-center gap-6 pb-12 pt-36 md:py-24">
           <div className="flex items-center gap-2 bg-muted px-4 py-1.5 rounded-full text-sm font-medium">
             <Zap className="h-4 w-4 text-primary" />
             <span>{content.tagline}</span>
           </div>
           <div className="mx-auto max-w-5xl">
-            <h1 className="text-4xl font-extrabold leading-tight tracking-tight md:text-7xl font-headline text-white">
+            <h1 className="text-4xl font-extrabold leading-tight tracking-tight md:text-7xl font-headline">
               {content.title1}
               <br />
               {content.title2}
