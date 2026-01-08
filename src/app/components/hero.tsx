@@ -76,15 +76,16 @@ export default function Hero() {
             className="object-cover"
             data-ai-hint="abstract background"
           />
+           <div className="absolute inset-0 bg-black/30"></div>
         </div>
       )}
-      <div className="container flex flex-col items-center justify-center gap-6 pb-12 pt-36 md:py-24">
+      <div className="container flex flex-col items-center justify-center gap-6 pb-12 pt-28 md:py-24">
           <div className="flex items-center gap-2 bg-muted px-4 py-1.5 rounded-full text-sm font-medium">
             <Zap className="h-4 w-4 text-primary" />
             <span>{content.tagline}</span>
           </div>
           <div className="mx-auto max-w-5xl">
-            <h1 className="text-4xl font-extrabold leading-tight tracking-tight md:text-7xl font-headline">
+            <h1 className="text-4xl font-extrabold leading-tight tracking-tight md:text-7xl font-headline text-white">
               {content.title1}
               <br />
               {content.title2}
@@ -97,7 +98,7 @@ export default function Hero() {
                     {displayedService}
                 </div>
             </div>
-            <p className="leading-7 [&:not(:first-child)]:mt-6 text-lg text-muted-foreground max-w-2xl mx-auto dark:text-gray-300">
+            <p className="leading-7 [&:not(:first-child)]:mt-6 text-lg text-gray-200 max-w-2xl mx-auto dark:text-gray-300">
               <span dangerouslySetInnerHTML={{ __html: content.description }} />
             </p>
           </div>
@@ -105,11 +106,11 @@ export default function Hero() {
             <Button asChild size="lg" className="rounded-full">
               <Link href="#contact">{t('startProject')}</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="rounded-full">
+            <Button asChild size="lg" variant="outline" className="rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20">
               <Link href="#clients">{t('seeRealizations')}</Link>
             </Button>
           </div>
-          <div className="flex flex-wrap justify-center items-center gap-6 mt-8 text-sm text-muted-foreground">
+          <div className="flex flex-wrap justify-center items-center gap-6 mt-8 text-sm text-gray-300">
             <div className="flex items-center gap-2">
                 <span className="font-bold text-blue-600 bg-blue-100 p-1 rounded">C</span>
                 <span>{t('reviewSource1')}</span>
