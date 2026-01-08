@@ -55,7 +55,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
 
     return (
         <Dialog>
-            <Card className="group bg-card dark:bg-card border dark:border-neutral-700 text-card-foreground dark:text-white flex flex-col h-full transition-colors duration-300 hover:bg-red-600 hover:text-white">
+            <Card className="bg-white/10 dark:bg-white/5 border border-white/20 text-white flex flex-col h-full transition-shadow duration-300 hover:shadow-2xl hover:bg-white/20 rounded-xl">
                 <CardContent className="p-6 flex-grow flex flex-col">
                     <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
@@ -68,17 +68,17 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
                             />
                             <div>
                                 <p className="font-semibold">{testimonial.name}</p>
-                                <p className="text-sm text-muted-foreground dark:text-neutral-400 group-hover:text-red-100">{testimonial.position}</p>
+                                <p className="text-sm text-red-100">{testimonial.position}</p>
                             </div>
                         </div>
-                        {testimonial.source?.toLowerCase() === 'google' && <GoogleIcon />}
+                        {testimonial.source?.toLowerCase() === 'google' && <div className="p-1 rounded-full bg-white"><GoogleIcon /></div>}
                     </div>
                     <StarRating rating={testimonial.rating} />
-                    <p className="mt-4 text-muted-foreground dark:text-neutral-300 group-hover:text-red-50 flex-grow break-words">
+                    <p className="mt-4 text-red-50 flex-grow break-words">
                         {displayedReview}
                         {isTruncated && (
                             <DialogTrigger asChild>
-                                <button className="text-primary dark:text-primary group-hover:text-yellow-300 hover:underline ml-1 font-semibold">Lire la suite</button>
+                                <button className="text-yellow-300 hover:underline ml-1 font-semibold">Lire la suite</button>
                             </DialogTrigger>
                         )}
                     </p>
@@ -158,10 +158,10 @@ export default function Testimonials() {
   }
 
   return (
-    <section id="testimonials" className="bg-background text-foreground dark:bg-black dark:text-white py-16 md:py-24">
+    <section id="testimonials" className="bg-red-700 text-white py-16 md:py-24">
       <div className="container mx-auto">
         <div className="text-center mb-12">
-            <span className="text-sm font-bold text-muted-foreground dark:text-neutral-400 tracking-widest uppercase">Témoignages</span>
+            <span className="text-sm font-bold text-red-200 tracking-widest uppercase">Témoignages</span>
             <h2 className="text-4xl md:text-5xl font-bold mt-2 font-headline">Ce que nos clients disent de nous</h2>
         </div>
 
@@ -186,15 +186,15 @@ export default function Testimonials() {
             ))}
           </CarouselContent>
             <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex items-center justify-center gap-4">
-                <Button variant="outline" size="icon" className="rounded-full bg-transparent border-neutral-300 dark:border-neutral-600 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-foreground dark:hover:text-white" onClick={scrollPrev}>
+                <Button variant="outline" size="icon" className="rounded-full bg-transparent border-red-300 text-red-200 hover:bg-white/10 hover:text-white" onClick={scrollPrev}>
                     &lt;
                 </Button>
-                 <div className="text-sm text-muted-foreground dark:text-neutral-400">
-                    <span className="font-bold text-foreground dark:text-white">{String(current).padStart(2, '0')}</span>
+                 <div className="text-sm text-red-200">
+                    <span className="font-bold text-white">{String(current).padStart(2, '0')}</span>
                     /
                     <span>{String(testimonials.length).padStart(2, '0')}</span>
                 </div>
-                <Button variant="outline" size="icon" className="rounded-full bg-transparent border-neutral-300 dark:border-neutral-600 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-foreground dark:hover:text-white" onClick={scrollNext}>
+                <Button variant="outline" size="icon" className="rounded-full bg-transparent border-red-300 text-red-200 hover:bg-white/10 hover:text-white" onClick={scrollNext}>
                     &gt;
                 </Button>
             </div>
