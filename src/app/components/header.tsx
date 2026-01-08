@@ -83,12 +83,14 @@ export default function Header() {
         "sticky top-0 z-50 w-full transition-all duration-300",
         isScrolled ? "border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" : "bg-transparent"
     )}>
-      <div className="container flex h-20 items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2">
-          <SiteLogo isScrolled={isScrolled}/>
-        </Link>
+      <div className="container flex h-20 items-center">
+        <div className="flex-1 flex justify-start">
+            <Link href="/" className="flex items-center space-x-2">
+            <SiteLogo isScrolled={isScrolled}/>
+            </Link>
+        </div>
         
-        <nav className="hidden md:flex items-center gap-6 text-sm">
+        <nav className="hidden md:flex items-center justify-center gap-6 text-sm flex-1">
             <Link href="#services" className={navLinkClasses}>
                 {t('ourServices')}
             </Link>
@@ -109,7 +111,7 @@ export default function Header() {
             </Link>
         </nav>
 
-        <div className="flex items-center justify-end space-x-2">
+        <div className="flex flex-1 items-center justify-end space-x-2">
           <ThemeSwitcher />
           <LanguageSwitcher />
           <Button asChild className="hidden md:flex rounded-full">
@@ -117,7 +119,7 @@ export default function Header() {
           </Button>
            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className={cn(isScrolled || resolvedTheme === 'dark' ? "text-foreground" : "text-white hover:bg-white/10 hover:text-white")}>
+                <Button variant="ghost" size="icon" className={cn("md:hidden", isScrolled || resolvedTheme === 'dark' ? "text-foreground" : "text-white hover:bg-white/10 hover:text-white")}>
                     <Menu />
                     <span className="sr-only">Open menu</span>
                 </Button>
