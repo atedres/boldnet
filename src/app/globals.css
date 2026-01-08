@@ -122,7 +122,6 @@
     flex-shrink: 0;
     display: flex;
     justify-content: space-around;
-    gap: 4rem;
     min-width: 100%;
     animation: scroll 20s linear infinite;
   }
@@ -132,7 +131,7 @@
       transform: translateX(0);
     }
     to {
-      transform: translateX(-100%);
+      transform: translateX(-50%);
     }
   }
 }
