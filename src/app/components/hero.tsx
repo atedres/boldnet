@@ -84,7 +84,7 @@ export default function Hero() {
             <span>{content.tagline}</span>
           </div>
           <div className="mx-auto max-w-5xl">
-            <h1 className="text-4xl font-extrabold leading-tight tracking-tight md:text-7xl font-headline">
+            <h1 className="text-4xl font-extrabold leading-tight tracking-tight md:text-7xl font-headline text-white">
               {content.title1}
               <br />
               {content.title2}
