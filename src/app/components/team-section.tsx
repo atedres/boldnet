@@ -15,6 +15,16 @@ export default function TeamSection() {
   );
   const { data: members, isLoading: isLoadingMembers } = useCollection(teamQuery);
   
+  const duplicatedMembers = useMemo(() => {
+    if (!members || members.length === 0) return [];
+    // Duplicate the members array to create a seamless loop
+    const items = [...members, ...members];
+    // Ensure we have enough items to fill the screen and loop
+    if (items.length < 10) {
+        return [...items, ...items];
+    }
+    return items;
+  }, [members]);
 
   const renderMemberCard = (member: any, index: number) => (
     <Card key={`${member.id}-${index}`} className="border-none shadow-none bg-transparent flex-shrink-0" style={{ width: '160px' }}>
@@ -39,14 +49,14 @@ export default function TeamSection() {
         return <p className="text-center">Chargement de l'équipe...</p>
     }
 
-    if (!members || members.length === 0) {
+    if (!duplicatedMembers || duplicatedMembers.length === 0) {
         return <p className="text-center text-muted-foreground">Aucun membre d'équipe disponible.</p>
     }
 
      return (
          <div className="relative marquee group overflow-x-hidden">
             <div className="marquee-content flex flex-nowrap group-hover:[animation-play-state:paused]">
-                {members.map((member, index) => renderMemberCard(member, index))}
+                {duplicatedMembers.map((member, index) => renderMemberCard(member, index))}
             </div>
              <div className="absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-background to-transparent z-10"></div>
              <div className="absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-background to-transparent z-10"></div>
