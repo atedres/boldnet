@@ -50,7 +50,7 @@ const SiteLogo = () => {
   }
 
   if (lightLogoUrl) {
-    return <Image src={lightLogoUrl} alt="BoldNet Digital Logo" width={32} height={32} className={cn(logoClassName, 'brightness-0 invert')}/>;
+    return <Image src={lightLogoUrl} alt="BoldNet Digital Logo" width={32} height={32} className={cn(logoClassName, 'dark:brightness-0 dark:invert-0 brightness-0 invert')}/>;
   }
   
   return <DefaultLogo className={cn(logoClassName, logoTextColor)} />;
@@ -59,11 +59,23 @@ const SiteLogo = () => {
 export default function Header() {
     const { t } = useLanguage();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 10);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     const navLinkClasses = "text-white/90 hover:text-white transition-colors font-medium";
 
   return (
-    <header className="fixed top-0 z-50 w-full bg-red-700">
+    <header className={cn(
+        "fixed top-0 z-50 w-full transition-all duration-300",
+        isScrolled ? 'bg-black/50 backdrop-blur-sm' : 'bg-transparent'
+    )}>
       <div className="container flex h-20 items-center">
         <div className="flex-1 flex justify-start">
             <Link href="/" className="flex items-center space-x-2">
@@ -95,7 +107,7 @@ export default function Header() {
         <div className="flex flex-1 items-center justify-end space-x-2">
           <ThemeSwitcher />
           <LanguageSwitcher />
-          <Button asChild className="hidden md:flex rounded-full bg-white text-red-600 hover:bg-red-200">
+          <Button asChild className="hidden md:flex rounded-full bg-white text-primary hover:bg-white/90">
             <Link href="#contact">{t('discuss')}</Link>
           </Button>
            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
