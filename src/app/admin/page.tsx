@@ -2,7 +2,7 @@
 import { useUser, FirebaseClientProvider, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code, Mail, Inbox, Star, UserSquare, Rss, GalleryHorizontal } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code, Mail, Inbox, Star, UserSquare, Rss, GalleryHorizontal, Footprints } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -41,8 +41,9 @@ import TeamManagement from './components/team-management';
 import BlogManagement from './components/blog-management';
 import PersonalBrandingManagement from './components/personal-branding-management';
 import PortfolioManagement from './components/portfolio-management';
+import FooterManagement from './components/footer-management';
 
-type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'contacts' | 'landing-pages' | 'coded-landing-pages' | 'testimonials' | 'team' | 'blog' | 'personal-branding' | 'portfolio';
+type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'footer' | 'quotes' | 'contacts' | 'landing-pages' | 'coded-landing-pages' | 'testimonials' | 'team' | 'blog' | 'personal-branding' | 'portfolio';
 
 function AdminDashboard() {
   const { user, isUserLoading } = useUser();
@@ -88,6 +89,7 @@ function AdminDashboard() {
     funnel: t('adminFunnel'),
     sections: t('adminHomepageSections'),
     theme: t('adminTheme'),
+    footer: 'Footer',
     quotes: t('adminQuotes'),
     contacts: t('adminContacts'),
     'landing-pages': t('adminLandingPages'),
@@ -111,6 +113,8 @@ function AdminDashboard() {
         return <SectionManagement />;
       case 'theme':
         return <ThemeManagement />;
+       case 'footer':
+        return <FooterManagement />;
       case 'quotes':
         return <QuoteRequestManagement />;
       case 'contacts':
@@ -221,6 +225,16 @@ function AdminDashboard() {
                         >
                         <Palette />
                         {t('adminTheme')}
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                    <SidebarMenuButton 
+                        onClick={() => setActiveSection('footer')}
+                        isActive={activeSection === 'footer'}
+                        className="data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground"
+                        >
+                        <Footprints />
+                        Footer
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
@@ -381,5 +395,3 @@ export default function Admin() {
     </FirebaseClientProvider>
   );
 }
-
-    

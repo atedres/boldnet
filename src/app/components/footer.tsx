@@ -3,9 +3,14 @@
 import { Instagram, Linkedin, Facebook, Zap, Mail, Phone, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/app/context/language-context';
+import { useDoc, useFirestore, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 export default function Footer() {
   const { t } = useLanguage();
+  const firestore = useFirestore();
+  const settingsDocRef = useMemoFirebase(() => doc(firestore, 'footer_settings', 'main'), [firestore]);
+  const { data: settings, isLoading } = useDoc(settingsDocRef);
   
   const navLinks = [
     { href: '#services', label: t('ourServices') },
@@ -15,6 +20,15 @@ export default function Footer() {
     { href: '#blog', label: t('blog') },
     { href: '#contact', label: t('contactUs') }
   ];
+
+  const description = settings?.description || "Amplifiez votre marque. Dominez le marché. Nous aidons les entreprises ambitieuses à créer des expériences numériques qui génèrent des résultats.";
+  const instagramUrl = settings?.instagramUrl || "https://www.instagram.com/boldnetdigital/";
+  const facebookUrl = settings?.facebookUrl || "https://web.facebook.com/profile.php?id=61580707476970";
+  const linkedinUrl = settings?.linkedinUrl || "#";
+  const email = settings?.email || "contact@boldnet.ma";
+  const phone = settings?.phone || "+212 6 93 37 99 21";
+  const address = settings?.address || "Technopark Casablanca, P.S, Casablanca 20270, Maroc";
+
 
   return (
     <footer className="w-full bg-transparent text-white/80">
@@ -26,16 +40,16 @@ export default function Footer() {
               <span className="text-xl font-bold text-white">BoldNet Digital</span>
             </div>
             <p className="max-w-sm mt-4 text-sm">
-                Amplifiez votre marque. Dominez le marché. Nous aidons les entreprises ambitieuses à créer des expériences numériques qui génèrent des résultats.
+                {description}
             </p>
              <div className="flex mt-6 -mx-2">
-              <a href="https://www.instagram.com/boldnetdigital/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="mx-2 text-white/80 transition-colors duration-300 hover:text-white">
+              <a href={instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="mx-2 text-white/80 transition-colors duration-300 hover:text-white">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="https://web.facebook.com/profile.php?id=61580707476970" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="mx-2 text-white/80 transition-colors duration-300 hover:text-white">
+              <a href={facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="mx-2 text-white/80 transition-colors duration-300 hover:text-white">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" aria-label="LinkedIn" className="mx-2 text-white/80 transition-colors duration-300 hover:text-white">
+              <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="mx-2 text-white/80 transition-colors duration-300 hover:text-white">
                 <Linkedin className="w-5 h-5" />
               </a>
             </div>
@@ -55,15 +69,15 @@ export default function Footer() {
             <div className="flex flex-col items-center sm:items-start mt-4 space-y-4">
                 <p className="flex items-center gap-2">
                     <Mail className="w-5 h-5"/>
-                    <span>contact@boldnet.ma</span>
+                    <span>{email}</span>
                 </p>
                 <p className="flex items-center gap-2">
                     <Phone className="w-5 h-5"/>
-                    <span>+212 6 93 37 99 21</span>
+                    <span>{phone}</span>
                 </p>
                  <p className="flex items-start gap-2">
                     <MapPin className="w-5 h-5 mt-1 flex-shrink-0"/>
-                    <span>Technopark Casablanca, <br />P.S, Casablanca 20270, Maroc</span>
+                    <span dangerouslySetInnerHTML={{ __html: address.replace(/\n/g, '<br />') }}></span>
                 </p>
             </div>
           </div>
