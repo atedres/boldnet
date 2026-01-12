@@ -19,7 +19,7 @@ const DefaultLogo = ({className}: {className?: string}) => (
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="currentColor"
-      className={cn("h-8 w-8 text-foreground", className)}
+      className={cn("h-8 w-8", className)}
     >
       <path d="M6.01,3.01L6.01,20.99L13.99,20.99C18.41,20.99 22,17.4 22,12C22,6.6,18.41,3.01,13.99,3.01L6.01,3.01ZM8.01,5.01L13.99,5.01C17.31,5.01 20,7.69 20,11C20,14.31 17.31,17 13.99,17L8.01,17L8.01,5.01Z" />
       <path d="M2,3.01L13,3.01L13,5.01L4,5.01L4,11L13,11L13,13L4,13L4,18.99L13,18.99L13,20.99L2,20.99L2,3.01Z" />
@@ -42,7 +42,7 @@ const SiteLogo = ({isScrolled}: {isScrolled: boolean}) => {
   const lightLogoUrl = themeSettings?.logoUrl;
   
   const logoClassName = "h-8 w-8 object-contain transition-all";
-  const logoTextColor = !isScrolled || isDark ? 'text-white' : 'text-foreground';
+  const logoTextColor = isDark || !isScrolled ? 'text-white' : 'text-foreground';
 
 
   if (isDark && useDarkLogo && darkLogoUrl) {
@@ -64,9 +64,12 @@ export default function Header() {
 
     useEffect(() => {
         const handleScroll = () => {
+            // A small threshold to avoid header changing right at the top
             setIsScrolled(window.scrollY > 10);
         };
         window.addEventListener('scroll', handleScroll);
+        // Set initial state
+        handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -80,7 +83,7 @@ export default function Header() {
 
   return (
     <header className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300",
+        "fixed top-0 z-50 w-full transition-all duration-300",
         isScrolled ? "border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" : "bg-transparent"
     )}>
       <div className="container flex h-20 items-center">
