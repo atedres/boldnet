@@ -22,6 +22,7 @@
  * - /testimonials/{testimonialId}: Publicly readable client testimonials.
  * - /team_members/{memberId}: Publicly readable team member information.
  * - /blog_posts/{postId}: Publicly readable blog posts.
+ * - /portfolio_items/{itemId}: Publicly readable portfolio items.
  *
  * Key Security Decisions:
  * - Public Read, Admin Write: All informational collections are publicly readable.
@@ -185,6 +186,15 @@ service cloud.firestore {
      * @path /blog_posts/{postId}
      */
     match /blog_posts/{postId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    /**
+     * @description Manages portfolio items.
+     * @path /portfolio_items/{itemId}
+     */
+    match /portfolio_items/{itemId} {
       allow read: if true;
       allow write: if isAdmin();
     }
