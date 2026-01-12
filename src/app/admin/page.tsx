@@ -2,7 +2,7 @@
 import { useUser, FirebaseClientProvider, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code, Mail, Inbox, Star, UserSquare, Rss } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code, Mail, Inbox, Star, UserSquare, Rss, GalleryHorizontal } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -40,8 +40,9 @@ import TestimonialManagement from './components/testimonial-management';
 import TeamManagement from './components/team-management';
 import BlogManagement from './components/blog-management';
 import PersonalBrandingManagement from './components/personal-branding-management';
+import PortfolioManagement from './components/portfolio-management';
 
-type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'contacts' | 'landing-pages' | 'coded-landing-pages' | 'testimonials' | 'team' | 'blog' | 'personal-branding';
+type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'quotes' | 'contacts' | 'landing-pages' | 'coded-landing-pages' | 'testimonials' | 'team' | 'blog' | 'personal-branding' | 'portfolio';
 
 function AdminDashboard() {
   const { user, isUserLoading } = useUser();
@@ -94,7 +95,8 @@ function AdminDashboard() {
     'personal-branding': 'Personal Branding Page',
     testimonials: 'Témoignages',
     team: 'Équipe',
-    blog: 'Blog'
+    blog: 'Blog',
+    portfolio: 'Portfolio'
   };
 
   const renderContent = () => {
@@ -125,6 +127,8 @@ function AdminDashboard() {
         return <TeamManagement />;
       case 'blog':
         return <BlogManagement />;
+      case 'portfolio':
+        return <PortfolioManagement />;
       case 'dashboard':
       default:
         return (
@@ -237,6 +241,16 @@ function AdminDashboard() {
                         >
                         <Rss />
                         Blog
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton
+                        onClick={() => setActiveSection('portfolio')}
+                        isActive={activeSection === 'portfolio'}
+                        className="data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground"
+                    >
+                        <GalleryHorizontal />
+                        Portfolio
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
@@ -367,3 +381,5 @@ export default function Admin() {
     </FirebaseClientProvider>
   );
 }
+
+    

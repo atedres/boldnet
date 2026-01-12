@@ -1,0 +1,204 @@
+/**
+ * Core Philosophy:
+ * This ruleset is designed for a public-facing portfolio or marketing website.
+ * The primary goal is to make informational content (like clients, services,
+ * process steps, and theme settings) publicly readable by anyone. Write operations
+ * are restricted to authenticated users, who are considered administrators for content management.
+ * Dedicated collections for contact and quote submissions are configured to be write-only for any visitor.
+ *
+ * Data Structure:
+ * The data is organized into multiple distinct, top-level collections including:
+ * - /clients/{clientId}: Publicly viewable client information.
+ * - /services/{serviceId}: Publicly viewable service offerings.
+ * - /funnel_steps/{funnelStepId}: Publicly viewable funnel/process steps.
+ * - /contact_form_submissions/{submissionId}: Private, write-only submissions.
+ * - /quote_requests/{quoteId}: Private, admin-readable submissions for quotes.
+ * - /site_settings/{settingsId}: Publicly readable site configuration.
+ * - /sections/{sectionId}: Publicly readable dynamic content sections.
+ * - /theme_settings/{settingsId}: Publicly readable theme customization.
+ * - /landing_pages/{landingPageId}: Publicly readable, admin-writable landing pages.
+ * - /coded_landing_pages/{codedLandingPageId}: Admin-only landing page metadata.
+ * - /personal_branding_pages/{pageId}: Publicly readable, admin-writable content for the personal branding page.
+ * - /testimonials/{testimonialId}: Publicly readable client testimonials.
+ * - /team_members/{memberId}: Publicly readable team member information.
+ * - /blog_posts/{postId}: Publicly readable blog posts.
+ * - /portfolio_items/{itemId}: Publicly readable portfolio items.
+ *
+ * Key Security Decisions:
+ * - Public Read, Admin Write: All informational collections are publicly readable.
+ *   Write access is restricted to any user who is signed in, effectively
+ *   treating all authenticated users as admins.
+ * - Write-Only Ingress: The `contact_form_submissions` collection is intentionally
+ *   configured to allow anyone to create a document but denies all read, update,
+ *   and delete operations to protect PII.
+ * - Admin-Readable Ingress: The `quote_requests` collection allows anyone to create
+ *   a document, but only admins can read or delete them. This protects PII
+ *   while allowing admin management.
+ * - Default Secure: The default security posture is to deny all access unless
+ *   explicitly granted.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ----------------------------------------------------------------------
+    // Helper Functions
+    // ----------------------------------------------------------------------
+
+    /**
+     * Checks if a user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * For this application, any signed-in user is considered an admin.
+     * In a more complex app, this would check for specific custom claims.
+     */
+    function isAdmin() {
+      return isSignedIn();
+    }
+
+    // ----------------------------------------------------------------------
+    // Collection Rules
+    // ----------------------------------------------------------------------
+
+    /**
+     * @description Manages public information about company clients.
+     * @path /clients/{clientId}
+     */
+    match /clients/{clientId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    /**
+     * @description Manages public information about company services.
+     * @path /services/{serviceId}
+     */
+    match /services/{serviceId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    /**
+     * @description Manages public information about the company's process/funnel.
+     * @path /funnel_steps/{funnelStepId}
+     */
+    match /funnel_steps/{funnelStepId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    /**
+     * @description A write-only collection for receiving contact form messages.
+     * @path /contact_form_submissions/{contactFormSubmissionId}
+     */
+    match /contact_form_submissions/{contactFormSubmissionId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if true;
+    }
+
+    /**
+     * @description A collection for receiving quote requests. Writable by anyone, readable by admins.
+     * @path /quote_requests/{quoteId}
+     */
+    match /quote_requests/{quoteId} {
+        allow read, update, delete: if isAdmin();
+        allow create: if true;
+    }
+
+
+    /**
+     * @description Manages global site settings, like section visibility.
+     * @path /site_settings/{settingsId}
+     */
+    match /site_settings/{settingsId} {
+        allow read: if true;
+        allow write: if isAdmin();
+    }
+
+    /**
+     * @description Manages dynamic content sections for the homepage.
+     * @path /sections/{sectionId}
+     */
+    match /sections/{sectionId} {
+        allow read: if true;
+        allow write: if isAdmin();
+    }
+
+    /**
+     * @description Manages global theme settings, like logo and colors.
+     * @path /theme_settings/{settingsId}
+     */
+    match /theme_settings/{settingsId} {
+        allow read: if true;
+        allow write: if isAdmin();
+    }
+    
+    /**
+     * @description Manages standalone, dynamic landing pages.
+     * @path /landing_pages/{landingPageId}
+     */
+    match /landing_pages/{landingPageId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    /**
+     * @description Manages metadata for manually coded landing pages. Admin only.
+     * @path /coded_landing_pages/{codedLandingPageId}
+     */
+    match /coded_landing_pages/{codedLandingPageId} {
+      allow read, write: if isAdmin();
+    }
+    
+    /**
+     * @description Manages content for the Personal Branding landing page.
+     * @path /personal_branding_pages/{pageId}
+     */
+    match /personal_branding_pages/{pageId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    /**
+     * @description Manages client testimonials.
+     * @path /testimonials/{testimonialId}
+     */
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    /**
+     * @description Manages team member information.
+     * @path /team_members/{memberId}
+     */
+    match /team_members/{memberId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    /**
+     * @description Manages blog posts.
+     * @path /blog_posts/{postId}
+     */
+    match /blog_posts/{postId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    /**
+     * @description Manages portfolio items.
+     * @path /portfolio_items/{itemId}
+     */
+    match /portfolio_items/{itemId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
+
+    

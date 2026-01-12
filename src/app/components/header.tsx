@@ -84,22 +84,25 @@ export default function Header() {
         </div>
         
         <nav className="hidden md:flex items-center justify-center gap-6 text-sm flex-1">
-            <Link href="#services" className={navLinkClasses}>
+            <Link href="/portfolio" className={navLinkClasses}>
+                Portfolio
+            </Link>
+            <Link href="/#services" className={navLinkClasses}>
                 {t('ourServices')}
             </Link>
-             <Link href="#funnel" className={navLinkClasses}>
+             <Link href="/#funnel" className={navLinkClasses}>
                 {t('highPerformanceFunnel')}
             </Link>
-             <Link href="#testimonials" className={navLinkClasses}>
+             <Link href="/#testimonials" className={navLinkClasses}>
                 {t('testimonials')}
             </Link>
-            <Link href="#team" className={navLinkClasses}>
+            <Link href="/#team" className={navLinkClasses}>
                 {t('team')}
             </Link>
-             <Link href="#blog" className={navLinkClasses}>
+             <Link href="/#blog" className={navLinkClasses}>
                 {t('blog')}
             </Link>
-             <Link href="#contact" className={navLinkClasses}>
+             <Link href="/#contact" className={navLinkClasses}>
                 {t('contactUs')}
             </Link>
         </nav>
@@ -122,12 +125,13 @@ export default function Header() {
                     <Link href="/" className="flex items-center space-x-2 mb-4">
                         <SiteLogo />
                     </Link>
-                    <Link href="#services" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('ourServices')}</Link>
-                    <Link href="#funnel" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('highPerformanceFunnel')}</Link>
-                    <Link href="#testimonials" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('testimonials')}</Link>
-                    <Link href="#team" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('team')}</Link>
-                    <Link href="#blog" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('blog')}</Link>
-                    <Link href="#contact" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('contactUs')}</Link>
+                    <Link href="/portfolio" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>Portfolio</Link>
+                    <Link href="/#services" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('ourServices')}</Link>
+                    <Link href="/#funnel" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('highPerformanceFunnel')}</Link>
+                    <Link href="/#testimonials" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('testimonials')}</Link>
+                    <Link href="/#team" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('team')}</Link>
+                    <Link href="/#blog" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('blog')}</Link>
+                    <Link href="/#contact" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('contactUs')}</Link>
                      <Button asChild className="mt-4">
                         <Link href="#contact" onClick={() => setIsMobileMenuOpen(false)}>{t('discuss')}</Link>
                     </Button>
@@ -139,3 +143,5 @@ export default function Header() {
     </header>
   );
 }
+
+    
