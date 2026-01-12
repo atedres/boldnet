@@ -5,6 +5,7 @@ import { LanguageProvider } from '@/app/context/language-context';
 import { FirebaseClientProvider } from '@/firebase';
 import { ThemeProvider } from '@/app/components/theme-provider';
 import DynamicTheme from './components/dynamic-theme';
+import WhatsAppButton from './components/whatsapp-button';
 
 export const metadata: Metadata = {
   title: 'BoldNet Digital',
@@ -45,6 +46,7 @@ export default function RootLayout({
             <LanguageProvider>
               <DynamicTheme />
               {children}
+              <WhatsAppButton phoneNumber="+212693379921" />
               <Toaster />
             </LanguageProvider>
           </FirebaseClientProvider>
