@@ -12,18 +12,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { DynamicIcon } from '@/components/ui/dynamic-icon';
 import { PersonalBrandingContactForm } from './PersonalBrandingContactForm';
-import { DndSectionSorter, SectionItem } from '@/app/admin/components/dnd-section-sorter';
 
 const SectionTitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
   <h2 className={cn("text-3xl md:text-4xl font-bold text-center font-headline", className)}>{children}</h2>
 );
 
-const SectionSubtitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-    <p className={`text-lg md:text-xl text-center text-muted-foreground max-w-3xl mx-auto ${className}`}>{children}</p>
-);
-
 const HeroSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => void }) => (
-  <section className="relative w-full flex items-center justify-center py-20 min-h-screen text-white overflow-hidden bg-black">
+  <section id="hero" className="relative w-full flex items-center justify-center py-20 min-h-screen text-white overflow-hidden bg-black">
     <div className="absolute inset-0 z-0">
         <Image
             src={content?.backgroundImageUrl || "https://picsum.photos/seed/hero-bg/1200/800"}
@@ -61,7 +56,7 @@ const HeroSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => 
 );
 
 const ProfessionsSection = ({ content }: { content: any }) => (
-    <section className="py-16 md:py-24 relative">
+    <section id="team" className="py-16 md:py-24 relative">
          {content?.backgroundImageUrl && (
             <Image
                 src={content.backgroundImageUrl}
@@ -88,7 +83,7 @@ const ProfessionsSection = ({ content }: { content: any }) => (
 );
 
 const ProblemSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => void }) => (
-    <section className="py-16 md:py-24 bg-red-700 text-white">
+    <section id="problem" className="py-16 md:py-24 bg-red-700 text-white">
         <div className="container mx-auto px-4 text-center">
             <SectionTitle className="mb-8">{content?.title || "Le problème quand on a pas de personal branding"}</SectionTitle>
             <div className="max-w-2xl mx-auto text-left mt-8 space-y-4 text-lg">
@@ -114,7 +109,7 @@ const ProblemSection = ({ content, onCtaClick }: { content: any, onCtaClick: () 
 );
 
 const ExpertiseSection = ({ content }: { content: any }) => (
-    <section className="relative py-24 md:py-32 bg-gray-800 text-white">
+    <section id="expertise" className="relative py-24 md:py-32 bg-gray-800 text-white">
         <div className="absolute inset-0 z-0">
             <Image
                 src={content?.backgroundImageUrl || "https://picsum.photos/seed/expertise/1200/500"}
@@ -137,7 +132,7 @@ const BeneficiariesSection = ({ content, onCtaClick }: { content: any, onCtaClic
     if (!content?.items?.length) return null;
 
     return (
-        <section className="py-16 md:py-24 bg-[#fff4f2]">
+        <section id="beneficiaries" className="py-16 md:py-24 bg-[#fff4f2]">
             <div className="container mx-auto px-4">
                  <div className="flex items-center justify-center mb-12">
                     <div className="h-px flex-grow bg-red-200"></div>
@@ -186,7 +181,7 @@ const BeneficiariesSection = ({ content, onCtaClick }: { content: any, onCtaClic
 };
 
 const ResultsSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => void }) => (
-    <section className="py-16 md:py-24 bg-red-700 text-white">
+    <section id="results" className="py-16 md:py-24 bg-red-700 text-white">
         <div className="container mx-auto px-4">
             <SectionTitle className="mb-16">{content?.title || "LES RÉSULTATS?"}</SectionTitle>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12 relative">
@@ -241,7 +236,7 @@ const ResultsSection = ({ content, onCtaClick }: { content: any, onCtaClick: () 
 
 const MethodSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => void }) => {
     return (
-        <section className="py-16 md:py-24 bg-[#fff4f2]">
+        <section id="method" className="py-16 md:py-24 bg-[#fff4f2]">
             <div className="container mx-auto px-4">
                 <div className="space-y-8 max-w-4xl mx-auto">
                     {(content?.steps || []).map((step: any, index: number) => (
@@ -298,7 +293,7 @@ const TimelineMethodSection = ({ content, onCtaClick }: { content: any, onCtaCli
     const steps = content?.steps?.length ? content.steps : defaultSteps;
     
     return (
-        <section className="py-16 md:py-24 bg-red-700 text-white relative overflow-hidden">
+        <section id="timelineMethod" className="py-16 md:py-24 bg-red-700 text-white relative overflow-hidden">
              <div className="absolute inset-0 z-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '1.5rem 1.5rem' }}></div>
             <div className="container mx-auto px-4 relative z-10">
                 
@@ -340,7 +335,7 @@ const TimelineMethodSection = ({ content, onCtaClick }: { content: any, onCtaCli
 }
 
 const FinalCtaSection = ({ content }: { content: any }) => (
-    <section className="relative py-24 md:py-32 bg-gray-900 text-white">
+    <section id="finalCta" className="relative py-24 md:py-32 bg-gray-900 text-white">
          <div className="absolute inset-0 z-0">
             <Image
                 src={content?.backgroundImageUrl || "https://picsum.photos/seed/final-cta/1200/400"}
@@ -390,6 +385,12 @@ function PersonalBrandingContent() {
 
     const sectionOrder = useMemo(() => pageContent?.sectionOrder || DEFAULT_SECTION_ORDER, [pageContent]);
 
+    const handleScrollTo = (sectionId: string) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      };
 
     if (isLoading) {
         return (
@@ -401,25 +402,42 @@ function PersonalBrandingContent() {
         )
     }
 
-  return (
-    <div className="bg-white">
-      <main>
-        {sectionOrder.map((sectionKey: string) => {
-            const Component = sectionComponents[sectionKey];
-            if (!Component || !pageContent?.[sectionKey]) {
-                return null;
-            }
-            const content = pageContent[sectionKey];
-            
-            // The FinalCtaSection is the only one without a CTA button.
-            const onCtaClick = sectionKey !== 'finalCta' ? handleOpenForm : undefined;
+    return (
+        <div className="bg-white">
+          <main>
+            {sectionOrder.map((sectionKey: string, index: number) => {
+                const Component = sectionComponents[sectionKey];
+                if (!Component || !pageContent?.[sectionKey]) {
+                    return null;
+                }
+                const content = pageContent[sectionKey];
+                
+                const nextSectionIndex = index + 1;
+                const nextSectionId = nextSectionIndex < sectionOrder.length ? sectionOrder[nextSectionIndex] : null;
 
-            return <Component key={sectionKey} content={content} onCtaClick={onCtaClick} />;
-        })}
-      </main>
-      {isFormOpen && <PersonalBrandingContactForm onOpenChange={setIsFormOpen} />}
-    </div>
-  );
+                let onCtaClick;
+
+                const formTriggerSections = ['beneficiaries', 'results', 'timelineMethod', 'method'];
+
+                if (formTriggerSections.includes(sectionKey)) {
+                    onCtaClick = handleOpenForm;
+                } else if (nextSectionId) {
+                    onCtaClick = () => handleScrollTo(nextSectionId);
+                } else {
+                    onCtaClick = handleOpenForm;
+                }
+                
+                // The FinalCtaSection is the only one without a CTA button.
+                if (sectionKey === 'finalCta' || sectionKey === 'team' || sectionKey === 'expertise') {
+                    return <Component key={sectionKey} content={content} />;
+                }
+                
+                return <Component key={sectionKey} content={content} onCtaClick={onCtaClick} />;
+            })}
+          </main>
+          {isFormOpen && <PersonalBrandingContactForm onOpenChange={setIsFormOpen} />}
+        </div>
+      );
 }
 
 export default function PersonalBrandingPage() {
