@@ -83,7 +83,7 @@ export default function Hero() {
 
       <div className="container mx-auto grid lg:grid-cols-2 gap-12 items-center min-h-screen px-4 md:px-6 pt-32 pb-12 relative z-10">
         <div className="space-y-6 text-center lg:text-left">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-headline leading-tight tracking-tight text-white">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-headline leading-normal tracking-normal text-white">
             {title}
           </h1>
           <p className="text-xl md:text-2xl text-red-100/90 max-w-2xl mx-auto lg:mx-0">
