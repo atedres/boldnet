@@ -7,18 +7,33 @@ import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AnimatedDollarIcon } from './animated-dollar-icon';
 import { BarChart, Percent, TrendingUp, DollarSign, Users, LucideProps } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+const animationThemes = ['dollar', 'sales', 'clients'] as const;
+type AnimationTheme = typeof animationThemes[number];
 
 export default function Hero() {
   const { t } = useLanguage();
-  const [animationTheme, setAnimationTheme] = useState<'dollar' | 'sales' | 'clients'>('dollar');
+  const [animationTheme, setAnimationTheme] = useState<AnimationTheme>('dollar');
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimationTheme(prevTheme => {
+        const currentIndex = animationThemes.indexOf(prevTheme);
+        const nextIndex = (currentIndex + 1) % animationThemes.length;
+        return animationThemes[nextIndex];
+      });
+    }, 3000); // Change theme every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   const title = "10× Your Profits in the next 6 Months with BoldNetDigital";
   const subtitle = "More Leads. More Sales. Real Growth.";
   const description = "We build marketing systems that generate qualified leads, convert them and help scale without limits.";
   const ctaText = "Get Started";
 
-  const fallingIcons: Record<'dollar' | 'sales' | 'clients', { Icon: React.FC<LucideProps>, style: React.CSSProperties }[]> = {
+  const fallingIcons: Record<AnimationTheme, { Icon: React.FC<LucideProps>, style: React.CSSProperties }[]> = {
     dollar: [
       { Icon: DollarSign, style: { left: '10%', animationDuration: '10s' } },
       { Icon: DollarSign, style: { left: '30%', animationDuration: '8s', animationDelay: '1s' } },
@@ -42,7 +57,7 @@ export default function Hero() {
     ]
   };
 
-  const renderFallingIcons = (theme: 'dollar' | 'sales' | 'clients') => {
+  const renderFallingIcons = (theme: AnimationTheme) => {
     return fallingIcons[theme].map(({ Icon, style }, index) => (
         <Icon 
             key={`${theme}-${index}`}
@@ -61,7 +76,7 @@ export default function Hero() {
        <div className="absolute inset-0 z-0">
         {Object.keys(fallingIcons).map((theme) => (
             <div key={theme} className={cn("absolute inset-0 transition-opacity duration-1000", animationTheme === theme ? "opacity-100" : "opacity-0")}>
-                {renderFallingIcons(theme as 'dollar' | 'sales' | 'clients')}
+                {renderFallingIcons(theme as AnimationTheme)}
             </div>
         ))}
       </div>
@@ -84,7 +99,7 @@ export default function Hero() {
           </div>
         </div>
         <div className="relative w-full h-80 lg:h-full flex items-center justify-center">
-            <AnimatedDollarIcon onThemeChange={setAnimationTheme} />
+            <AnimatedDollarIcon currentTheme={animationTheme} />
         </div>
       </div>
     </section>

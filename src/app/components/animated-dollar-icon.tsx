@@ -9,21 +9,14 @@ const icons: { name: 'dollar' | 'sales' | 'clients'; Icon: React.FC<LucideProps>
     { name: 'clients', Icon: Users },
 ];
 
-export function AnimatedDollarIcon({ onThemeChange }: { onThemeChange: (theme: 'dollar' | 'sales' | 'clients') => void }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const themeToIndex: Record<'dollar' | 'sales' | 'clients', number> = {
+    dollar: 0,
+    sales: 1,
+    clients: 2,
+};
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => {
-        const nextIndex = (prevIndex + 1) % icons.length;
-        onThemeChange(icons[nextIndex].name);
-        return nextIndex;
-      });
-    }, 3000); // Change icon every 3 seconds
-
-    return () => clearInterval(interval);
-  }, [onThemeChange]);
-
+export function AnimatedDollarIcon({ currentTheme }: { currentTheme: 'dollar' | 'sales' | 'clients' }) {
+  const currentIndex = themeToIndex[currentTheme];
   const { Icon } = icons[currentIndex];
 
   return (
