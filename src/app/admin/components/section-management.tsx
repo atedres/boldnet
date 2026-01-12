@@ -121,15 +121,25 @@ const sectionTemplates = [
         title: 'NOTRE METHODE',
         ctaButtonText: 'EN SAVOIR PLUS'
     },
-    isStatic: true,
+    isStatic: false,
   },
   {
     type: 'results-showcase',
     name: 'Results Showcase',
     description: 'Displays the before/after results section.',
     icon: <TrendingUp className="w-8 h-8" />,
-    defaultContent: {},
-    isStatic: true,
+    defaultContent: {
+        title: "LES RÉSULTATS?",
+        withoutTitle: "Avant Boldnet",
+        withoutItems: [],
+        withoutImage: "https://picsum.photos/seed/sans-marque/400/225",
+        withTitle: "Après Boldnet",
+        withItems: [],
+        withImage: "https://picsum.photos/seed/avec-marque/400/225",
+        bonus: "Votre impact grandit aussi. Plus de personnes profitent de votre expertise et de vos services.",
+        ctaButtonText: "COMMENÇONS!"
+    },
+    isStatic: false,
   },
   {
     type: 'testimonials',
@@ -189,6 +199,23 @@ function SectionForm({ section, onComplete, onSave }: { section: any; onComplete
       const newVideos = [...(content.videos || [])];
       newVideos.splice(index, 1);
       handleContentChange('videos', newVideos);
+  };
+
+  const handleListItemChange = (listName: 'withoutItems' | 'withItems', index: number, value: string) => {
+    const newList = [...(content[listName] || [])];
+    newList[index] = value;
+    handleContentChange(listName, newList);
+  };
+
+  const handleAddListItem = (listName: 'withoutItems' | 'withItems') => {
+    const newList = [...(content[listName] || []), ""];
+    handleContentChange(listName, newList);
+  };
+
+  const handleRemoveListItem = (listName: 'withoutItems' | 'withItems', index: number) => {
+    const newList = [...(content[listName] || [])];
+    newList.splice(index, 1);
+    handleContentChange(listName, newList);
   };
 
   const handleSubmit = async () => {
@@ -344,6 +371,48 @@ function SectionForm({ section, onComplete, onSave }: { section: any; onComplete
             <p className="text-sm text-muted-foreground pt-4 border-t">The steps for this timeline are managed in the "Personal Branding" page under the "Coded Landing Pages" section.</p>
           </>
         );
+      case 'results-showcase':
+        return (
+          <>
+            <div className="grid gap-2">
+              <Label htmlFor="title">Main Title</Label>
+              <Input id="title" value={content.title} onChange={(e) => handleContentChange('title', e.target.value)} />
+            </div>
+
+            <Card className="p-4">
+              <h4 className="font-semibold mb-4">"Before" Column</h4>
+              <div className="grid gap-2">
+                <Label>Title</Label>
+                <Input value={content.withoutTitle} onChange={(e) => handleContentChange('withoutTitle', e.target.value)} />
+              </div>
+              <div className="grid gap-2 mt-4">
+                <Label>Image</Label>
+                <ImageUpload value={content.withoutImage} onChange={(url) => handleContentChange('withoutImage', url)} />
+              </div>
+            </Card>
+
+            <Card className="p-4">
+              <h4 className="font-semibold mb-4">"After" Column</h4>
+              <div className="grid gap-2">
+                <Label>Title</Label>
+                <Input value={content.withTitle} onChange={(e) => handleContentChange('withTitle', e.target.value)} />
+              </div>
+              <div className="grid gap-2 mt-4">
+                <Label>Image</Label>
+                <ImageUpload value={content.withImage} onChange={(url) => handleContentChange('withImage', url)} />
+              </div>
+            </Card>
+
+             <div className="grid gap-2">
+                <Label>Bonus Text</Label>
+                <Input value={content.bonus} onChange={(e) => handleContentChange('bonus', e.target.value)} />
+            </div>
+             <div className="grid gap-2">
+                <Label>CTA Button Text</Label>
+                <Input value={content.ctaButtonText} onChange={(e) => handleContentChange('ctaButtonText', e.target.value)} />
+            </div>
+          </>
+        );
       default:
         return <p>This section type has no configurable content.</p>;
     }
@@ -404,7 +473,7 @@ function SortableSectionItem({ section, onEdit, onDelete, onToggleVisibility }: 
                     {section.visible === false ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     <span className="sr-only">Toggle Visibility</span>
                 </Button>
-                 {(!template?.isStatic || isHeroSection || section.type === 'funnel-display' || section.type === 'results-showcase') && (
+                 {(!template?.isStatic || isHeroSection) && (
                     <Button variant="ghost" size="icon" onClick={onEdit}>
                         <Edit className="h-4 w-4" />
                         <span className="sr-only">Edit</span>
