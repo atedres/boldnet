@@ -18,7 +18,7 @@ export default function Hero() {
   return (
     <section className={cn(
         "relative text-white",
-        "bg-gradient-to-br from-red-700 via-black to-red-900",
+        "bg-gradient-to-br from-primary via-red-500 to-fuchsia-900",
         "bg-[length:200%_200%] animate-gradient"
     )}>
       <div className="container mx-auto grid lg:grid-cols-2 gap-12 items-center min-h-screen px-4 md:px-6 pt-24 pb-12">
