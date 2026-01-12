@@ -103,7 +103,7 @@ function AuthForm() {
   };
   
   if (isUserLoading || (!isUserLoading && user)) {
-    return <div>Loading...</div>;
+    return <div className="flex h-screen items-center justify-center bg-gray-100 dark:bg-gray-950">Loading...</div>;
   }
 
   const resetForm = () => {
@@ -118,7 +118,7 @@ function AuthForm() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
       <Card className="w-full max-w-sm">
         {formMode === 'signin' ? (
           <>
