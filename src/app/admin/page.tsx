@@ -149,7 +149,7 @@ function AdminDashboard() {
             <h2 className="text-lg font-semibold text-sidebar-primary-foreground tracking-wider">BoldNet</h2>
           </div>
         </SidebarHeader>
-        <SidebarContent className="mt-4">
+        <SidebarContent className="mt-4 px-2">
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton
@@ -328,7 +328,7 @@ function AdminDashboard() {
 
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter>
+        <SidebarFooter className="px-2">
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton onClick={handleLogout}>
