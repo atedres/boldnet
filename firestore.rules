@@ -198,5 +198,23 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+    
+    /**
+     * @description Manages newsletter subscriptions.
+     * @path /newsletter_subscriptions/{subscriptionId}
+     */
+    match /newsletter_subscriptions/{subscriptionId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if true;
+    }
+    
+    /**
+     * @description Manages global footer content.
+     * @path /footer_settings/{settingsId}
+     */
+    match /footer_settings/{settingsId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
   }
 }
