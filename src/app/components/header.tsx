@@ -26,7 +26,7 @@ const DefaultLogo = ({className}: {className?: string}) => (
     </svg>
   );
 
-const SiteLogo = ({isScrolled}: {isScrolled: boolean}) => {
+const SiteLogo = () => {
   const firestore = useFirestore();
   const { resolvedTheme } = useTheme();
   const settingsDocRef = useMemoFirebase(() => doc(firestore, 'theme_settings', 'main'), [firestore]);
@@ -42,7 +42,7 @@ const SiteLogo = ({isScrolled}: {isScrolled: boolean}) => {
   const lightLogoUrl = themeSettings?.logoUrl;
   
   const logoClassName = "h-8 w-8 object-contain transition-all";
-  const logoTextColor = isDark || !isScrolled ? 'text-white' : 'text-foreground';
+  const logoTextColor = 'text-white';
 
 
   if (isDark && useDarkLogo && darkLogoUrl) {
@@ -50,7 +50,7 @@ const SiteLogo = ({isScrolled}: {isScrolled: boolean}) => {
   }
 
   if (lightLogoUrl) {
-    return <Image src={lightLogoUrl} alt="BoldNet Digital Logo" width={32} height={32} className={cn(logoClassName, !isScrolled && !isDark && 'brightness-0 invert')}/>;
+    return <Image src={lightLogoUrl} alt="BoldNet Digital Logo" width={32} height={32} className={cn(logoClassName, 'brightness-0 invert')}/>;
   }
   
   return <DefaultLogo className={cn(logoClassName, logoTextColor)} />;
@@ -59,37 +59,15 @@ const SiteLogo = ({isScrolled}: {isScrolled: boolean}) => {
 export default function Header() {
     const { t } = useLanguage();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isScrolled, setIsScrolled] = useState(false);
-    const { resolvedTheme } = useTheme();
 
-    useEffect(() => {
-        const handleScroll = () => {
-            // A small threshold to avoid header changing right at the top
-            setIsScrolled(window.scrollY > 10);
-        };
-        window.addEventListener('scroll', handleScroll);
-        // Set initial state
-        handleScroll();
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    const navLinkClasses = cn(
-        "transition-colors font-medium",
-        isScrolled || resolvedTheme === 'dark'
-        ? "text-foreground/80 hover:text-foreground/90"
-        : "text-white/90 hover:text-white"
-    );
-
+    const navLinkClasses = "text-white/90 hover:text-white transition-colors font-medium";
 
   return (
-    <header className={cn(
-        "fixed top-0 z-50 w-full transition-all duration-300",
-        isScrolled ? "border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" : "bg-transparent"
-    )}>
+    <header className="fixed top-0 z-50 w-full bg-red-700">
       <div className="container flex h-20 items-center">
         <div className="flex-1 flex justify-start">
             <Link href="/" className="flex items-center space-x-2">
-            <SiteLogo isScrolled={isScrolled}/>
+            <SiteLogo />
             </Link>
         </div>
         
@@ -117,12 +95,12 @@ export default function Header() {
         <div className="flex flex-1 items-center justify-end space-x-2">
           <ThemeSwitcher />
           <LanguageSwitcher />
-          <Button asChild className="hidden md:flex rounded-full">
+          <Button asChild className="hidden md:flex rounded-full bg-white text-red-600 hover:bg-red-200">
             <Link href="#contact">{t('discuss')}</Link>
           </Button>
            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className={cn("md:hidden", isScrolled || resolvedTheme === 'dark' ? "text-foreground" : "text-white hover:bg-white/10 hover:text-white")}>
+                <Button variant="ghost" size="icon" className="md:hidden text-white hover:bg-white/10 hover:text-white">
                     <Menu />
                     <span className="sr-only">Open menu</span>
                 </Button>
@@ -130,7 +108,7 @@ export default function Header() {
             <SheetContent side="left">
                 <div className="flex flex-col gap-6 pt-10">
                     <Link href="/" className="flex items-center space-x-2 mb-4">
-                        <SiteLogo isScrolled={true} />
+                        <SiteLogo />
                     </Link>
                     <Link href="#services" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('ourServices')}</Link>
                     <Link href="#funnel" className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>{t('highPerformanceFunnel')}</Link>
