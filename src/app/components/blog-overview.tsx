@@ -24,8 +24,8 @@ export default function BlogOverview({ content }: { content: any }) {
 
   const renderPostCard = (post: any) => (
     <Link href={`/blog/${post.slug}`} className="group block h-full">
-        <Card className="flex flex-col h-full bg-background dark:bg-neutral-900 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <div className="overflow-hidden relative">
+        <Card className="flex flex-col h-full bg-gradient-to-br from-black to-red-900/50 text-white shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-2xl">
+            <div className="overflow-hidden relative rounded-t-2xl">
                  {post.imageUrl ? (
                     <Image 
                         src={post.imageUrl}
@@ -44,11 +44,11 @@ export default function BlogOverview({ content }: { content: any }) {
                 )}
             </div>
            <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-xl font-bold font-headline mb-3 flex-grow text-foreground dark:text-white">{post.title}</h3>
-                <p className="text-muted-foreground dark:text-neutral-400 line-clamp-3 mb-4">
+                <h3 className="text-xl font-bold font-headline mb-3 flex-grow text-white">{post.title}</h3>
+                <p className="text-white/80 line-clamp-3 mb-4">
                     {post.excerpt}
                 </p>
-                 <span className="font-semibold tracking-widest text-sm text-primary group-hover:text-primary/80 transition-colors">
+                 <span className="font-semibold tracking-widest text-sm text-red-300 group-hover:text-white transition-colors">
                     READ MORE
                 </span>
            </div>
