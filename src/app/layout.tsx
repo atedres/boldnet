@@ -46,7 +46,7 @@ export default function RootLayout({
             <LanguageProvider>
               <DynamicTheme />
               {children}
-              <WhatsAppButton phoneNumber="+212693379921" />
+              <WhatsAppButton phoneNumber="+212719802571" />
               <Toaster />
             </LanguageProvider>
           </FirebaseClientProvider>
