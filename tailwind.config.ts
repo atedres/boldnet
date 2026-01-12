@@ -102,6 +102,16 @@ export default {
         gradient: {
           '0%, 100%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
+        },
+        fall: {
+          '0%': { transform: 'translateY(-10%)', opacity: '0' },
+          '10%': { opacity: '0.1' },
+          '90%': { opacity: '0.1' },
+          '100%': { transform: 'translateY(110vh)', opacity: '0' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0) rotate(-3deg)' },
+          '50%': { transform: 'translateY(-20px) rotate(3deg)' },
         }
       },
       animation: {
@@ -109,6 +119,8 @@ export default {
         'accordion-up': 'accordion-up 0.2s ease-out',
         scroll: 'scroll 40s linear infinite',
         gradient: 'gradient 15s ease infinite',
+        fall: 'fall 10s linear infinite',
+        float: 'float 6s ease-in-out infinite',
       },
     },
   },
