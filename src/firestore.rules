@@ -198,7 +198,7 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
-
+    
     /**
      * @description Manages newsletter subscriptions.
      * @path /newsletter_subscriptions/{subscriptionId}
