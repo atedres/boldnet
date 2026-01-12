@@ -17,6 +17,7 @@ import TeamSection from './team-section';
 import BlogOverview from './blog-overview';
 import ResultsSection from './results-section';
 import NewsletterSection from './newsletter-section';
+import ContactSection from './contact-section';
 
 // --- Helper Functions ---
 function getYouTubeEmbedUrl(url: string) {
@@ -191,6 +192,7 @@ const sectionComponents = {
   'team': TeamSection,
   'blog-overview': BlogOverview,
   'newsletter': NewsletterSection,
+  'contact-form': ContactSection,
 };
 
 export default function DynamicSections() {

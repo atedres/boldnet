@@ -179,6 +179,14 @@ const sectionTemplates = [
     },
     isStatic: false,
   },
+  {
+    type: 'contact-form',
+    name: 'Contact Form',
+    description: 'Displays the main contact form section.',
+    icon: <Mail className="w-8 h-8" />,
+    defaultContent: {},
+    isStatic: true,
+  },
 ];
 
 function SectionForm({ section, onComplete, onSave }: { section: any; onComplete: () => void, onSave: (section: any) => void }) {
