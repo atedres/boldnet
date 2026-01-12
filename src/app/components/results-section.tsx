@@ -88,5 +88,3 @@ export default function ResultsSection({ content }: { content?: any }) {
         </section>
     )
 }
-
-    
