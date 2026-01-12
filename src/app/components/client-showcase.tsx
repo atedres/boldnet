@@ -34,24 +34,24 @@ export default function ClientShowcase() {
           <div className="text-center text-white">Loading clients...</div>
         )}
         {clients && clients.length > 0 && (
-          <div className="relative marquee">
-            <div className="marquee-content">
-              {duplicatedClients.map((client, index) => (
-                <div key={`${client.id}-${index}`} className="flex-shrink-0" style={{ width: '160px' }}>
-                  <div className="flex aspect-square items-center justify-center p-6 flex-col gap-2 rounded-lg">
-                    <Image
-                      src={client.logoUrl}
-                      alt={`${client.name} logo`}
-                      width={100}
-                      height={100}
-                      className="object-contain grayscale hover:grayscale-0 transition-all brightness-0 invert"
-                    />
+          <div className="relative marquee-container">
+            <div className="marquee">
+              <div className="marquee-content">
+                {duplicatedClients.map((client, index) => (
+                  <div key={`${client.id}-${index}`} className="flex-shrink-0" style={{ width: '160px' }}>
+                    <div className="flex aspect-square items-center justify-center p-6 flex-col gap-2 rounded-lg">
+                      <Image
+                        src={client.logoUrl}
+                        alt={`${client.name} logo`}
+                        width={100}
+                        height={100}
+                        className="object-contain grayscale hover:grayscale-0 transition-all brightness-0 invert"
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-             <div className="absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-background to-transparent"></div>
-             <div className="absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-background to-transparent"></div>
           </div>
         )}
       </div>
