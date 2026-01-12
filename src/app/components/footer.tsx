@@ -17,7 +17,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="w-full bg-red-700 text-red-200">
+    <footer className="w-full bg-transparent text-white/80">
       <div className="container px-6 py-12 mx-auto">
         <div className="grid grid-cols-1 gap-8 text-center sm:text-left sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           <div className="flex flex-col items-center sm:items-start">
@@ -29,13 +29,13 @@ export default function Footer() {
                 Amplifiez votre marque. Dominez le marché. Nous aidons les entreprises ambitieuses à créer des expériences numériques qui génèrent des résultats.
             </p>
              <div className="flex mt-6 -mx-2">
-              <a href="https://www.instagram.com/boldnetdigital/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="mx-2 text-red-200 transition-colors duration-300 hover:text-white">
+              <a href="https://www.instagram.com/boldnetdigital/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="mx-2 text-white/80 transition-colors duration-300 hover:text-white">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="https://web.facebook.com/profile.php?id=61580707476970" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="mx-2 text-red-200 transition-colors duration-300 hover:text-white">
+              <a href="https://web.facebook.com/profile.php?id=61580707476970" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="mx-2 text-white/80 transition-colors duration-300 hover:text-white">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" aria-label="LinkedIn" className="mx-2 text-red-200 transition-colors duration-300 hover:text-white">
+              <a href="#" aria-label="LinkedIn" className="mx-2 text-white/80 transition-colors duration-300 hover:text-white">
                 <Linkedin className="w-5 h-5" />
               </a>
             </div>
@@ -77,7 +77,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <hr className="my-6 border-red-500" />
+        <hr className="my-6 border-white/20" />
 
         <div className="text-center">
           <p className="text-sm">

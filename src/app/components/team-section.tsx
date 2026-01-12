@@ -37,8 +37,8 @@ export default function TeamSection() {
                 className="rounded-full object-cover aspect-square w-32 h-32"
             />
             <div>
-                <h3 className="font-bold text-lg font-headline whitespace-nowrap tracking-wide">{member.name}</h3>
-                <p className="text-primary">{member.position}</p>
+                <h3 className="font-bold text-lg font-headline whitespace-nowrap tracking-wide text-white">{member.name}</h3>
+                <p className="text-white/80">{member.position}</p>
             </div>
         </CardContent>
     </Card>
@@ -46,11 +46,11 @@ export default function TeamSection() {
 
   const renderContent = () => {
     if (isLoadingMembers) {
-        return <p className="text-center">Chargement de l'équipe...</p>
+        return <p className="text-center text-white">Chargement de l'équipe...</p>
     }
 
     if (!duplicatedMembers || duplicatedMembers.length === 0) {
-        return <p className="text-center text-muted-foreground">Aucun membre d'équipe disponible.</p>
+        return <p className="text-center text-white/80">Aucun membre d'équipe disponible.</p>
     }
 
      return (
@@ -67,15 +67,15 @@ export default function TeamSection() {
   return (
     <section 
         id="team" 
-        className="w-full py-12 md:py-24 lg:py-32 bg-background text-foreground"
+        className="w-full py-12 md:py-24 lg:py-32 bg-transparent text-foreground"
     >
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-5xl font-headline text-foreground">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-5xl font-headline text-white">
               Notre Équipe
             </h2>
-            <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-muted-foreground">
+            <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-white/80">
               Rencontrez les experts qui donnent vie à vos projets.
             </p>
           </div>

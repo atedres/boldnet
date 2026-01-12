@@ -55,7 +55,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
 
     return (
         <Dialog>
-            <Card className="bg-white/10 dark:bg-white/5 border border-white/20 text-white flex flex-col h-full transition-shadow duration-300 hover:shadow-2xl hover:bg-white/20 rounded-xl">
+            <Card className="bg-white/10 dark:bg-white/5 border border-white/20 text-white flex flex-col h-full transition-shadow duration-300 hover:shadow-2xl hover:bg-white/20 rounded-xl backdrop-blur-sm">
                 <CardContent className="p-6 flex-grow flex flex-col">
                     <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
@@ -158,7 +158,7 @@ export default function Testimonials() {
   }
 
   return (
-    <section id="testimonials" className="bg-red-700 text-white py-16 md:py-24">
+    <section id="testimonials" className="bg-transparent text-white py-16 md:py-24">
       <div className="container mx-auto">
         <div className="text-center mb-12">
             <span className="text-sm font-bold text-red-200 tracking-widest uppercase">Témoignages</span>

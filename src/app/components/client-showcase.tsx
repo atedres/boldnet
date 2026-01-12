@@ -22,16 +22,16 @@ export default function ClientShowcase() {
   }, [clients]);
 
   return (
-    <section id="clients" className="w-full bg-background py-12 md:py-24">
+    <section id="clients" className="w-full bg-transparent py-12 md:py-24">
       <div className="container mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-2 font-headline tracking-tight">
+        <h2 className="text-3xl font-bold text-center mb-2 font-headline tracking-tight text-white">
           {t('trustedBy')}
         </h2>
-        <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+        <p className="text-center text-white/80 mb-12 max-w-2xl mx-auto">
           {t('clientShowcaseDescription')}
         </p>
         {isLoadingClients && (
-          <div className="text-center">Loading clients...</div>
+          <div className="text-center text-white">Loading clients...</div>
         )}
         {clients && clients.length > 0 && (
           <div className="relative marquee">
@@ -44,7 +44,7 @@ export default function ClientShowcase() {
                       alt={`${client.name} logo`}
                       width={100}
                       height={100}
-                      className="object-contain grayscale hover:grayscale-0 transition-all"
+                      className="object-contain grayscale hover:grayscale-0 transition-all brightness-0 invert"
                     />
                   </div>
                 </div>

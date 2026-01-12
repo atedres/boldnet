@@ -19,14 +19,14 @@ export default function FunnelDisplay() {
   const sortedSteps = funnelSteps;
 
   return (
-    <section id="funnel" className="w-full py-12 md:py-24 lg:py-32">
+    <section id="funnel" className="w-full py-12 md:py-24 lg:py-32 bg-transparent">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-5xl font-headline text-foreground">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-5xl font-headline text-white">
               {t('highPerformanceFunnel')}
             </h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            <p className="max-w-[900px] text-white/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               {t('funnelDescription')}
             </p>
           </div>
@@ -41,7 +41,7 @@ export default function FunnelDisplay() {
            {sortedSteps?.map((step, index) => (
             <div 
               key={step.id} 
-              className="relative flex items-start gap-6 p-6 rounded-lg border bg-card text-card-foreground overflow-hidden shadow-lg transition-shadow hover:shadow-xl"
+              className="relative flex items-start gap-6 p-6 rounded-lg border bg-card/10 text-white backdrop-blur-sm overflow-hidden shadow-lg transition-shadow hover:shadow-xl"
             >
               <div className="relative z-10 flex-shrink-0 w-12 h-12 rounded-full bg-white border-2 border-primary flex items-center justify-center">
                  {step.iconUrl ? (
@@ -54,7 +54,7 @@ export default function FunnelDisplay() {
               </div>
               <div className="relative z-10">
                 <h3 className="text-xl font-bold font-headline">{t(step.name)}</h3>
-                <p className="text-muted-foreground mt-2">{t(step.description)}</p>
+                <p className="text-white/80 mt-2">{t(step.description)}</p>
               </div>
             </div>
           ))}

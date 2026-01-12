@@ -76,14 +76,14 @@ export default function ContactSection() {
 
   if (isSubmitted) {
     return (
-      <section id="contact" className="w-full py-12 md:py-24 lg:py-32 bg-background">
+      <section id="contact" className="w-full py-12 md:py-24 lg:py-32 bg-transparent text-white">
         <div className="container text-center">
             <div className="mx-auto max-w-md space-y-4">
               <Send className="mx-auto h-16 w-16 text-primary" />
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl font-headline">
                 {t('submissionSuccessTitle')}
               </h2>
-              <p className="text-muted-foreground">
+              <p className="text-white/80">
                 {t('submissionSuccessMessage')}
               </p>
             </div>
@@ -93,13 +93,13 @@ export default function ContactSection() {
   }
 
   return (
-    <section id="contact" className="w-full py-12 md:py-24 lg:py-32 bg-background">
+    <section id="contact" className="w-full py-12 md:py-24 lg:py-32 bg-transparent text-white">
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
         <div className="space-y-3">
           <h2 className="text-3xl font-bold tracking-tight md:text-4xl/tight font-headline">
             {t('letsBuildSomethingBold')}
           </h2>
-          <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+          <p className="mx-auto max-w-[600px] text-white/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
             {t('contactFormDescription')}
           </p>
         </div>

@@ -56,9 +56,7 @@ export default function Hero() {
 
   return (
     <section className={cn(
-        "relative text-white overflow-hidden",
-        "bg-gradient-to-br from-primary via-red-800 to-black",
-        "bg-[length:200%_200%] animate-gradient"
+        "relative text-white overflow-hidden bg-transparent"
     )}>
        <div className="absolute inset-0 z-0">
         {Object.keys(fallingIcons).map((theme) => (
