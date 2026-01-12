@@ -2,7 +2,7 @@
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
-import { Award, Zap, Target, ArrowRight, Video } from 'lucide-react';
+import { ArrowRight, Video } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -15,6 +15,7 @@ import Testimonials from './testimonials';
 import { DynamicIcon } from '@/components/ui/dynamic-icon';
 import TeamSection from './team-section';
 import BlogOverview from './blog-overview';
+import ResultsSection from './results-section';
 
 // --- Helper Functions ---
 function getYouTubeEmbedUrl(url: string) {
@@ -184,6 +185,7 @@ const sectionComponents = {
   'services-overview': ServicesOverview,
   'client-showcase': ClientShowcase,
   'funnel-display': FunnelDisplay,
+  'results-showcase': ResultsSection,
   'testimonials': Testimonials,
   'team': TeamSection,
   'blog-overview': BlogOverview
@@ -226,3 +228,5 @@ export default function DynamicSections() {
     </>
   );
 }
+
+    

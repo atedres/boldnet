@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Layers, Trash2, Edit, Award, Zap, Target, ImageIcon, MessageSquare, GripVertical, Briefcase, Users, Workflow, EyeOff, Eye, Plus, Video, Home, Star, UserSquare, Rss } from 'lucide-react';
+import { Layers, Trash2, Edit, Award, Zap, Target, ImageIcon, MessageSquare, GripVertical, Briefcase, Users, Workflow, EyeOff, Eye, Plus, Video, Home, Star, UserSquare, Rss, TrendingUp } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { ImageUpload } from '@/components/ui/image-upload';
 import {
@@ -124,6 +124,14 @@ const sectionTemplates = [
     isStatic: true,
   },
   {
+    type: 'results-showcase',
+    name: 'Results Showcase',
+    description: 'Displays the before/after results section.',
+    icon: <TrendingUp className="w-8 h-8" />,
+    defaultContent: {},
+    isStatic: true,
+  },
+  {
     type: 'testimonials',
     name: 'Testimonials',
     description: 'Displays the client testimonials carousel.',
@@ -152,11 +160,9 @@ const sectionTemplates = [
   },
 ];
 
-function SectionForm({ section, onComplete }: { section?: any; onComplete: () => void }) {
+function SectionForm({ section, onComplete, onSave }: { section: any; onComplete: () => void, onSave: (section: any) => void }) {
   const [content, setContent] = useState(section?.content || {});
   const [order, setOrder] = useState(section?.order || 0);
-  const firestore = useFirestore();
-  const { toast } = useToast();
 
   const handleContentChange = (field: string, value: any) => {
     setContent((prev: any) => ({ ...prev, [field]: value }));
@@ -186,16 +192,7 @@ function SectionForm({ section, onComplete }: { section?: any; onComplete: () =>
   };
 
   const handleSubmit = async () => {
-    if (!section?.id) return; // Should not happen
-    const docRef = doc(firestore, 'sections', section.id);
-    try {
-      await setDoc(docRef, { ...section, content, order }, { merge: true });
-      toast({ title: 'Section Updated', description: 'Your section has been saved.' });
-      onComplete();
-    } catch (error) {
-      console.error(error);
-      toast({ variant: 'destructive', title: 'Error', description: 'Could not save the section.' });
-    }
+    onSave({ ...section, content, order });
   };
 
   const renderFormFields = () => {
@@ -407,7 +404,7 @@ function SortableSectionItem({ section, onEdit, onDelete, onToggleVisibility }: 
                     {section.visible === false ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     <span className="sr-only">Toggle Visibility</span>
                 </Button>
-                 {(!template?.isStatic || isHeroSection || section.type === 'funnel-display') && (
+                 {(!template?.isStatic || isHeroSection || section.type === 'funnel-display' || section.type === 'results-showcase') && (
                     <Button variant="ghost" size="icon" onClick={onEdit}>
                         <Edit className="h-4 w-4" />
                         <span className="sr-only">Edit</span>
@@ -505,6 +502,20 @@ export default function SectionManagement() {
       setEditingSection(section);
     }
   }
+  
+  const handleSaveSection = async (updatedSection: any) => {
+    if (!updatedSection?.id) return;
+    const { id, ...dataToSave } = updatedSection;
+    const docRef = doc(firestore, 'sections', id);
+    try {
+      await setDoc(docRef, dataToSave, { merge: true });
+      toast({ title: 'Section Updated' });
+      setEditingSection(null);
+    } catch (error) {
+      console.error(error);
+      toast({ variant: 'destructive', title: 'Error saving section' });
+    }
+  };
 
   async function handleDragEnd(event: DragEndEvent) {
     const {active, over} = event;
@@ -603,6 +614,7 @@ export default function SectionManagement() {
         <SectionForm 
             section={editingSection} 
             onComplete={() => setEditingSection(null)}
+            onSave={handleSaveSection}
         />
       )}
 
@@ -625,3 +637,5 @@ export default function SectionManagement() {
     </div>
   );
 }
+
+    
