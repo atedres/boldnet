@@ -1,23 +1,22 @@
 'use client';
 import React from 'react';
-import { useLanguage } from '@/app/context/language-context';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy, limit } from 'firebase/firestore';
+import { collection, query, orderBy } from 'firebase/firestore';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { cn } from '@/lib/utils';
+import Header from '../components/header';
+import Footer from '../components/footer';
+import { useLanguage } from '../context/language-context';
 
-export default function BlogOverview({ content }: { content: any }) {
-  const { t, language } = useLanguage();
+function BlogIndexPage() {
+  const { language } = useLanguage();
   const firestore = useFirestore();
   
   const postsQuery = useMemoFirebase(
-    () => query(collection(firestore, 'blog_posts'), orderBy('createdAt', 'desc'), limit(3)),
+    () => query(collection(firestore, 'blog_posts'), orderBy('createdAt', 'desc')),
     [firestore]
   );
   const { data: posts, isLoading: isLoadingPosts } = useCollection(postsQuery);
@@ -58,24 +57,18 @@ export default function BlogOverview({ content }: { content: any }) {
 
   const renderContent = () => {
     if (isLoadingPosts) {
-        return <p className="text-center text-white">Loading posts...</p>
+        return <p className="text-center text-muted-foreground">Loading posts...</p>
     }
 
     if (!posts || posts.length === 0) {
-        return <p className="text-center text-red-200">No blog posts available yet.</p>
+        return <p className="text-center text-muted-foreground">No blog posts available yet.</p>
     }
     
     return (
-        <div className="grid justify-items-center md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map(post => (
-                <div key={post.id} className={cn(
-                    "w-full max-w-md",
-                    posts.length === 1 && "md:col-span-2 lg:col-span-3 flex justify-center",
-                    posts.length === 2 && "md:col-span-1 lg:col-span-1"
-                )}>
-                   <div className={cn(posts.length === 1 ? "max-w-md" : "w-full", "h-full")}>
+                <div key={post.id} className="h-full">
                     {renderPostCard(post)}
-                   </div>
                 </div>
             ))}
         </div>
@@ -83,32 +76,19 @@ export default function BlogOverview({ content }: { content: any }) {
   }
   
   return (
-    <section 
-        id="blog" 
-        className="w-full py-12 md:py-24 lg:py-32 bg-transparent text-white"
-    >
-      <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center justify-center space-y-4 text-center">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-5xl font-headline">
-              {content?.title || 'From the Blog'}
-            </h2>
-            <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-red-200">
-              {content?.subtitle || 'Check out our latest articles and insights.'}
-            </p>
-          </div>
-        </div>
-        <div className="mt-12">
-            {renderContent()}
-        </div>
-        <div className="text-center mt-12">
-            <Button asChild variant="outline" className="bg-transparent text-white border-white/50 hover:bg-white/10">
-                <Link href="/blog">
-                    Voir tous les articles <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-            </Button>
-        </div>
-      </div>
-    </section>
+    <div className="flex flex-col min-h-dvh bg-background">
+        <Header />
+        <main className="flex-1">
+            <section className="pt-32 pb-16">
+                 <div className="container">
+                    <h1 className="text-4xl md:text-5xl font-extrabold font-headline mb-12 text-center">Notre Blog</h1>
+                    {renderContent()}
+                 </div>
+            </section>
+        </main>
+        <Footer />
+    </div>
   );
 }
+
+export default BlogIndexPage;
