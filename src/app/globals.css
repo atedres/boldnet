@@ -88,7 +88,7 @@
   }
 
   body {
-    @apply bg-gradient-to-br from-primary via-black to-white bg-[length:200%_200%] animate-gradient;
+    @apply bg-gradient-to-br from-primary via-black to-blue-700 bg-[length:200%_200%] animate-gradient;
   }
   
   .ql-editor {
