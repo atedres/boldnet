@@ -12,7 +12,7 @@ const SectionTitle = ({ children, className }: { children: React.ReactNode, clas
     <h2 className={cn("text-3xl md:text-4xl font-bold text-center font-headline text-white", className)}>{children}</h2>
   );
 
-export default function FunnelDisplay() {
+export default function FunnelDisplay({ content }: { content: any }) {
     const firestore = useFirestore();
     const pageDocRef = useMemoFirebase(() => doc(firestore, 'personal_branding_pages', 'main'), [firestore]);
     const { data: pageContent } = useDoc(pageDocRef);
@@ -20,7 +20,7 @@ export default function FunnelDisplay() {
 
     const handleOpenForm = () => setIsFormOpen(true);
     
-    const content = pageContent?.timelineMethod;
+    const timelineContent = pageContent?.timelineMethod;
 
     const defaultSteps = [
         { stepTitle: 'ÉTAPE 1', title: 'DÉCOUVERTE', description: 'On explore votre histoire.. vos objectifs et votre public.', iconName: 'Compass', position: 'right' },
@@ -28,7 +28,7 @@ export default function FunnelDisplay() {
         { stepTitle: 'ÉTAPE 3', title: 'EXÉCUTION', description: 'Scénario.. tournage.. montage.. réseaux sociaux.. site web.. tout est fait pour vous.', iconName: 'Lightbulb', position: 'right' },
         { stepTitle: 'ÉTAPE 4', title: 'RÉSULTATS', description: '• Visibilité\n• Prospects\n• Moins de pub\n• Plus de revenus\n• Votre réputation devient votre moteur.', iconName: 'BarChart', position: 'left' },
     ];
-    const steps = content?.steps?.length ? content.steps : defaultSteps;
+    const steps = timelineContent?.steps?.length ? timelineContent.steps : defaultSteps;
     
     return (
         <section id="funnel" className="py-16 md:py-24 bg-red-700/20 text-white relative overflow-hidden backdrop-blur-sm">

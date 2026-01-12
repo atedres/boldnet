@@ -117,7 +117,10 @@ const sectionTemplates = [
     name: 'Funnel / Expertise',
     description: 'Displays the funnel/process steps section.',
     icon: <Workflow className="w-8 h-8" />,
-    defaultContent: {},
+    defaultContent: {
+        title: 'NOTRE METHODE',
+        ctaButtonText: 'EN SAVOIR PLUS'
+    },
     isStatic: true,
   },
   {
@@ -330,6 +333,20 @@ function SectionForm({ section, onComplete }: { section?: any; onComplete: () =>
                 </div>
             </>
         );
+    case 'funnel-display':
+        return (
+          <>
+            <div className="grid gap-2">
+              <Label htmlFor="title">Title</Label>
+              <Input id="title" value={content.title} onChange={(e) => handleContentChange('title', e.target.value)} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="ctaButtonText">Button Text</Label>
+              <Input id="ctaButtonText" value={content.ctaButtonText} onChange={(e) => handleContentChange('ctaButtonText', e.target.value)} />
+            </div>
+            <p className="text-sm text-muted-foreground pt-4 border-t">The steps for this timeline are managed in the "Personal Branding" page under the "Coded Landing Pages" section.</p>
+          </>
+        );
       default:
         return <p>This section type has no configurable content.</p>;
     }
@@ -390,7 +407,7 @@ function SortableSectionItem({ section, onEdit, onDelete, onToggleVisibility }: 
                     {section.visible === false ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     <span className="sr-only">Toggle Visibility</span>
                 </Button>
-                 {(!template?.isStatic || isHeroSection) && (
+                 {(!template?.isStatic || isHeroSection || section.type === 'funnel-display') && (
                     <Button variant="ghost" size="icon" onClick={onEdit}>
                         <Edit className="h-4 w-4" />
                         <span className="sr-only">Edit</span>
