@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Layers, Trash2, Edit, Award, Zap, Target, ImageIcon, MessageSquare, GripVertical, Briefcase, Users, Workflow, EyeOff, Eye, Plus, Video, Home, Star, UserSquare, Rss, TrendingUp } from 'lucide-react';
+import { Layers, Trash2, Edit, Award, Zap, Target, ImageIcon, MessageSquare, GripVertical, Briefcase, Users, Workflow, EyeOff, Eye, Plus, Video, Home, Star, UserSquare, Rss, TrendingUp, Mail } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { ImageUpload } from '@/components/ui/image-upload';
 import {
@@ -167,6 +167,17 @@ const sectionTemplates = [
         subtitle: 'Check out our latest articles and insights.'
     },
     isStatic: true,
+  },
+  {
+    type: 'newsletter',
+    name: 'Newsletter',
+    description: 'A section to capture newsletter subscribers.',
+    icon: <Mail className="w-8 h-8" />,
+    defaultContent: {
+        title: 'Join Our Newsletter',
+        subtitle: 'Stay up to date with our latest offers, digital news, and insights.',
+    },
+    isStatic: false,
   },
 ];
 
@@ -410,6 +421,19 @@ function SectionForm({ section, onComplete, onSave }: { section: any; onComplete
              <div className="grid gap-2">
                 <Label>CTA Button Text</Label>
                 <Input value={content.ctaButtonText} onChange={(e) => handleContentChange('ctaButtonText', e.target.value)} />
+            </div>
+          </>
+        );
+      case 'newsletter':
+        return (
+          <>
+            <div className="grid gap-2">
+              <Label htmlFor="title">Title</Label>
+              <Input id="title" value={content.title || ''} onChange={(e) => handleContentChange('title', e.target.value)} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="subtitle">Subtitle</Label>
+              <Textarea id="subtitle" value={content.subtitle || ''} onChange={(e) => handleContentChange('subtitle', e.target.value)} />
             </div>
           </>
         );
@@ -706,5 +730,7 @@ export default function SectionManagement() {
     </div>
   );
 }
+
+    
 
     
