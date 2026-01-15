@@ -28,8 +28,8 @@ export default function TeamSection() {
 
   const renderMemberCard = (member: any, index: number) => {
     const nameParts = member.name.split(' ');
-    const firstName = nameParts[0];
-    const lastName = nameParts.slice(1).join(' ');
+    const lastName = nameParts.pop() || '';
+    const firstName = nameParts.join(' ');
 
     return (
         <Card key={`${member.id}-${index}`} className="border-none shadow-none bg-transparent flex-shrink-0" style={{ width: '160px' }}>
