@@ -56,7 +56,7 @@ export default function TeamSection() {
      return (
         <div className="team-marquee-container">
             <div className="marquee">
-                <div className="marquee-content flex flex-nowrap group-hover:[animation-play-state:paused]">
+                <div className="marquee-content flex flex-nowrap group-hover:[animation-play-state:paused] gap-x-8">
                     {duplicatedMembers.map((member, index) => renderMemberCard(member, index))}
                 </div>
             </div>
