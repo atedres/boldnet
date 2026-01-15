@@ -23,6 +23,8 @@ export default function ThemeManagement() {
   const [useDarkLogo, setUseDarkLogo] = useState(false);
   const [primaryColor, setPrimaryColor] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('');
+  const [bodyFontFamily, setBodyFontFamily] = useState('');
+  const [headlineFontFamily, setHeadlineFontFamily] = useState('');
 
   useEffect(() => {
     if (themeSettings) {
@@ -31,6 +33,8 @@ export default function ThemeManagement() {
       setUseDarkLogo(themeSettings.useDarkLogo || false);
       setPrimaryColor(themeSettings.primaryColor || '');
       setBackgroundColor(themeSettings.backgroundColor || '');
+      setBodyFontFamily(themeSettings.bodyFontFamily || '');
+      setHeadlineFontFamily(themeSettings.headlineFontFamily || '');
     }
   }, [themeSettings]);
 
@@ -41,7 +45,9 @@ export default function ThemeManagement() {
             logoUrlDark,
             useDarkLogo,
             primaryColor,
-            backgroundColor
+            backgroundColor,
+            bodyFontFamily,
+            headlineFontFamily,
         };
       await setDoc(settingsDocRef, settingsToSave, { merge: true });
       toast({ title: 'Theme Saved', description: 'Your new theme settings have been applied.' });
@@ -61,6 +67,8 @@ export default function ThemeManagement() {
       setUseDarkLogo(false);
       setPrimaryColor('0 84.2% 60.2%');
       setBackgroundColor('0 0% 100%');
+      setBodyFontFamily('Inter');
+      setHeadlineFontFamily('Clash Display');
       toast({title: "Reset", description: "Values have been reset. Click save to apply."})
   }
 
@@ -118,6 +126,32 @@ export default function ThemeManagement() {
             />
              <p className="text-sm text-muted-foreground">This is the main site background. Use HSL format: `Hue Saturation% Lightness%`.</p>
           </div>
+          
+          <Separator />
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+                <Label htmlFor="bodyFontFamily">Body Font</Label>
+                <Input
+                id="bodyFontFamily"
+                value={bodyFontFamily}
+                onChange={(e) => setBodyFontFamily(e.target.value)}
+                placeholder="e.g., Inter"
+                />
+                <p className="text-sm text-muted-foreground">Enter a font name from Google Fonts.</p>
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="headlineFontFamily">Headline Font</Label>
+                <Input
+                id="headlineFontFamily"
+                value={headlineFontFamily}
+                onChange={(e) => setHeadlineFontFamily(e.target.value)}
+                placeholder="e.g., Clash Display"
+                />
+                <p className="text-sm text-muted-foreground">Enter a font name from Google Fonts.</p>
+            </div>
+          </div>
+
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={handleReset}>Reset to Default</Button>
             <Button onClick={handleSave}>Save Theme</Button>

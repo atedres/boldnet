@@ -316,6 +316,14 @@
         "backgroundColor": {
           "type": "string",
           "description": "Background theme color in HSL format (e.g., '0 0% 100%')."
+        },
+        "bodyFontFamily": {
+            "type": "string",
+            "description": "The font family for body text (from Google Fonts)."
+        },
+        "headlineFontFamily": {
+            "type": "string",
+            "description": "The font family for headlines (from Google Fonts)."
         }
       }
     },

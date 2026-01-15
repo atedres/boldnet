@@ -85,10 +85,10 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-body), sans-serif;
   }
   h1,h2,h3,h4,h5,h6, .font-headline {
-    font-family: 'Clash Display', sans-serif;
+    font-family: var(--font-headline), sans-serif;
   }
 
   body:not(.admin-page) {
@@ -141,14 +141,5 @@
       hsla(0, 0%, 0%, 1) 80%,
       hsla(0, 0%, 0%, 0)
     );
-  }
-
-  @keyframes scroll {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
   }
 }
