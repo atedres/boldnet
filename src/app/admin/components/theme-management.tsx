@@ -10,6 +10,13 @@ import { ImageUpload } from '@/components/ui/image-upload';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
+import { Combobox } from '@/components/ui/combobox';
+import fontData from '@/lib/google-fonts.json';
+
+const fontOptions = fontData.fonts.map(font => ({
+  value: font,
+  label: font,
+}));
 
 export default function ThemeManagement() {
   const firestore = useFirestore();
@@ -131,24 +138,28 @@ export default function ThemeManagement() {
 
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
-                <Label htmlFor="bodyFontFamily">Body Font</Label>
-                <Input
-                id="bodyFontFamily"
-                value={bodyFontFamily}
-                onChange={(e) => setBodyFontFamily(e.target.value)}
-                placeholder="e.g., Inter"
+                <Label>Body Font</Label>
+                <Combobox
+                  options={fontOptions}
+                  value={bodyFontFamily}
+                  onChange={setBodyFontFamily}
+                  placeholder="Select a font..."
+                  searchPlaceholder="Search fonts..."
+                  emptyText="No fonts found."
                 />
-                <p className="text-sm text-muted-foreground">Enter a font name from Google Fonts.</p>
+                <p className="text-sm text-muted-foreground">Select a font from Google Fonts.</p>
             </div>
             <div className="space-y-2">
-                <Label htmlFor="headlineFontFamily">Headline Font</Label>
-                <Input
-                id="headlineFontFamily"
-                value={headlineFontFamily}
-                onChange={(e) => setHeadlineFontFamily(e.target.value)}
-                placeholder="e.g., Clash Display"
+                <Label>Headline Font</Label>
+                <Combobox
+                  options={fontOptions}
+                  value={headlineFontFamily}
+                  onChange={setHeadlineFontFamily}
+                  placeholder="Select a font..."
+                  searchPlaceholder="Search fonts..."
+                  emptyText="No fonts found."
                 />
-                <p className="text-sm text-muted-foreground">Enter a font name from Google Fonts.</p>
+                <p className="text-sm text-muted-foreground">Select a font from Google Fonts.</p>
             </div>
           </div>
 
