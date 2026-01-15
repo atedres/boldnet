@@ -126,6 +126,23 @@
     animation: scroll 40s linear infinite;
   }
 
+  .marquee-container, .team-marquee-container {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      hsl(var(--background) / 0),
+      hsl(var(--background) / 1) 20%,
+      hsl(var(--background) / 1) 80%,
+      hsl(var(--background) / 0)
+    );
+    mask-image: linear-gradient(
+      to right,
+      hsla(0, 0%, 0%, 0),
+      hsla(0, 0%, 0%, 1) 20%,
+      hsla(0, 0%, 0%, 1) 80%,
+      hsla(0, 0%, 0%, 0)
+    );
+  }
+
   @keyframes scroll {
     from {
       transform: translateX(0);

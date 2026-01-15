@@ -54,16 +54,12 @@ export default function TeamSection() {
     }
 
      return (
-         <div className="relative group overflow-x-hidden">
+        <div className="team-marquee-container">
             <div className="marquee">
                 <div className="marquee-content flex flex-nowrap group-hover:[animation-play-state:paused]">
                     {duplicatedMembers.map((member, index) => renderMemberCard(member, index))}
                 </div>
             </div>
-             <div className="absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-transparent via-background/0 to-transparent pointer-events-none"></div>
-             <div className="absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-transparent via-background/0 to-transparent pointer-events-none"></div>
-             <div className="absolute top-0 left-0 h-full w-48 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none"></div>
-            <div className="absolute top-0 right-0 h-full w-48 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none"></div>
         </div>
     )
   }
