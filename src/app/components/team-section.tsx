@@ -26,23 +26,33 @@ export default function TeamSection() {
     return items;
   }, [members]);
 
-  const renderMemberCard = (member: any, index: number) => (
-    <Card key={`${member.id}-${index}`} className="border-none shadow-none bg-transparent flex-shrink-0" style={{ width: '160px' }}>
-        <CardContent className="p-0 flex flex-col items-center text-center gap-4">
-            <Image 
-                src={member.imageUrl}
-                alt={member.name}
-                width={128}
-                height={128}
-                className="rounded-full object-cover aspect-square w-32 h-32"
-            />
-            <div>
-                <h3 className="font-bold text-lg font-headline whitespace-nowrap tracking-wide text-white">{member.name}</h3>
-                <p className="text-white/80">{member.position}</p>
-            </div>
-        </CardContent>
-    </Card>
-  );
+  const renderMemberCard = (member: any, index: number) => {
+    const nameParts = member.name.split(' ');
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(' ');
+
+    return (
+        <Card key={`${member.id}-${index}`} className="border-none shadow-none bg-transparent flex-shrink-0" style={{ width: '160px' }}>
+            <CardContent className="p-0 flex flex-col items-center text-center gap-4">
+                <Image 
+                    src={member.imageUrl}
+                    alt={member.name}
+                    width={128}
+                    height={128}
+                    className="rounded-full object-cover aspect-square w-32 h-32"
+                />
+                <div>
+                    <h3 className="font-bold text-lg font-headline tracking-wide text-white">
+                        <span>{firstName}</span>
+                        {lastName && <br />}
+                        <span>{lastName}</span>
+                    </h3>
+                    <p className="text-white/80">{member.position}</p>
+                </div>
+            </CardContent>
+        </Card>
+    );
+  };
 
   const renderContent = () => {
     if (isLoadingMembers) {
