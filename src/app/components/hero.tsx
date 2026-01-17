@@ -27,6 +27,11 @@ export default function Hero() {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-headline leading-normal tracking-normal text-white">
             {title}
           </h1>
+
+          <div className="lg:hidden flex justify-center py-6">
+            <AnimatedDollarIcon />
+          </div>
+
           <p className="text-xl md:text-2xl text-red-100/90 max-w-2xl mx-auto lg:mx-0">
             {subtitle}
           </p>
@@ -39,7 +44,7 @@ export default function Hero() {
             </Button>
           </div>
         </div>
-        <div className="relative w-full h-80 lg:h-full flex items-center justify-center">
+        <div className="relative w-full h-80 lg:h-full hidden lg:flex items-center justify-center">
             <AnimatedDollarIcon />
         </div>
       </div>
