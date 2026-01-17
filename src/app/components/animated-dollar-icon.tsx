@@ -1,29 +1,20 @@
 'use client';
-import { TrendingUp, Users, LucideProps } from 'lucide-react';
+import { DollarSign, TrendingUp, Users, LucideProps } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
 
-const iconComponents: { name: 'dollar' | 'sales' | 'clients'; component: React.ReactNode }[] = [
+const iconComponents: { name: 'dollar' | 'sales' | 'clients'; component: React.FC<LucideProps> }[] = [
     {
         name: 'dollar',
-        component: (
-            <Image
-                src="https://res.cloudinary.com/ddbj70ziv/image/upload/v1718824749/coin_sszq3p.png"
-                alt="Dollar Coin"
-                layout="fill"
-                objectFit="contain"
-                className="drop-shadow-lg"
-            />
-        ),
+        component: DollarSign,
     },
     {
         name: 'sales',
-        component: <TrendingUp className="w-full h-full text-white drop-shadow-lg" />,
+        component: TrendingUp,
     },
     {
         name: 'clients',
-        component: <Users className="w-full h-full text-white drop-shadow-lg" />,
+        component: Users,
     },
 ];
 
@@ -41,7 +32,7 @@ export function AnimatedDollarIcon({ currentTheme }: { currentTheme: 'dollar' | 
       <div className="absolute inset-0 bg-white/10 rounded-full blur-2xl"></div>
       <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-white/20 to-transparent rounded-full border-2 border-white/30 backdrop-blur-sm">
         <div className="relative w-1/2 h-1/2" style={{ transformStyle: 'preserve-3d', transform: 'rotateY(-25deg) rotateX(10deg)' }}>
-            {iconComponents.map(({ component, name }, index) => (
+            {iconComponents.map(({ component: Icon, name }, index) => (
                  <div
                     key={name}
                     className={cn(
@@ -49,7 +40,7 @@ export function AnimatedDollarIcon({ currentTheme }: { currentTheme: 'dollar' | 
                         currentIndex === index ? "opacity-100" : "opacity-0"
                     )}
                 >
-                    {component}
+                    <Icon className="w-full h-full text-white drop-shadow-lg" />
                 </div>
             ))}
         </div>
