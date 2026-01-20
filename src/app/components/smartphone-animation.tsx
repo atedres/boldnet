@@ -1,77 +1,76 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import React, { useRef, useEffect } from 'react';
+import { motion, useMotionValue, useTransform, useSpring, animate } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 // New component for the animated screen content
 const MoneyGrowthAnimation = () => {
-    const container = {
-      hidden: { opacity: 0 },
-      show: {
-        opacity: 1,
-        transition: {
-          staggerChildren: 0.1,
-        },
-      },
-    };
+    const count = useMotionValue(12345);
+    const rounded = useTransform(count, (latest) =>
+      new Intl.NumberFormat('en-US').format(Math.round(latest))
+    );
   
-    // Function to generate a random height for the bars
-    const getRandomHeight = () => `${Math.floor(Math.random() * 70) + 20}%`;
+    useEffect(() => {
+      const controls = animate(count, 15789, {
+        duration: 2.5,
+        repeat: Infinity,
+        repeatType: "mirror",
+        ease: "easeInOut",
+      });
   
-    // Variants for each bar, using a function to get a dynamic target
-    const item = {
-      hidden: { height: "0%", opacity: 0 },
-      show: {
-        height: getRandomHeight(),
-        opacity: 1,
-        transition: {
-          duration: 0.5,
-          ease: "easeOut",
-        },
-      },
-    };
-  
-    // State to force re-animation
-    const [key, setKey] = React.useState(0);
-  
-    React.useEffect(() => {
-      const interval = setInterval(() => {
-        setKey(prevKey => prevKey + 1);
-      }, 2000); // Re-trigger animation every 2 seconds
-      return () => clearInterval(interval);
-    }, []);
+      return () => controls.stop();
+    }, [count]);
   
     return (
-      <div className="w-full h-full p-3 flex flex-col justify-between">
-          {/* Top placeholder UI */}
-          <div>
-            <div className="h-2 w-3/4 bg-red-400/30 rounded-sm mb-1" />
-            <div className="h-1.5 w-1/2 bg-red-400/30 rounded-sm" />
+      <div className="w-full h-full p-3 flex flex-col justify-between text-white overflow-hidden">
+        {/* Top section: Balance */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+          <p className="text-[0.6rem] text-red-200/70">Current Balance</p>
+          <div className="flex items-baseline">
+            <span className="text-lg font-semibold text-red-100">$</span>
+            <motion.h1 className="text-3xl font-bold font-mono tabular-nums tracking-tighter">
+              {rounded}
+            </motion.h1>
+            <span className="text-3xl font-bold font-mono tabular-nums tracking-tighter text-red-100">.00</span>
           </div>
-          
-          {/* Animated bars */}
-          <motion.div
-            key={key} // Change key to force re-render and re-animate
-            className="flex items-end h-20 pt-2 gap-0.5"
-            variants={container}
-            initial="hidden"
-            animate="show"
-          >
-            {[...Array(8)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="w-full bg-red-500 rounded-t-sm"
-                variants={item}
-              />
-            ))}
-          </motion.div>
+        </motion.div>
   
-          {/* Bottom placeholder UI */}
-          <div className="space-y-1.5">
-            <div className="h-6 w-full bg-white/10 rounded-sm" />
-            <div className="h-6 w-3/4 bg-white/10 rounded-sm" />
+        {/* Middle section: floating transactions */}
+        <div className="relative h-24">
+          {[...Array(3)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-full flex justify-center"
+              style={{
+                  left: `${(i * 30) + 5}%` // Stagger them horizontally
+              }}
+              animate={{
+                y: [0, -80],
+                opacity: [1, 0],
+              }}
+              transition={{
+                delay: i * 0.8,
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeOut",
+              }}
+            >
+              <div className="bg-green-500/20 border border-green-500/50 rounded-full px-2 py-0.5 text-xs text-green-300 inline-block">
+                +${Math.floor(Math.random() * 200) + 50}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+  
+        {/* Bottom section: placeholder UI */}
+         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }}>
+          <div className="space-y-1">
+              <div className="h-2 w-3/4 bg-red-400/20 rounded-sm" />
+              <div className="h-1.5 w-1/2 bg-red-400/20 rounded-sm" />
           </div>
+          <div className="mt-2 h-6 w-full bg-white/5 rounded-sm" />
+        </motion.div>
       </div>
     );
   };
