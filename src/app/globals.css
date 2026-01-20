@@ -92,7 +92,7 @@
   }
 
   body:not(.admin-page) {
-    @apply bg-gradient-to-br from-primary via-black to-blue-700 bg-[length:200%_200%] animate-gradient;
+    @apply bg-gradient-to-br from-red-300 via-red-600 to-red-950 bg-[length:200%_200%] animate-gradient;
   }
   
   .ql-editor {
