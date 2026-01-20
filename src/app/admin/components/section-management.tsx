@@ -115,7 +115,7 @@ const sectionTemplates = [
   {
     type: 'funnel-display',
     name: 'Funnel / Expertise',
-    description: 'Displays the funnel/process steps section.',
+    description: 'Displays the animated funnel/process steps section.',
     icon: <Workflow className="w-8 h-8" />,
     defaultContent: {
         title: 'NOTRE METHODE',
@@ -380,14 +380,14 @@ function SectionForm({ section, onComplete, onSave }: { section: any; onComplete
         return (
           <>
             <div className="grid gap-2">
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title">Titre</Label>
               <Input id="title" value={content.title} onChange={(e) => handleContentChange('title', e.target.value)} />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="ctaButtonText">Button Text</Label>
+              <Label htmlFor="ctaButtonText">Texte du bouton</Label>
               <Input id="ctaButtonText" value={content.ctaButtonText} onChange={(e) => handleContentChange('ctaButtonText', e.target.value)} />
             </div>
-            <p className="text-sm text-muted-foreground pt-4 border-t">The steps for this timeline are managed in the "Personal Branding" page under the "Coded Landing Pages" section.</p>
+            <p className="text-sm text-muted-foreground pt-4 border-t">Les étapes de cette timeline sont gérées dans le code du composant MethodSection.</p>
           </>
         );
       case 'results-showcase':
@@ -742,3 +742,4 @@ export default function SectionManagement() {
     
 
     
+

@@ -4,6 +4,7 @@ import Header from '@/app/components/header';
 import Hero from '@/app/components/hero';
 import DynamicSections from '@/app/components/dynamic-sections';
 import Footer from '@/app/components/footer';
+import MethodSection from '@/app/components/method-section';
 
 export default function Home() {
   return (

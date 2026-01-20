@@ -10,7 +10,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import ServicesOverview from './services-overview';
 import ClientShowcase from './client-showcase';
-import FunnelDisplay from './funnel-display';
+import MethodSection from './method-section';
 import Testimonials from './testimonials';
 import { DynamicIcon } from '@/components/ui/dynamic-icon';
 import TeamSection from './team-section';
@@ -186,7 +186,7 @@ const sectionComponents = {
   'youtube-gallery': YoutubeGallerySection,
   'services-overview': ServicesOverview,
   'client-showcase': ClientShowcase,
-  'funnel-display': FunnelDisplay,
+  'funnel-display': MethodSection,
   'results-showcase': ResultsSection,
   'testimonials': Testimonials,
   'team': TeamSection,
@@ -232,7 +232,3 @@ export default function DynamicSections() {
     </>
   );
 }
-
-    
-
-    
