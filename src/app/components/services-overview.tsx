@@ -3,7 +3,6 @@
 import React from 'react';
 import {
   Card,
-  CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -37,43 +36,54 @@ export default function ServicesOverview() {
   );
   const { data: services, isLoading: isLoadingServices } = useCollection(servicesCollection);
 
+  const landingPagesCollection = useMemoFirebase(
+    () => collection(firestore, 'landing_pages'),
+    [firestore]
+  );
+  const { data: landingPages, isLoading: isLoadingLandingPages } = useCollection(landingPagesCollection);
+
   const plugin = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true })
   )
 
-  const renderServiceCard = (service: any) => (
-    <Card key={service.id} className="bg-card text-card-foreground flex flex-col h-full shadow-lg hover:shadow-2xl transition-all duration-300 group hover:bg-primary hover:text-primary-foreground rounded-xl sm:rounded-2xl md:rounded-3xl">
-        <CardHeader className="items-start gap-4">
-            <div className="bg-gray-900 text-white p-3 rounded-lg group-hover:bg-white group-hover:text-primary transition-colors">
-              {service.iconUrl ? (
-                 <Image src={service.iconUrl} alt={service.name} width={24} height={24} className="h-6 w-6 object-contain" />
-              ) : (
-                <DynamicIcon iconName={service.iconName || 'Zap'} className="h-6 w-6 text-white group-hover:text-primary transition-colors" />
-              )}
-            </div>
-            <CardTitle className="text-xl font-bold font-headline">{service.name}</CardTitle>
-            <div 
-              className="prose-sm prose-p:text-muted-foreground group-hover:prose-p:text-primary-foreground/80 dark:prose-invert max-w-none prose-ul:list-disc prose-ul:pl-5"
-              dangerouslySetInnerHTML={{ __html: service.description }}
-            />
-        </CardHeader>
-        <CardFooter className="flex-col items-stretch gap-4 mt-auto pt-6">
-            <Button asChild className="w-full bg-gray-900 text-white hover:bg-gray-800 group-hover:bg-white group-hover:text-primary transition-colors">
-                <Link href="/quote">
-                  <ArrowRight className="mr-2 h-4 w-4" /> {t('requestAQuote')}
-                </Link>
-            </Button>
-            <Button variant="link" className="text-muted-foreground hover:text-primary group-hover:text-primary-foreground/80 group-hover:hover:text-primary-foreground" asChild>
-                <Link href={`/services/${service.slug}`}>
-                    En savoir plus <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-            </Button>
-        </CardFooter>
-    </Card>
-  );
+  const renderServiceCard = (service: any) => {
+    const linkedLandingPage = landingPages?.find(lp => lp.id === service.landingPageId);
+    const detailsHref = linkedLandingPage ? `/lp/${linkedLandingPage.slug}` : `/services/${service.slug}`;
+
+    return (
+      <Card key={service.id} className="bg-card text-card-foreground flex flex-col h-full shadow-lg hover:shadow-2xl transition-all duration-300 group hover:bg-primary hover:text-primary-foreground rounded-xl sm:rounded-2xl md:rounded-3xl">
+          <CardHeader className="items-start gap-4">
+              <div className="bg-gray-900 text-white p-3 rounded-lg group-hover:bg-white group-hover:text-primary transition-colors">
+                {service.iconUrl ? (
+                   <Image src={service.iconUrl} alt={service.name} width={24} height={24} className="h-6 w-6 object-contain" />
+                ) : (
+                  <DynamicIcon iconName={service.iconName || 'Zap'} className="h-6 w-6 text-white group-hover:text-primary transition-colors" />
+                )}
+              </div>
+              <CardTitle className="text-xl font-bold font-headline">{service.name}</CardTitle>
+              <div 
+                className="prose-sm prose-p:text-muted-foreground group-hover:prose-p:text-primary-foreground/80 dark:prose-invert max-w-none prose-ul:list-disc prose-ul:pl-5"
+                dangerouslySetInnerHTML={{ __html: service.description }}
+              />
+          </CardHeader>
+          <CardFooter className="flex-col items-stretch gap-4 mt-auto pt-6">
+              <Button asChild className="w-full bg-gray-900 text-white hover:bg-gray-800 group-hover:bg-white group-hover:text-primary transition-colors">
+                  <Link href="/quote">
+                    <ArrowRight className="mr-2 h-4 w-4" /> {t('requestAQuote')}
+                  </Link>
+              </Button>
+              <Button variant="link" className="text-muted-foreground hover:text-primary group-hover:text-primary-foreground/80 group-hover:hover:text-primary-foreground" asChild>
+                  <Link href={detailsHref}>
+                      En savoir plus <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+              </Button>
+          </CardFooter>
+      </Card>
+    );
+  }
 
   const renderContent = () => {
-    if (isLoadingServices) {
+    if (isLoadingServices || isLoadingLandingPages) {
         return <p className="text-center">Loading services...</p>
     }
 
@@ -139,4 +149,3 @@ export default function ServicesOverview() {
     </section>
   );
 }
-    
