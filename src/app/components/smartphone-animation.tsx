@@ -4,37 +4,82 @@ import React, { useRef } from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-// Abstract UI components
-const UIGraph = () => (
-  <div className="w-full h-full p-2 space-y-1">
-    <div className="h-2 w-3/4 bg-gray-600/50 rounded-sm" />
-    <div className="h-1.5 w-1/2 bg-gray-600/50 rounded-sm" />
-    <div className="flex items-end h-16 pt-2 gap-0.5">
-      <motion.div className="w-full bg-cyan-400/50" style={{ height: '40%' }} />
-      <motion.div className="w-full bg-cyan-400/70" style={{ height: '60%' }} />
-      <motion.div className="w-full bg-cyan-400" style={{ height: '80%' }} />
-      <motion.div className="w-full bg-cyan-400/70" style={{ height: '70%' }} />
-      <motion.div className="w-full bg-cyan-400/50" style={{ height: '50%' }} />
-      <motion.div className="w-full bg-cyan-400/30" style={{ height: '30%' }} />
-      <motion.div className="w-full bg-cyan-400/50" style={{ height: '50%' }} />
-      <motion.div className="w-full bg-cyan-400/70" style={{ height: '65%' }} />
-    </div>
-  </div>
-);
-
-const UICard = () => (
-  <div className="w-full h-full p-2 space-y-1.5 rounded-lg bg-white/5">
-    <div className="h-3 w-1/2 bg-gray-500/50 rounded-sm" />
-    <div className="h-2 w-3/4 bg-gray-500/50 rounded-sm" />
-    <div className="h-2 w-2/3 bg-gray-500/50 rounded-sm" />
-  </div>
-);
-
+// New component for the animated screen content
+const MoneyGrowthAnimation = () => {
+    const container = {
+      hidden: { opacity: 0 },
+      show: {
+        opacity: 1,
+        transition: {
+          staggerChildren: 0.1,
+        },
+      },
+    };
+  
+    // Function to generate a random height for the bars
+    const getRandomHeight = () => `${Math.floor(Math.random() * 70) + 20}%`;
+  
+    // Variants for each bar, using a function to get a dynamic target
+    const item = {
+      hidden: { height: "0%", opacity: 0 },
+      show: {
+        height: getRandomHeight(),
+        opacity: 1,
+        transition: {
+          duration: 0.5,
+          ease: "easeOut",
+        },
+      },
+    };
+  
+    // State to force re-animation
+    const [key, setKey] = React.useState(0);
+  
+    React.useEffect(() => {
+      const interval = setInterval(() => {
+        setKey(prevKey => prevKey + 1);
+      }, 2000); // Re-trigger animation every 2 seconds
+      return () => clearInterval(interval);
+    }, []);
+  
+    return (
+      <div className="w-full h-full p-3 flex flex-col justify-between">
+          {/* Top placeholder UI */}
+          <div>
+            <div className="h-2 w-3/4 bg-red-400/30 rounded-sm mb-1" />
+            <div className="h-1.5 w-1/2 bg-red-400/30 rounded-sm" />
+          </div>
+          
+          {/* Animated bars */}
+          <motion.div
+            key={key} // Change key to force re-render and re-animate
+            className="flex items-end h-20 pt-2 gap-0.5"
+            variants={container}
+            initial="hidden"
+            animate="show"
+          >
+            {[...Array(8)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="w-full bg-red-500 rounded-t-sm"
+                variants={item}
+              />
+            ))}
+          </motion.div>
+  
+          {/* Bottom placeholder UI */}
+          <div className="space-y-1.5">
+            <div className="h-6 w-full bg-white/10 rounded-sm" />
+            <div className="h-6 w-3/4 bg-white/10 rounded-sm" />
+          </div>
+      </div>
+    );
+  };
+  
 const PhoneScreen = () => (
-  <div className="absolute inset-[3px] rounded-[2rem] bg-gray-900 p-2 space-y-2 overflow-hidden">
-    <UIGraph />
-    <UICard />
-  </div>
+    <div className="absolute inset-[3px] rounded-[2rem] bg-gray-900 overflow-hidden">
+        <MoneyGrowthAnimation />
+    </div>
 );
 
 const PhoneMockup = React.forwardRef<
@@ -44,7 +89,7 @@ const PhoneMockup = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      'relative w-[150px] h-[300px] md:w-[200px] md:h-[400px] rounded-[2.5rem] bg-gray-800 p-2 shadow-2xl shadow-fuchsia-500/10 border-4 border-gray-900',
+      'relative w-[150px] h-[300px] md:w-[200px] md:h-[400px] rounded-[2.5rem] bg-gray-800 p-2 shadow-2xl shadow-red-500/10 border-4 border-gray-900',
       className
     )}
     style={{
@@ -142,8 +187,8 @@ const SmartphoneAnimation = () => {
     >
       {/* Background Glows */}
       <div className="absolute inset-0 z-0">
-          <div className="absolute top-1/4 left-1/4 w-3/4 h-3/4 bg-violet-500/50 rounded-full blur-[100px] animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-1/2 h-1/2 bg-cyan-400/30 rounded-full blur-[80px] animate-pulse [animation-delay:2s]" />
+          <div className="absolute top-1/4 left-1/4 w-3/4 h-3/4 bg-red-600/30 rounded-full blur-[100px] animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-1/2 h-1/2 bg-red-400/20 rounded-full blur-[80px] animate-pulse [animation-delay:2s]" />
       </div>
         
         <motion.div
@@ -188,9 +233,9 @@ const SmartphoneAnimation = () => {
             >
                  <GlassCard className="w-32 h-20 p-2">
                     <div className="w-full h-1/2 flex gap-0.5 items-end">
-                        <div className="w-full h-full bg-cyan-400/50 rounded-t-sm"/>
-                        <div className="w-full h-1/2 bg-cyan-400/50 rounded-t-sm"/>
-                        <div className="w-full h-3/4 bg-cyan-400/50 rounded-t-sm"/>
+                        <div className="w-full h-full bg-red-400/50 rounded-t-sm"/>
+                        <div className="w-full h-1/2 bg-red-400/50 rounded-t-sm"/>
+                        <div className="w-full h-3/4 bg-red-400/50 rounded-t-sm"/>
                     </div>
                 </GlassCard>
             </motion.div>
