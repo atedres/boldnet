@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
@@ -261,10 +260,10 @@ export default function MethodSection({ content }: { content: any }) {
 
           <div className="relative mx-auto mt-12 max-w-4xl md:mt-20">
             {/* The timeline bar */}
-            <div className="absolute left-4 top-4 bottom-4 w-1 -translate-x-1/2 rounded-full bg-white/10 md:left-1/2" />
+            <div className={cn("absolute top-4 bottom-4 w-1 -translate-x-1/2 rounded-full bg-white/10", isMobile ? "left-4" : "left-1/2")} />
             <motion.div
               style={{ scaleY: lineHeight }}
-              className="absolute left-4 top-4 bottom-4 w-1 -translate-x-1/2 origin-top rounded-full bg-white"
+              className={cn("absolute top-4 bottom-4 w-1 -translate-x-1/2 origin-top rounded-full bg-white", isMobile ? "left-4" : "left-1/2")}
             />
 
             {/* Steps container */}
