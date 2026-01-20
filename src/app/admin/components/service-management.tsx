@@ -40,6 +40,7 @@ import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { IconSelect } from '@/components/ui/icon-select';
 import { ImageUpload } from '@/components/ui/image-upload';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 
 function DescriptionEditorModal({ value, onChange, onOpenChange }: { value: string, onChange: (value: string) => void, onOpenChange: (open: boolean) => void }) {
@@ -78,9 +79,13 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
   const [iconName, setIconName] = useState(serviceToEdit?.iconName || '');
   const [iconUrl, setIconUrl] = useState(serviceToEdit?.iconUrl || '');
   const [imageUrl, setImageUrl] = useState(serviceToEdit?.imageUrl || '');
+  const [landingPageId, setLandingPageId] = useState(serviceToEdit?.landingPageId || '');
   const firestore = useFirestore();
   const { toast } = useToast();
   const [isEditingDescription, setIsEditingDescription] = useState(false);
+
+  const landingPagesCollection = useMemoFirebase(() => collection(firestore, 'landing_pages'), [firestore]);
+  const { data: landingPages } = useCollection(landingPagesCollection);
 
 
   const servicesCollection = useMemoFirebase(
@@ -98,7 +103,7 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
       return;
     }
 
-    const serviceData = { name, slug, description, iconName, iconUrl, imageUrl };
+    const serviceData = { name, slug, description, iconName, iconUrl, imageUrl, landingPageId };
 
     if (serviceToEdit) {
       const docRef = doc(firestore, 'services', serviceToEdit.id);
@@ -115,6 +120,7 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
     setIconName('');
     setIconUrl('');
     setImageUrl('');
+    setLandingPageId('');
     onComplete();
   };
   
@@ -185,6 +191,22 @@ function ServiceUploader({ serviceToEdit, onComplete }: { serviceToEdit?: any, o
             value={imageUrl}
             onChange={setImageUrl}
           />
+          <div className="grid gap-2">
+            <Label htmlFor="landingPage">Link to Landing Page (optional)</Label>
+            <Select value={landingPageId} onValueChange={setLandingPageId}>
+                <SelectTrigger id="landingPage">
+                    <SelectValue placeholder="Select a landing page" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="">None</SelectItem>
+                    {landingPages?.map((page: any) => (
+                        <SelectItem key={page.id} value={page.id}>
+                            {page.title}
+                        </SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+          </div>
         </CardContent>
         <CardFooter className="flex justify-end gap-2">
           <Button variant="outline" onClick={onComplete}>Cancel</Button>

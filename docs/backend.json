@@ -66,6 +66,10 @@
           "type": "string",
           "description": "URL of a hero image for the service detail page.",
           "format": "uri"
+        },
+        "landingPageId": {
+            "type": "string",
+            "description": "ID of a linked landing page (optional)."
         }
       },
       "required": [
