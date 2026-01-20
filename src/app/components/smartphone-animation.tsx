@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion, useMotionValue, useTransform, useSpring, animate } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -10,6 +10,8 @@ const MoneyGrowthAnimation = () => {
     const rounded = useTransform(count, (latest) =>
       new Intl.NumberFormat('en-US').format(Math.round(latest))
     );
+
+    const [transactions, setTransactions] = useState<number[]>([]);
   
     useEffect(() => {
       const controls = animate(count, 15789, {
@@ -18,6 +20,13 @@ const MoneyGrowthAnimation = () => {
         repeatType: "mirror",
         ease: "easeInOut",
       });
+
+      // Generate transaction amounts only on the client
+      setTransactions([
+        Math.floor(Math.random() * 200) + 50,
+        Math.floor(Math.random() * 200) + 50,
+        Math.floor(Math.random() * 200) + 50,
+      ]);
   
       return () => controls.stop();
     }, [count]);
@@ -38,7 +47,7 @@ const MoneyGrowthAnimation = () => {
   
         {/* Middle section: floating transactions */}
         <div className="relative h-24">
-          {[...Array(3)].map((_, i) => (
+          {transactions.map((amount, i) => (
             <motion.div
               key={i}
               className="absolute w-full flex justify-center"
@@ -57,7 +66,7 @@ const MoneyGrowthAnimation = () => {
               }}
             >
               <div className="bg-green-500/20 border border-green-500/50 rounded-full px-2 py-0.5 text-xs text-green-300 inline-block">
-                +${Math.floor(Math.random() * 200) + 50}
+                +${amount}
               </div>
             </motion.div>
           ))}
