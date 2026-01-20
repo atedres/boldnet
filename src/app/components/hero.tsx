@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useLanguage } from '@/app/context/language-context';
 import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { AnimatedDollarIcon } from './animated-dollar-icon';
+import SmartphoneAnimation from './smartphone-animation';
 import React from 'react';
 
 export default function Hero() {
@@ -28,8 +28,8 @@ export default function Hero() {
             {title}
           </h1>
 
-          <div className="lg:hidden flex justify-center py-6">
-            <AnimatedDollarIcon />
+          <div className="lg:hidden flex justify-center py-6 h-96">
+            <SmartphoneAnimation />
           </div>
 
           <p className="text-xl md:text-2xl text-red-100/90 max-w-2xl mx-auto lg:mx-0">
@@ -45,7 +45,7 @@ export default function Hero() {
           </div>
         </div>
         <div className="relative w-full h-80 lg:h-full hidden lg:flex items-center justify-center">
-            <AnimatedDollarIcon />
+            <SmartphoneAnimation />
         </div>
       </div>
     </section>
