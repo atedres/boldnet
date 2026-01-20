@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, Lightbulb, BarChart, ArrowRight, PenTool, Video, Image as ImageIcon, Speaker, MessageSquare, Globe, Compass, Target } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { SiteLogo } from './components';
 import { FirebaseClientProvider, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { DynamicIcon } from '@/components/ui/dynamic-icon';
 import { PersonalBrandingContactForm } from './PersonalBrandingContactForm';
+import { motion, useInView, useAnimation } from 'framer-motion';
 
 const SectionTitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
   <h2 className={cn("text-3xl md:text-4xl font-bold text-center font-headline", className)}>{children}</h2>
@@ -291,6 +292,40 @@ const TimelineMethodSection = ({ content, onCtaClick }: { content: any, onCtaCli
         { stepTitle: 'ÉTAPE 4', title: 'RÉSULTATS', description: '• Visibilité\n• Prospects\n• Moins de pub\n• Plus de revenus\n• Votre réputation devient votre moteur.', iconName: 'BarChart3', position: 'left' },
     ];
     const steps = content?.steps?.length ? content.steps : defaultSteps;
+
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, amount: 0.2 });
+    const controls = useAnimation();
+
+    useEffect(() => {
+        if (isInView) {
+            controls.start("visible");
+        }
+    }, [isInView, controls]);
+
+    const containerVariants = {
+        hidden: {},
+        visible: {
+            transition: {
+                staggerChildren: 0.3,
+            },
+        },
+    };
+
+    const itemVariants = {
+        hidden: (isRightPosition: boolean) => ({ // 'right' position means left on screen
+            opacity: 0,
+            x: isRightPosition ? -50 : 50,
+        }),
+        visible: {
+            opacity: 1,
+            x: 0,
+            transition: {
+                duration: 0.5,
+                ease: "easeOut",
+            },
+        },
+    };
     
     return (
         <section id="timelineMethod" className="py-16 md:py-24 bg-red-700 text-white relative overflow-hidden">
@@ -300,28 +335,39 @@ const TimelineMethodSection = ({ content, onCtaClick }: { content: any, onCtaCli
                 <SectionTitle className="mb-4">{content?.title}</SectionTitle>
                 <div className="w-24 h-1 bg-white/50 mx-auto mb-16"></div>
 
-                <div className="relative max-w-2xl mx-auto">
+                <div ref={ref} className="relative max-w-2xl mx-auto">
                     {/* The connecting line */}
                     <div className="absolute left-1/2 -translate-x-1/2 top-12 bottom-12 w-1 bg-white/20 rounded-full hidden md:block"></div>
 
-                    {steps.map((step: any, index: number) => (
-                        <div key={index} className={cn("flex items-center w-full mb-8 md:mb-0", step.position === 'right' ? 'justify-start' : 'justify-end')}>
-                             <div className={cn("flex md:w-1/2 items-center", step.position === 'right' ? 'flex-row' : 'flex-row-reverse')}>
-                                {/* Icon Circle */}
-                                <div className="relative z-10 flex-shrink-0">
-                                    <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center shadow-lg">
-                                        <DynamicIcon iconName={step.iconName || 'HelpCircle'} className="w-12 h-12 text-red-600" />
+                    <motion.div
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate={controls}
+                    >
+                        {steps.map((step: any, index: number) => (
+                            <motion.div 
+                                key={index}
+                                custom={step.position === 'right'}
+                                variants={itemVariants}
+                                className={cn("flex items-center w-full mb-8 md:mb-0", step.position === 'right' ? 'justify-start' : 'justify-end')}
+                            >
+                                <div className={cn("flex md:w-1/2 items-center", step.position === 'right' ? 'flex-row' : 'flex-row-reverse')}>
+                                    {/* Icon Circle */}
+                                    <div className="relative z-10 flex-shrink-0">
+                                        <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center shadow-lg">
+                                            <DynamicIcon iconName={step.iconName || 'HelpCircle'} className="w-12 h-12 text-red-600" />
+                                        </div>
+                                    </div>
+                                    {/* Content */}
+                                    <div className={cn("p-4 w-full", step.position === 'right' ? 'text-left' : 'text-right')}>
+                                        <h3 className="font-bold text-lg uppercase tracking-wide">{step.stepTitle || `ÉTAPE ${index + 1}`}</h3>
+                                        <h4 className="font-bold text-xl uppercase text-red-200">{step.title}</h4>
+                                        <p className="mt-2 text-sm whitespace-pre-line">{step.description}</p>
                                     </div>
                                 </div>
-                                {/* Content */}
-                                <div className={cn("p-4 w-full", step.position === 'right' ? 'text-left' : 'text-right')}>
-                                    <h3 className="font-bold text-lg uppercase tracking-wide">{step.stepTitle || `ÉTAPE ${index + 1}`}</h3>
-                                    <h4 className="font-bold text-xl uppercase text-red-200">{step.title}</h4>
-                                    <p className="mt-2 text-sm whitespace-pre-line">{step.description}</p>
-                                </div>
-                             </div>
-                        </div>
-                    ))}
+                            </motion.div>
+                        ))}
+                    </motion.div>
                 </div>
 
                 <div className="text-center mt-12">
