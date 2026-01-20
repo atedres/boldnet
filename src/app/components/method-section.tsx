@@ -16,7 +16,6 @@ import {
   LucideProps,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { PersonalBrandingContactForm } from '../coded/personal-branding/PersonalBrandingContactForm';
@@ -60,11 +59,10 @@ type StepProps = {
   step: (typeof steps)[0];
   index: number;
   isActive: boolean;
-  isMobile: boolean;
 };
 
 // --- Sub-component for a single timeline step ---
-const Step = ({ step, index, isActive, isMobile }: StepProps) => {
+const Step = ({ step, index, isActive }: StepProps) => {
   const shouldReduceMotion = useReducedMotion();
 
   const stepVariants = {
@@ -90,7 +88,7 @@ const Step = ({ step, index, isActive, isMobile }: StepProps) => {
     },
   };
 
-  const contentOpacity = isActive || isMobile ? 1 : 0.55;
+  const contentOpacity = isActive ? 1 : 0.55;
 
   return (
     <motion.div
@@ -101,13 +99,13 @@ const Step = ({ step, index, isActive, isMobile }: StepProps) => {
       transition={{ delay: index * 0.15 }}
       className={cn(
         'group relative flex w-full items-center',
-        !isMobile && (index % 2 === 0 ? 'justify-end' : 'justify-start')
+        index % 2 === 0 ? 'justify-end' : 'justify-start'
       )}
     >
       <div
         className={cn(
-          'w-full md:w-1/2',
-          !isMobile && (index % 2 === 0 ? 'pl-8' : 'pr-8')
+          'w-1/2',
+          index % 2 === 0 ? 'pl-4 md:pl-8' : 'pr-4 md:pr-8'
         )}
       >
         <motion.div
@@ -117,56 +115,44 @@ const Step = ({ step, index, isActive, isMobile }: StepProps) => {
           animate={{ opacity: contentOpacity }}
           transition={{ duration: 0.4 }}
           className={cn(
-            'rounded-lg p-4 transition-all',
-            isActive && !isMobile ? 'bg-white/5 shadow-lg' : 'bg-transparent'
+            'rounded-lg p-2 md:p-4 transition-all',
+            isActive ? 'bg-white/5 shadow-lg' : 'bg-transparent'
           )}
         >
           <div
             className={cn(
-              'flex items-center gap-4',
-              !isMobile && index % 2 === 0 && 'flex-row-reverse'
+              'flex items-center gap-2 md:gap-4',
+              index % 2 === 0 && 'flex-row-reverse'
             )}
           >
-            {/* Desktop Icon and Line */}
-            {!isMobile && (
-              <motion.div
-                variants={iconVariants}
-                whileHover={shouldReduceMotion ? {} : { rotate: -3 }}
-                className="relative z-10 hidden flex-shrink-0 md:flex"
+            <motion.div
+              variants={iconVariants}
+              whileHover={shouldReduceMotion ? {} : { rotate: -3 }}
+              className="relative z-10 flex flex-shrink-0"
+            >
+              <div
+                className={cn(
+                  'flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg transition-all duration-300 md:h-12 md:w-12',
+                  isActive && 'shadow-red-300/50'
+                )}
               >
-                <div
-                  className={cn(
-                    'flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-lg transition-all duration-300',
-                    isActive && 'shadow-red-300/50'
-                  )}
-                >
-                  <step.Icon className="h-6 w-6 text-red-600" />
-                </div>
-              </motion.div>
-            )}
+                <step.Icon className="h-5 w-5 text-red-600 md:h-6 md:w-6" />
+              </div>
+            </motion.div>
 
-            {/* Content */}
             <div
               className={cn(
                 'flex-grow',
-                !isMobile && (index % 2 === 0 ? 'text-right' : 'text-left')
+                index % 2 === 0 ? 'text-right' : 'text-left'
               )}
             >
-              <div className="flex items-center gap-3 md:hidden">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white">
-                  <step.Icon className="h-5 w-5 text-red-600" />
-                </div>
-                <h3 className="font-bold uppercase tracking-wide text-white">
-                  {step.subtitle}
-                </h3>
-              </div>
-              <h3 className="hidden font-bold uppercase tracking-wide text-white md:block">
+              <h3 className="text-xs font-bold uppercase tracking-wide text-white md:text-sm">
                 {step.subtitle}
               </h3>
-              <h4 className="font-headline text-xl font-bold uppercase text-red-200">
+              <h4 className="font-headline text-lg font-bold uppercase text-red-200 md:text-xl">
                 {step.title}
               </h4>
-              <p className="mt-1 text-sm text-white/80">{step.description}</p>
+              <p className="mt-1 text-xs text-white/80 md:text-sm">{step.description}</p>
             </div>
           </div>
         </motion.div>
@@ -177,7 +163,6 @@ const Step = ({ step, index, isActive, isMobile }: StepProps) => {
 
 // --- Main MethodSection Component ---
 export default function MethodSection({ content }: { content: any }) {
-  const isMobile = useIsMobile();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(1);
 
@@ -189,13 +174,11 @@ export default function MethodSection({ content }: { content: any }) {
     offset: ['start center', 'end center'],
   });
 
-  // Animate the height of the progress line
   const lineHeight = useTransform(scrollYProgress, (v) => v);
 
-  // Track the active step based on scroll position
   useEffect(() => {
     const handleScroll = () => {
-      if (!containerRef.current || isMobile) return;
+      if (!containerRef.current) return;
 
       const viewportCenter = window.scrollY + window.innerHeight / 2;
       let closestStep = { index: 0, distance: Infinity };
@@ -216,7 +199,7 @@ export default function MethodSection({ content }: { content: any }) {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isMobile]);
+  }, []);
 
   const titleVariants = {
     hidden: { opacity: 0, y: 16 },
@@ -234,7 +217,6 @@ export default function MethodSection({ content }: { content: any }) {
         ref={containerRef}
         className="relative overflow-hidden bg-red-700/20 py-16 text-white backdrop-blur-sm md:py-24"
       >
-        {/* Background decorative gradient */}
         <div
           className="absolute inset-0 z-0 opacity-10"
           style={{
@@ -259,15 +241,13 @@ export default function MethodSection({ content }: { content: any }) {
           </motion.div>
 
           <div className="relative mx-auto mt-12 max-w-4xl md:mt-20">
-            {/* The timeline bar */}
-            <div className={cn("absolute top-4 bottom-4 w-1 -translate-x-1/2 rounded-full bg-white/10", isMobile ? "left-4" : "left-1/2")} />
+            <div className={cn("absolute top-4 bottom-4 w-1 -translate-x-1/2 rounded-full bg-white/10", "left-1/2")} />
             <motion.div
               style={{ scaleY: lineHeight }}
-              className={cn("absolute top-4 bottom-4 w-1 -translate-x-1/2 origin-top rounded-full bg-white", isMobile ? "left-4" : "left-1/2")}
+              className={cn("absolute top-4 bottom-4 w-1 -translate-x-1/2 origin-top rounded-full bg-white", "left-1/2")}
             />
 
-            {/* Steps container */}
-            <div className="relative flex flex-col gap-12 md:gap-0">
+            <div className="relative flex flex-col gap-12">
               {steps.map((step, index) => (
                 <div
                   key={step.id}
@@ -277,7 +257,6 @@ export default function MethodSection({ content }: { content: any }) {
                     step={step}
                     index={index}
                     isActive={activeStep === step.id}
-                    isMobile={isMobile}
                   />
                 </div>
               ))}
