@@ -294,7 +294,7 @@ const TimelineMethodSection = ({ content, onCtaClick }: { content: any, onCtaCli
     const steps = content?.steps?.length ? content.steps : defaultSteps;
 
     const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, amount: 0.2 });
+    const isInView = useInView(ref, { once: true, amount: 0.5 });
     const controls = useAnimation();
 
     useEffect(() => {
