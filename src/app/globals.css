@@ -120,8 +120,8 @@
   .marquee-content {
     flex-shrink: 0;
     display: flex;
+    flex-wrap: nowrap;
     gap: 2rem;
-    min-width: 100%;
     animation: scroll 40s linear infinite;
   }
 
