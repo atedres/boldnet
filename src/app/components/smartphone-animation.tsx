@@ -22,11 +22,13 @@ const MoneyGrowthAnimation = () => {
       });
 
       // Generate transaction amounts only on the client
-      setTransactions([
-        Math.floor(Math.random() * 200) + 50,
-        Math.floor(Math.random() * 200) + 50,
-        Math.floor(Math.random() * 200) + 50,
-      ]);
+      if (typeof window !== 'undefined') {
+        setTransactions([
+          Math.floor(Math.random() * 200) + 50,
+          Math.floor(Math.random() * 200) + 50,
+          Math.floor(Math.random() * 200) + 50,
+        ]);
+      }
   
       return () => controls.stop();
     }, [count]);

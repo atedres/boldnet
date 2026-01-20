@@ -39,8 +39,8 @@ const FallingMoney = ({ count = 30 }: { count?: number }) => {
             left: dollar.x,
             scale: dollar.scale,
           }}
-          initial={{ y: '110vh' }}
-          animate={{ y: '-10vh' }}
+          initial={{ y: '-10vh' }}
+          animate={{ y: '110vh' }}
           transition={{
             duration: dollar.duration,
             delay: dollar.delay,
