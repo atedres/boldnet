@@ -294,7 +294,7 @@ const TimelineMethodSection = ({ content, onCtaClick }: { content: any, onCtaCli
     const steps = content?.steps?.length ? content.steps : defaultSteps;
 
     const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, amount: 0.5 });
+    const isInView = useInView(ref, { once: true, amount: 0.2 });
     const controls = useAnimation();
 
     useEffect(() => {
@@ -313,13 +313,13 @@ const TimelineMethodSection = ({ content, onCtaClick }: { content: any, onCtaCli
     };
 
     const itemVariants = {
-        hidden: (isRightPosition: boolean) => ({ // 'right' position means left on screen
+        hidden: {
             opacity: 0,
-            x: isRightPosition ? -50 : 50,
-        }),
+            y: 50,
+        },
         visible: {
             opacity: 1,
-            x: 0,
+            y: 0,
             transition: {
                 duration: 0.5,
                 ease: "easeOut",
@@ -347,7 +347,6 @@ const TimelineMethodSection = ({ content, onCtaClick }: { content: any, onCtaCli
                         {steps.map((step: any, index: number) => (
                             <motion.div 
                                 key={index}
-                                custom={step.position === 'right'}
                                 variants={itemVariants}
                                 className={cn("flex items-center w-full mb-8 md:mb-0", step.position === 'right' ? 'justify-start' : 'justify-end')}
                             >
