@@ -18,7 +18,7 @@ export default function ClientShowcase() {
   const duplicatedClients = useMemo(() => {
     if (!clients) return [];
     // Duplicate the clients to ensure a seamless loop
-    return [...clients, ...clients, ...clients, ...clients];
+    return [...clients, ...clients];
   }, [clients]);
 
   return (
@@ -34,9 +34,9 @@ export default function ClientShowcase() {
           <div className="text-center text-white">Loading clients...</div>
         )}
         {clients && clients.length > 0 && (
-          <div className="relative marquee-container">
+          <div className="relative marquee-container group">
             <div className="marquee">
-              <div className="marquee-content">
+              <div className="marquee-content group-hover:[animation-play-state:paused]">
                 {duplicatedClients.map((client, index) => (
                   <div key={`${client.id}-${index}`} className="flex-shrink-0" style={{ width: '160px' }}>
                     <div className="flex aspect-square items-center justify-center p-6 flex-col gap-2 rounded-lg">

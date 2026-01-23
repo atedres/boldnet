@@ -18,12 +18,7 @@ export default function TeamSection() {
   const duplicatedMembers = useMemo(() => {
     if (!members || members.length === 0) return [];
     // Duplicate the members array to create a seamless loop
-    const items = [...members, ...members];
-    // Ensure we have enough items to fill the screen and loop
-    if (items.length < 10) {
-        return [...items, ...items];
-    }
-    return items;
+    return [...members, ...members];
   }, [members]);
 
   const renderMemberCard = (member: any, index: number) => {
@@ -64,7 +59,7 @@ export default function TeamSection() {
     }
 
      return (
-        <div className="team-marquee-container">
+        <div className="team-marquee-container group">
             <div className="marquee">
                 <div className="marquee-content flex flex-nowrap group-hover:[animation-play-state:paused] gap-x-8">
                     {duplicatedMembers.map((member, index) => renderMemberCard(member, index))}
