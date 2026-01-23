@@ -113,26 +113,15 @@
 
 @layer utilities {
   .marquee {
-    overflow: hidden;
-    user-select: none;
-    display: flex;
-    position: relative;
+    @apply relative flex overflow-x-hidden;
   }
 
-  .marquee__content {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: space-around;
-    gap: 4rem; /* Default gap for team members */
+  .marquee-content {
+    @apply flex flex-shrink-0 items-center justify-around;
     animation: scroll 40s linear infinite;
   }
   
-  .client-marquee-container .marquee__content {
-    gap: 0; /* No gap for clients, width is handled per-item */
-  }
-
-  .marquee-container, .team-marquee-container {
+  .marquee-container {
     -webkit-mask-image: linear-gradient(
       to right,
       transparent,
@@ -170,5 +159,14 @@
 
   .coin-back {
     transform: rotateY(180deg);
+  }
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
   }
 }

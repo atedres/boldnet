@@ -95,10 +95,6 @@ export default {
             height: '0',
           },
         },
-        scroll: {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-100%)' },
-        },
         gradient: {
           '0%, 100%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
@@ -122,7 +118,6 @@ export default {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        scroll: 'scroll 40s linear infinite',
         gradient: 'gradient 15s ease infinite',
         fall: 'fall 10s linear infinite',
         float: 'float 6s ease-in-out infinite',

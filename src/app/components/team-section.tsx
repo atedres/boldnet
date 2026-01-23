@@ -16,31 +16,33 @@ export default function TeamSection() {
   const { data: members, isLoading: isLoadingMembers } = useCollection(teamQuery);
   
 
-  const renderMemberCard = (member: any, index: number) => {
+  const renderMemberCard = (member: any) => {
     const nameParts = member.name.split(' ');
     const lastName = nameParts.pop() || '';
     const firstName = nameParts.join(' ');
 
     return (
-        <Card key={`${member.id}-${index}`} className="border-none shadow-none bg-transparent flex-shrink-0 w-40">
-            <CardContent className="p-0 flex flex-col items-center text-center gap-4">
-                <Image 
-                    src={member.imageUrl}
-                    alt={member.name}
-                    width={128}
-                    height={128}
-                    className="rounded-full object-cover aspect-square w-32 h-32"
-                />
-                <div>
-                    <h3 className="font-bold text-lg font-headline tracking-wide text-white">
-                        <span>{firstName}</span>
-                        {lastName && <br />}
-                        <span>{lastName}</span>
-                    </h3>
-                    <p className="text-white/80">{member.position}</p>
-                </div>
-            </CardContent>
-        </Card>
+        <div className="flex-shrink-0 w-48 px-4">
+             <Card className="border-none shadow-none bg-transparent">
+                <CardContent className="p-0 flex flex-col items-center text-center gap-4">
+                    <Image 
+                        src={member.imageUrl}
+                        alt={member.name}
+                        width={128}
+                        height={128}
+                        className="rounded-full object-cover aspect-square w-32 h-32"
+                    />
+                    <div>
+                        <h3 className="font-bold text-lg font-headline tracking-wide text-white">
+                            <span>{firstName}</span>
+                            {lastName && <br />}
+                            <span>{lastName}</span>
+                        </h3>
+                        <p className="text-white/80">{member.position}</p>
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
     );
   };
 
@@ -54,13 +56,21 @@ export default function TeamSection() {
     }
 
      return (
-        <div className="team-marquee-container">
+        <div className="marquee-container">
             <div className="marquee">
-                <div className="marquee__content">
-                    {members.map((member, index) => renderMemberCard(member, index))}
+                 <div className="marquee-content">
+                    {members.map((member, index) => (
+                      <div key={`${member.id}-${index}`}>
+                        {renderMemberCard(member)}
+                      </div>
+                    ))}
                 </div>
-                 <div className="marquee__content" aria-hidden="true">
-                    {members.map((member, index) => renderMemberCard(member, index))}
+                 <div className="marquee-content" aria-hidden="true">
+                    {members.map((member, index) => (
+                      <div key={`${member.id}-${index}-clone`}>
+                       {renderMemberCard(member)}
+                      </div>
+                    ))}
                 </div>
             </div>
         </div>

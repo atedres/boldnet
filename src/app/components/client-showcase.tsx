@@ -28,35 +28,31 @@ export default function ClientShowcase() {
           <div className="text-center text-white">Loading clients...</div>
         )}
         {clients && clients.length > 0 && (
-          <div className="marquee-container client-marquee-container">
+          <div className="marquee-container">
             <div className="marquee">
-              <div className="marquee__content">
+              <div className="marquee-content">
                 {clients.map((client) => (
-                  <div key={client.id} className="flex-shrink-0" style={{ width: '160px' }}>
-                    <div className="flex aspect-square items-center justify-center p-6 flex-col gap-2 rounded-lg">
-                      <Image
-                        src={client.logoUrl}
-                        alt={`${client.name} logo`}
-                        width={100}
-                        height={100}
-                        className="object-contain grayscale hover:grayscale-0 transition-all brightness-0 invert"
-                      />
-                    </div>
+                  <div key={client.id} className="flex-shrink-0 px-8">
+                    <Image
+                      src={client.logoUrl}
+                      alt={`${client.name} logo`}
+                      width={100}
+                      height={100}
+                      className="object-contain aspect-square grayscale hover:grayscale-0 transition-all brightness-0 invert"
+                    />
                   </div>
                 ))}
               </div>
-              <div className="marquee__content" aria-hidden="true">
+              <div className="marquee-content" aria-hidden="true">
                 {clients.map((client) => (
-                  <div key={client.id} className="flex-shrink-0" style={{ width: '160px' }}>
-                    <div className="flex aspect-square items-center justify-center p-6 flex-col gap-2 rounded-lg">
-                      <Image
-                        src={client.logoUrl}
-                        alt={`${client.name} logo`}
-                        width={100}
-                        height={100}
-                        className="object-contain grayscale hover:grayscale-0 transition-all brightness-0 invert"
-                      />
-                    </div>
+                  <div key={client.id} className="flex-shrink-0 px-8">
+                    <Image
+                      src={client.logoUrl}
+                      alt={`${client.name} logo`}
+                      width={100}
+                      height={100}
+                      className="object-contain aspect-square grayscale hover:grayscale-0 transition-all brightness-0 invert"
+                    />
                   </div>
                 ))}
               </div>
