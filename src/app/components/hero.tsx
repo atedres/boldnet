@@ -31,7 +31,7 @@ export default function Hero() {
             {title}
           </h1>
 
-          <div className="lg:hidden flex justify-center py-6 h-96">
+          <div className="lg:hidden flex justify-center py-6 h-64">
             <SmartphoneAnimation />
           </div>
 

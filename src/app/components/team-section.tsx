@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import Image from 'next/image';
@@ -15,14 +15,6 @@ export default function TeamSection() {
   );
   const { data: members, isLoading: isLoadingMembers } = useCollection(teamQuery);
   
-  const [duplicatedMembers, setDuplicatedMembers] = useState<any[]>([]);
-
-  useEffect(() => {
-    if (members && members.length > 0) {
-      // Duplicate multiple times to ensure seamless looping on all screen sizes
-      setDuplicatedMembers([...members, ...members, ...members, ...members]);
-    }
-  }, [members]);
 
   const renderMemberCard = (member: any, index: number) => {
     const nameParts = member.name.split(' ');
@@ -30,7 +22,7 @@ export default function TeamSection() {
     const firstName = nameParts.join(' ');
 
     return (
-        <Card key={`${member.id}-${index}`} className="border-none shadow-none bg-transparent flex-shrink-0" style={{ width: '160px' }}>
+        <Card key={`${member.id}-${index}`} className="border-none shadow-none bg-transparent flex-shrink-0 w-40">
             <CardContent className="p-0 flex flex-col items-center text-center gap-4">
                 <Image 
                     src={member.imageUrl}
@@ -64,8 +56,11 @@ export default function TeamSection() {
      return (
         <div className="team-marquee-container">
             <div className="marquee">
-                <div className="marquee-content">
-                    {duplicatedMembers.map((member, index) => renderMemberCard(member, index))}
+                <div className="marquee__content">
+                    {members.map((member, index) => renderMemberCard(member, index))}
+                </div>
+                 <div className="marquee__content" aria-hidden="true">
+                    {members.map((member, index) => renderMemberCard(member, index))}
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useLanguage } from '@/app/context/language-context';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection } from 'firebase/firestore';
@@ -15,15 +15,6 @@ export default function ClientShowcase() {
   );
   const { data: clients, isLoading: isLoadingClients } = useCollection(clientsCollection);
 
-  const [duplicatedClients, setDuplicatedClients] = useState<any[]>([]);
-
-  useEffect(() => {
-    if (clients && clients.length > 0) {
-      // Duplicate to ensure seamless looping
-      setDuplicatedClients([...clients, ...clients, ...clients, ...clients]);
-    }
-  }, [clients]);
-
   return (
     <section id="clients" className="w-full bg-transparent py-12 md:py-24">
       <div className="container mx-auto">
@@ -37,11 +28,26 @@ export default function ClientShowcase() {
           <div className="text-center text-white">Loading clients...</div>
         )}
         {clients && clients.length > 0 && (
-          <div className="relative marquee-container">
+          <div className="marquee-container client-marquee-container">
             <div className="marquee">
-              <div className="marquee-content">
-                {duplicatedClients.map((client, index) => (
-                  <div key={`${client.id}-${index}`} className="flex-shrink-0" style={{ width: '160px' }}>
+              <div className="marquee__content">
+                {clients.map((client) => (
+                  <div key={client.id} className="flex-shrink-0" style={{ width: '160px' }}>
+                    <div className="flex aspect-square items-center justify-center p-6 flex-col gap-2 rounded-lg">
+                      <Image
+                        src={client.logoUrl}
+                        alt={`${client.name} logo`}
+                        width={100}
+                        height={100}
+                        className="object-contain grayscale hover:grayscale-0 transition-all brightness-0 invert"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="marquee__content" aria-hidden="true">
+                {clients.map((client) => (
+                  <div key={client.id} className="flex-shrink-0" style={{ width: '160px' }}>
                     <div className="flex aspect-square items-center justify-center p-6 flex-col gap-2 rounded-lg">
                       <Image
                         src={client.logoUrl}
