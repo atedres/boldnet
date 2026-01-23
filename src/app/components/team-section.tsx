@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import Image from 'next/image';
@@ -15,10 +15,13 @@ export default function TeamSection() {
   );
   const { data: members, isLoading: isLoadingMembers } = useCollection(teamQuery);
   
-  const duplicatedMembers = useMemo(() => {
-    if (!members || members.length === 0) return [];
-    // Duplicate the members array to create a seamless loop
-    return [...members, ...members];
+  const [duplicatedMembers, setDuplicatedMembers] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (members && members.length > 0) {
+      // Duplicate multiple times to ensure seamless looping on all screen sizes
+      setDuplicatedMembers([...members, ...members, ...members, ...members]);
+    }
   }, [members]);
 
   const renderMemberCard = (member: any, index: number) => {
@@ -54,14 +57,14 @@ export default function TeamSection() {
         return <p className="text-center text-white">Chargement de l'équipe...</p>
     }
 
-    if (!duplicatedMembers || duplicatedMembers.length === 0) {
+    if (!members || members.length === 0) {
         return <p className="text-center text-white/80">Aucun membre d'équipe disponible.</p>
     }
 
      return (
-        <div className="team-marquee-container group">
+        <div className="team-marquee-container">
             <div className="marquee">
-                <div className="marquee-content flex flex-nowrap group-hover:[animation-play-state:paused] gap-x-8">
+                <div className="marquee-content">
                     {duplicatedMembers.map((member, index) => renderMemberCard(member, index))}
                 </div>
             </div>

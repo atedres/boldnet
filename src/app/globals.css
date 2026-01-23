@@ -128,17 +128,17 @@
   .marquee-container, .team-marquee-container {
     -webkit-mask-image: linear-gradient(
       to right,
-      hsl(var(--background) / 0),
-      hsl(var(--background) / 1) 20%,
-      hsl(var(--background) / 1) 80%,
-      hsl(var(--background) / 0)
+      transparent,
+      black 20%,
+      black 80%,
+      transparent
     );
     mask-image: linear-gradient(
       to right,
-      hsla(0, 0%, 0%, 0),
-      hsla(0, 0%, 0%, 1) 20%,
-      hsla(0, 0%, 0%, 1) 80%,
-      hsla(0, 0%, 0%, 0)
+      transparent,
+      black 20%,
+      black 80%,
+      transparent
     );
   }
 

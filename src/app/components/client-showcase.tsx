@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/app/context/language-context';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection } from 'firebase/firestore';
@@ -15,10 +15,13 @@ export default function ClientShowcase() {
   );
   const { data: clients, isLoading: isLoadingClients } = useCollection(clientsCollection);
 
-  const duplicatedClients = useMemo(() => {
-    if (!clients) return [];
-    // Duplicate the clients to ensure a seamless loop
-    return [...clients, ...clients];
+  const [duplicatedClients, setDuplicatedClients] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (clients && clients.length > 0) {
+      // Duplicate to ensure seamless looping
+      setDuplicatedClients([...clients, ...clients, ...clients, ...clients]);
+    }
   }, [clients]);
 
   return (
@@ -34,9 +37,9 @@ export default function ClientShowcase() {
           <div className="text-center text-white">Loading clients...</div>
         )}
         {clients && clients.length > 0 && (
-          <div className="relative marquee-container group">
+          <div className="relative marquee-container">
             <div className="marquee">
-              <div className="marquee-content group-hover:[animation-play-state:paused]">
+              <div className="marquee-content">
                 {duplicatedClients.map((client, index) => (
                   <div key={`${client.id}-${index}`} className="flex-shrink-0" style={{ width: '160px' }}>
                     <div className="flex aspect-square items-center justify-center p-6 flex-col gap-2 rounded-lg">
