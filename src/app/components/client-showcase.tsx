@@ -2,7 +2,7 @@
 import React from 'react';
 import { useLanguage } from '@/app/context/language-context';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { collection, query, orderBy } from 'firebase/firestore';
 import Image from 'next/image';
 
 export default function ClientShowcase() {
@@ -10,10 +10,24 @@ export default function ClientShowcase() {
   const firestore = useFirestore();
 
   const clientsCollection = useMemoFirebase(
-    () => collection(firestore, 'clients'),
+    () => query(collection(firestore, 'clients'), orderBy('order')),
     [firestore]
   );
   const { data: clients, isLoading: isLoadingClients } = useCollection(clientsCollection);
+
+  const renderClients = (isClone = false) => (
+    (clients || []).map((client) => (
+      <div key={isClone ? `${client.id}-clone` : client.id} className="flex-shrink-0 px-8">
+        <Image
+          src={client.logoUrl}
+          alt={`${client.name} logo`}
+          width={100}
+          height={100}
+          className="object-contain aspect-square grayscale hover:grayscale-0 transition-all brightness-0 invert"
+        />
+      </div>
+    ))
+  );
 
   return (
     <section id="clients" className="w-full bg-transparent py-12 md:py-24">
@@ -30,32 +44,8 @@ export default function ClientShowcase() {
         {clients && clients.length > 0 && (
           <div className="marquee-container">
             <div className="marquee">
-              <div className="marquee-content">
-                {clients.map((client) => (
-                  <div key={client.id} className="flex-shrink-0 px-8">
-                    <Image
-                      src={client.logoUrl}
-                      alt={`${client.name} logo`}
-                      width={100}
-                      height={100}
-                      className="object-contain aspect-square grayscale hover:grayscale-0 transition-all brightness-0 invert"
-                    />
-                  </div>
-                ))}
-              </div>
-              <div className="marquee-content" aria-hidden="true">
-                {clients.map((client) => (
-                  <div key={client.id} className="flex-shrink-0 px-8">
-                    <Image
-                      src={client.logoUrl}
-                      alt={`${client.name} logo`}
-                      width={100}
-                      height={100}
-                      className="object-contain aspect-square grayscale hover:grayscale-0 transition-all brightness-0 invert"
-                    />
-                  </div>
-                ))}
-              </div>
+              {renderClients()}
+              {renderClients(true)}
             </div>
           </div>
         )}

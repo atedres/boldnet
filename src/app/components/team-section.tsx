@@ -46,6 +46,14 @@ export default function TeamSection() {
     );
   };
 
+  const renderMembers = (isClone = false) => (
+    (members || []).map((member) => (
+        <div key={isClone ? `${member.id}-clone` : member.id}>
+            {renderMemberCard(member)}
+        </div>
+    ))
+  );
+
   const renderContent = () => {
     if (isLoadingMembers) {
         return <p className="text-center text-white">Chargement de l'équipe...</p>
@@ -58,20 +66,8 @@ export default function TeamSection() {
      return (
         <div className="marquee-container">
             <div className="marquee">
-                 <div className="marquee-content">
-                    {members.map((member, index) => (
-                      <div key={`${member.id}-${index}`}>
-                        {renderMemberCard(member)}
-                      </div>
-                    ))}
-                </div>
-                 <div className="marquee-content" aria-hidden="true">
-                    {members.map((member, index) => (
-                      <div key={`${member.id}-${index}-clone`}>
-                       {renderMemberCard(member)}
-                      </div>
-                    ))}
-                </div>
+                {renderMembers()}
+                {renderMembers(true)}
             </div>
         </div>
     )

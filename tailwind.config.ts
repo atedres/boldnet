@@ -114,6 +114,10 @@ export default {
           '50%': { transform: 'rotateY(180deg) rotateX(-5deg)' },
           '100%': { transform: 'rotateY(360deg) rotateX(5deg)' },
         },
+        'scroll-x': {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-50%)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -122,6 +126,7 @@ export default {
         fall: 'fall 10s linear infinite',
         float: 'float 6s ease-in-out infinite',
         'coin-spin': 'coin-spin 8s infinite ease-in-out',
+        'scroll-x': 'scroll-x 40s linear infinite',
       },
     },
   },

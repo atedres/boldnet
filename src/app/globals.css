@@ -112,16 +112,8 @@
 }
 
 @layer utilities {
-  .marquee {
-    @apply relative flex overflow-x-hidden;
-  }
-
-  .marquee-content {
-    @apply flex flex-shrink-0 items-center justify-around;
-    animation: scroll 40s linear infinite;
-  }
-  
   .marquee-container {
+    @apply relative flex w-full overflow-x-hidden;
     -webkit-mask-image: linear-gradient(
       to right,
       transparent,
@@ -136,6 +128,14 @@
       black 80%,
       transparent
     );
+  }
+
+  .marquee {
+    @apply flex w-max animate-scroll-x flex-shrink-0 items-center;
+  }
+
+  .marquee:hover {
+    animation-play-state: paused;
   }
 
   .coin-container {
@@ -159,14 +159,5 @@
 
   .coin-back {
     transform: rotateY(180deg);
-  }
-}
-
-@keyframes scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
   }
 }
