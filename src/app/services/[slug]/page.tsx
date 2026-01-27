@@ -17,7 +17,7 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
   const [service, setService] = useState<DocumentData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     if (!firestore || !params.slug) return;
@@ -58,6 +58,9 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
     if (!service) {
       return null;
     }
+    
+    const serviceName = service.name?.[language] || service.name;
+    const serviceDescription = service.description?.[language] || service.description;
 
     return (
       <>
@@ -66,7 +69,7 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
                 {service.imageUrl ? (
                     <Image
                         src={service.imageUrl}
-                        alt={service.name}
+                        alt={serviceName}
                         fill
                         className="object-cover opacity-20"
                     />
@@ -77,7 +80,7 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
             </div>
             <div className="container relative text-center">
                 <h1 className="text-4xl md:text-6xl font-extrabold font-headline tracking-tight text-white">
-                    {service.name}
+                    {serviceName}
                 </h1>
             </div>
         </section>
@@ -86,7 +89,7 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
             <div className="container max-w-4xl">
                  <div
                     className="prose dark:prose-invert max-w-none mx-auto prose-headings:font-headline prose-headings:text-white prose-p:text-white/80 prose-strong:text-white prose-li:text-white/80"
-                    dangerouslySetInnerHTML={{ __html: service.description }}
+                    dangerouslySetInnerHTML={{ __html: serviceDescription }}
                 />
                  <div className="mt-12 text-center">
                     <Button asChild size="lg">
