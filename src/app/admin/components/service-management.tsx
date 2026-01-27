@@ -285,6 +285,7 @@ export default function ServiceManagement() {
   };
   
   const truncateText = (html: string, length: number) => {
+    if (!html) return '';
     const text = html.replace(/<[^>]*>?/gm, '');
     if (text.length <= length) return text;
     return text.substring(0, length) + '...';
@@ -369,5 +370,3 @@ export default function ServiceManagement() {
     </>
   );
 }
-
-    
