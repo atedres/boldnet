@@ -18,11 +18,13 @@ import { Loader2, MailCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore, addDocumentNonBlocking, useMemoFirebase } from '@/firebase';
 import { collection, serverTimestamp } from 'firebase/firestore';
+import { useLanguage } from '../context/language-context';
 
 export default function NewsletterSection({ content }: { content: any }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { language } = useLanguage();
   const firestore = useFirestore();
 
   const newsletterSubmissionsCollection = useMemoFirebase(
@@ -86,10 +88,10 @@ export default function NewsletterSection({ content }: { content: any }) {
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
         <div className="space-y-3">
           <h2 className="text-3xl font-bold tracking-tight md:text-4xl/tight font-headline">
-            {content.title || 'Rejoignez notre newsletter'}
+            {content.title?.[language] || content.title || 'Rejoignez notre newsletter'}
           </h2>
           <p className="mx-auto max-w-[600px] text-white/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-            {content.subtitle || "Soyez au courant de nos offres, des actualités du digital, etc."}
+            {content.subtitle?.[language] || content.subtitle || "Soyez au courant de nos offres, des actualités du digital, etc."}
           </p>
         </div>
         <div className="mx-auto w-full max-w-sm space-y-4">
@@ -121,5 +123,3 @@ export default function NewsletterSection({ content }: { content: any }) {
     </section>
   );
 }
-
-    

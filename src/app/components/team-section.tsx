@@ -5,9 +5,11 @@ import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
+import { useLanguage } from '../context/language-context';
 
 export default function TeamSection() {
   const firestore = useFirestore();
+  const { language } = useLanguage();
   
   const teamQuery = useMemoFirebase(
     () => query(collection(firestore, 'team_members'), orderBy('order')),
@@ -18,7 +20,8 @@ export default function TeamSection() {
 
   const renderMembers = (isClone = false) => (
     (members || []).map((member) => {
-        const nameParts = member.name.split(' ');
+        const name = member.name?.[language] || member.name?.en || '';
+        const nameParts = name.split(' ');
         const lastName = nameParts.pop() || '';
         const firstName = nameParts.join(' ');
     
@@ -28,7 +31,7 @@ export default function TeamSection() {
                     <CardContent className="p-0 flex flex-col items-center text-center gap-4">
                         <Image 
                             src={member.imageUrl}
-                            alt={member.name}
+                            alt={name}
                             width={128}
                             height={128}
                             className="rounded-full object-cover aspect-square w-32 h-32"
@@ -39,7 +42,7 @@ export default function TeamSection() {
                                 {lastName && <br />}
                                 <span>{lastName}</span>
                             </h3>
-                            <p className="text-white/80">{member.position}</p>
+                            <p className="text-white/80">{member.position?.[language] || member.position?.en}</p>
                         </div>
                     </CardContent>
                 </Card>

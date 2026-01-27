@@ -26,7 +26,7 @@ import Image from 'next/image';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function ServicesOverview() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const firestore = useFirestore();
   const isMobile = useIsMobile();
   
@@ -55,15 +55,15 @@ export default function ServicesOverview() {
           <CardHeader className="items-start gap-4">
               <div className="bg-gray-900 text-white p-3 rounded-lg group-hover:bg-white group-hover:text-primary transition-colors">
                 {service.iconUrl ? (
-                   <Image src={service.iconUrl} alt={service.name} width={24} height={24} className="h-6 w-6 object-contain" />
+                   <Image src={service.iconUrl} alt={service.name?.[language] || ''} width={24} height={24} className="h-6 w-6 object-contain" />
                 ) : (
                   <DynamicIcon iconName={service.iconName || 'Zap'} className="h-6 w-6 text-white group-hover:text-primary transition-colors" />
                 )}
               </div>
-              <CardTitle className="text-xl font-bold font-headline">{service.name}</CardTitle>
+              <CardTitle className="text-xl font-bold font-headline">{service.name?.[language] || service.name?.en}</CardTitle>
               <div 
                 className="prose-sm prose-p:text-muted-foreground group-hover:prose-p:text-primary-foreground/80 dark:prose-invert max-w-none prose-ul:list-disc prose-ul:pl-5"
-                dangerouslySetInnerHTML={{ __html: service.description }}
+                dangerouslySetInnerHTML={{ __html: service.description?.[language] || service.description?.en }}
               />
           </CardHeader>
           <CardFooter className="flex-col items-stretch gap-4 mt-auto pt-6">

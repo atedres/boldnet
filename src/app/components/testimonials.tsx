@@ -22,6 +22,7 @@ import { collection, query, orderBy } from 'firebase/firestore';
 import Image from 'next/image';
 import { Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '../context/language-context';
 
 const GoogleIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5">
@@ -49,9 +50,13 @@ const StarRating = ({ rating, className }: { rating: number, className?: string 
   
 
 const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
+    const { language } = useLanguage();
+    const reviewText = testimonial.review?.[language] || testimonial.review?.en || '';
     const TRUNCATE_LENGTH = 150;
-    const isTruncated = testimonial.review.length > TRUNCATE_LENGTH;
-    const displayedReview = isTruncated ? `${testimonial.review.substring(0, TRUNCATE_LENGTH)}...` : testimonial.review;
+    const isTruncated = reviewText.length > TRUNCATE_LENGTH;
+    const displayedReview = isTruncated ? `${reviewText.substring(0, TRUNCATE_LENGTH)}...` : reviewText;
+    const name = testimonial.name?.[language] || testimonial.name?.en || '';
+    const position = testimonial.position?.[language] || testimonial.position?.en || '';
 
     return (
         <Dialog>
@@ -61,14 +66,14 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
                         <div className="flex items-center gap-3">
                             <Image
                                 src={testimonial.avatarUrl}
-                                alt={testimonial.name}
+                                alt={name}
                                 width={48}
                                 height={48}
                                 className="rounded-full object-cover"
                             />
                             <div>
-                                <p className="font-semibold">{testimonial.name}</p>
-                                <p className="text-sm text-red-100">{testimonial.position}</p>
+                                <p className="font-semibold">{name}</p>
+                                <p className="text-sm text-red-100">{position}</p>
                             </div>
                         </div>
                         {testimonial.source?.toLowerCase() === 'google' && <div className="p-1 rounded-full bg-white"><GoogleIcon /></div>}
@@ -90,20 +95,20 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
                     <DialogTitle className="flex items-center gap-4">
                          <Image
                             src={testimonial.avatarUrl}
-                            alt={testimonial.name}
+                            alt={name}
                             width={48}
                             height={48}
                             className="rounded-full object-cover"
                         />
                         <div>
-                            <p className="font-semibold text-lg">{testimonial.name}</p>
-                            <p className="text-sm text-muted-foreground dark:text-neutral-400 font-normal">{testimonial.position}</p>
+                            <p className="font-semibold text-lg">{name}</p>
+                            <p className="text-sm text-muted-foreground dark:text-neutral-400 font-normal">{position}</p>
                         </div>
                     </DialogTitle>
                 </DialogHeader>
                 <div className="py-4 space-y-4">
                     <StarRating rating={testimonial.rating} />
-                    <p className="text-muted-foreground dark:text-neutral-300 break-all">{testimonial.review}</p>
+                    <p className="text-muted-foreground dark:text-neutral-300 break-all">{reviewText}</p>
                     {testimonial.source?.toLowerCase() === 'google' && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground dark:text-neutral-400">
                            <GoogleIcon /> <span>Avis de Google</span>

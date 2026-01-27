@@ -29,7 +29,7 @@ export default function BlogOverview({ content }: { content: any }) {
                  {post.imageUrl ? (
                     <Image 
                         src={post.imageUrl}
-                        alt={post.title}
+                        alt={post.title?.[language] || post.title?.en}
                         width={400}
                         height={250}
                         className="object-cover w-full aspect-[4/3] group-hover:scale-105 transition-transform duration-300"
@@ -44,9 +44,9 @@ export default function BlogOverview({ content }: { content: any }) {
                 )}
             </div>
            <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-xl font-bold font-headline mb-3 flex-grow text-white">{post.title}</h3>
+                <h3 className="text-xl font-bold font-headline mb-3 flex-grow text-white">{post.title?.[language] || post.title?.en}</h3>
                 <p className="text-white/80 line-clamp-3 mb-4">
-                    {post.excerpt}
+                    {post.excerpt?.[language] || post.excerpt?.en}
                 </p>
                  <span className="font-semibold tracking-widest text-sm text-red-300 group-hover:text-white transition-colors">
                     READ MORE
@@ -91,10 +91,10 @@ export default function BlogOverview({ content }: { content: any }) {
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tight sm:text-5xl font-headline">
-              {content?.title || 'From the Blog'}
+              {content?.title?.[language] || content?.title}
             </h2>
             <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-red-200">
-              {content?.subtitle || 'Check out our latest articles and insights.'}
+              {content?.subtitle?.[language] || content?.subtitle}
             </p>
           </div>
         </div>

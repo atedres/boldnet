@@ -6,7 +6,7 @@ import { collection, query, orderBy } from 'firebase/firestore';
 import Image from 'next/image';
 
 export default function ClientShowcase() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const firestore = useFirestore();
 
   const clientsCollection = useMemoFirebase(
@@ -20,7 +20,7 @@ export default function ClientShowcase() {
       <li key={isClone ? `${client.id}-clone` : client.id} className="flex-shrink-0 px-8">
         <Image
           src={client.logoUrl}
-          alt={`${client.name} logo`}
+          alt={`${client.name?.[language] || client.name?.en} logo`}
           width={100}
           height={100}
           className="object-contain aspect-square grayscale hover:grayscale-0 transition-all brightness-0 invert"

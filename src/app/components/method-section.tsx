@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { PersonalBrandingContactForm } from '../coded/personal-branding/PersonalBrandingContactForm';
+import { useLanguage } from '../context/language-context';
 
 // --- Data for timeline steps ---
 const steps = [
@@ -165,6 +166,7 @@ const Step = ({ step, index, isActive }: StepProps) => {
 export default function MethodSection({ content }: { content: any }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(1);
+  const { language } = useLanguage();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -235,7 +237,7 @@ export default function MethodSection({ content }: { content: any }) {
             className="text-center"
           >
             <h2 className="font-headline text-3xl font-bold tracking-tight text-white sm:text-5xl">
-              {content?.title || 'NOTRE METHODE'}
+              {content?.title?.[language] || content?.title || 'NOTRE METHODE'}
             </h2>
             <div className="mx-auto mt-4 h-1 w-24 bg-white/50" />
           </motion.div>
@@ -269,7 +271,7 @@ export default function MethodSection({ content }: { content: any }) {
               size="lg"
               className="rounded-full bg-white px-10 py-6 text-lg font-bold text-red-600 hover:bg-gray-200"
             >
-              {content?.ctaButtonText || 'EN SAVOIR PLUS'}{' '}
+              {content?.ctaButtonText?.[language] || content?.ctaButtonText || 'EN SAVOIR PLUS'}{' '}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
