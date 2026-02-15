@@ -1,12 +1,12 @@
 'use client';
 
-import { ArrowLeft, CheckCircle, ChevronDown, Lightbulb, Megaphone, Plus, Star, Tv, Video, Zap, MousePointerClick, RefreshCw, CircleDollarSign, TrendingUp, UserPlus, Film, Bot, PenSquare } from 'lucide-react';
+import { ArrowLeft, CheckCircle, ChevronDown, Lightbulb, Megaphone, Plus, Star, Tv, Video, Zap, MousePointerClick, RefreshCw, CircleDollarSign, TrendingUp, UserPlus, Film, Bot, PenSquare, Camera, Lamp, Users, PenTool } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { FirebaseClientProvider } from '@/firebase';
 import { motion } from 'framer-motion';
-import { SiteLogo } from './personal-branding/components';
+import { SiteLogo } from '../personal-branding/components';
 import Link from 'next/link';
 
 const Section = ({ children, className, ...props }: React.HTMLAttributes<HTMLElement>) => (
@@ -27,7 +27,7 @@ const HeroSection = () => (
         <div className="relative h-[50vh] md:h-[60vh] flex items-center justify-center">
             <Image src="https://picsum.photos/seed/ugc-hero/1200/800" layout="fill" objectFit="cover" alt="Video Shoot" className="opacity-30" />
             <div className="relative z-10">
-                <div className="flex justify-center mb-4">
+                <div className="flex justify-center mb-4 h-16 w-16 relative">
                     <SiteLogo />
                 </div>
                 <h1 className="text-3xl md:text-5xl font-bold max-w-3xl mx-auto">
