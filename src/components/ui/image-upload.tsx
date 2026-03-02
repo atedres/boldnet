@@ -1,23 +1,28 @@
+
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, UploadCloud, X, Eye, Settings2, ZoomIn, Move } from 'lucide-react';
+import { Loader2, UploadCloud, X, Eye, Settings2, ZoomIn, Move, LayoutGrid } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { ImageCropper } from './image-cropper';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Slider } from './slider';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export interface StyledImage {
   url: string;
   zoom?: number;
   x?: number;
   y?: number;
+  layoutScale?: number;
+  layoutX?: number;
+  layoutY?: number;
 }
 
 interface ImageUploadProps {
@@ -46,6 +51,9 @@ export function ImageUpload({ value, onChange, label, className, aspectRatio, cr
   const zoom = typeof value === 'string' ? 1 : value?.zoom ?? 1;
   const x = typeof value === 'string' ? 0 : value?.x ?? 0;
   const y = typeof value === 'string' ? 0 : value?.y ?? 0;
+  const layoutScale = typeof value === 'string' ? 1 : value?.layoutScale ?? 1;
+  const layoutX = typeof value === 'string' ? 0 : value?.layoutX ?? 0;
+  const layoutY = typeof value === 'string' ? 0 : value?.layoutY ?? 0;
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -88,7 +96,7 @@ export function ImageUpload({ value, onChange, label, className, aspectRatio, cr
         const data = await response.json();
         
         if (enableStyling) {
-            onChange({ url: data.secure_url, zoom, x, y });
+            onChange({ url: data.secure_url, zoom, x, y, layoutScale, layoutX, layoutY });
         } else {
             onChange(data.secure_url);
         }
@@ -108,12 +116,12 @@ export function ImageUpload({ value, onChange, label, className, aspectRatio, cr
 
   const updateStyling = (updates: Partial<StyledImage>) => {
     if (enableStyling) {
-        onChange({ url, zoom, x, y, ...updates });
+        onChange({ url, zoom, x, y, layoutScale, layoutX, layoutY, ...updates });
     }
   };
 
   const clearImage = () => {
-    onChange(enableStyling ? { url: '', zoom: 1, x: 0, y: 0 } : '');
+    onChange(enableStyling ? { url: '', zoom: 1, x: 0, y: 0, layoutScale: 1, layoutX: 0, layoutY: 0 } : '');
   };
 
   return (
@@ -126,7 +134,13 @@ export function ImageUpload({ value, onChange, label, className, aspectRatio, cr
                 <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none">
                     <div 
                         className="relative w-full h-full transition-transform duration-200"
-                        style={{ transform: `scale(${zoom}) translate(${x}px, ${y}px)` }}
+                        style={{ 
+                            transform: `scale(${zoom}) translate(${x}px, ${y}px)`,
+                            width: `${layoutScale * 100}%`,
+                            height: `${layoutScale * 100}%`,
+                            left: `${layoutX}px`,
+                            top: `${layoutY}px`
+                        }}
                     >
                         <Image src={url} alt="Uploaded" layout="fill" objectFit="contain" />
                     </div>
@@ -141,26 +155,50 @@ export function ImageUpload({ value, onChange, label, className, aspectRatio, cr
                 <Collapsible open={isStylingOpen} onOpenChange={setIsStylingOpen} className="border rounded-md p-3 bg-muted/10">
                     <CollapsibleTrigger asChild>
                         <Button variant="ghost" size="sm" className="w-full justify-between">
-                            <div className="flex items-center gap-2"><Settings2 className="h-4 w-4" /> <span>Ajuster l'affichage (Zoom & Position)</span></div>
+                            <div className="flex items-center gap-2"><Settings2 className="h-4 w-4" /> <span>Paramètres d'affichage</span></div>
                             <Settings2 className={cn("h-4 w-4 transition-transform", isStylingOpen && "rotate-90")} />
                         </Button>
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="pt-4 space-y-6">
-                        <div className="space-y-3">
-                            <div className="flex justify-between items-center"><Label className="text-xs flex items-center gap-2"><ZoomIn className="h-3 w-3" /> Zoom ({zoom.toFixed(2)}x)</Label></div>
-                            <Slider value={[zoom]} min={0.5} max={3} step={0.05} onValueChange={(v) => updateStyling({ zoom: v[0] })} />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label className="text-xs flex items-center gap-2"><Move className="h-3 w-3" /> Décalage X (px)</Label>
-                                <Input type="number" size="sm" value={x} onChange={(e) => updateStyling({ x: Number(e.target.value) })} className="h-8" />
-                            </div>
-                            <div className="space-y-2">
-                                <Label className="text-xs flex items-center gap-2"><Move className="h-3 w-3 rotate-90" /> Décalage Y (px)</Label>
-                                <Input type="number" size="sm" value={y} onChange={(e) => updateStyling({ y: Number(e.target.value) })} className="h-8" />
-                            </div>
-                        </div>
-                        <Button variant="outline" size="sm" className="w-full text-[10px] h-7" onClick={() => updateStyling({ zoom: 1, x: 0, y: 0 })}>Réinitialiser les réglages</Button>
+                    <CollapsibleContent className="pt-4">
+                        <Tabs defaultValue="layout" className="w-full">
+                            <TabsList className="grid w-full grid-cols-2">
+                                <TabsTrigger value="internal" className="text-xs">Interne (Zoom/Pan)</TabsTrigger>
+                                <TabsTrigger value="layout" className="text-xs">Site (Taille/Position)</TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="internal" className="space-y-6 pt-4">
+                                <div className="space-y-3">
+                                    <Label className="text-xs flex items-center gap-2"><ZoomIn className="h-3 w-3" /> Zoom Interne ({zoom.toFixed(2)}x)</Label>
+                                    <Slider value={[zoom]} min={0.5} max={3} step={0.05} onValueChange={(v) => updateStyling({ zoom: v[0] })} />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label className="text-xs flex items-center gap-2"><Move className="h-3 w-3" /> Pan X (px)</Label>
+                                        <Input type="number" size="sm" value={x} onChange={(e) => updateStyling({ x: Number(e.target.value) })} className="h-8" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="text-xs flex items-center gap-2"><Move className="h-3 w-3 rotate-90" /> Pan Y (px)</Label>
+                                        <Input type="number" size="sm" value={y} onChange={(e) => updateStyling({ y: Number(e.target.value) })} className="h-8" />
+                                    </div>
+                                </div>
+                            </TabsContent>
+                            <TabsContent value="layout" className="space-y-6 pt-4">
+                                <div className="space-y-3">
+                                    <Label className="text-xs flex items-center gap-2"><LayoutGrid className="h-3 w-3" /> Taille sur le site ({(layoutScale * 100).toFixed(0)}%)</Label>
+                                    <Slider value={[layoutScale]} min={0.1} max={2} step={0.05} onValueChange={(v) => updateStyling({ layoutScale: v[0] })} />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label className="text-xs flex items-center gap-2"><Move className="h-3 w-3" /> Position X (px)</Label>
+                                        <Input type="number" size="sm" value={layoutX} onChange={(e) => updateStyling({ layoutX: Number(e.target.value) })} className="h-8" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="text-xs flex items-center gap-2"><Move className="h-3 w-3 rotate-90" /> Position Y (px)</Label>
+                                        <Input type="number" size="sm" value={layoutY} onChange={(e) => updateStyling({ layoutY: Number(e.target.value) })} className="h-8" />
+                                    </div>
+                                </div>
+                            </TabsContent>
+                        </Tabs>
+                        <Button variant="outline" size="sm" className="w-full text-[10px] h-7 mt-4" onClick={() => updateStyling({ zoom: 1, x: 0, y: 0, layoutScale: 1, layoutX: 0, layoutY: 0 })}>Réinitialiser tout</Button>
                     </CollapsibleContent>
                 </Collapsible>
             )}
@@ -197,7 +235,13 @@ export function ImageUpload({ value, onChange, label, className, aspectRatio, cr
             <div className="relative w-full aspect-video mt-4 bg-muted/20 rounded-md overflow-hidden flex items-center justify-center">
               <div 
                 className="relative w-full h-full"
-                style={{ transform: `scale(${zoom}) translate(${x}px, ${y}px)` }}
+                style={{ 
+                    transform: `scale(${zoom}) translate(${x}px, ${y}px)`,
+                    width: `${layoutScale * 100}%`,
+                    height: `${layoutScale * 100}%`,
+                    left: `${layoutX}px`,
+                    top: `${layoutY}px`
+                }}
               >
                 <Image src={url} alt="Aperçu" layout="fill" objectFit="contain" />
               </div>

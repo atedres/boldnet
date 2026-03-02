@@ -1,3 +1,4 @@
+
 'use client';
 
 import { ArrowLeft, CheckCircle, ChevronDown, Plus, MousePointerClick, RefreshCw, CircleDollarSign, TrendingUp, UserPlus, Film, Bot, PenSquare, Camera, Lamp, Users, PenTool, Link as LinkIcon } from 'lucide-react';
@@ -11,6 +12,7 @@ import { SiteLogo } from '../personal-branding/components';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DynamicIcon } from '@/components/ui/dynamic-icon';
 import { useMemo } from 'react';
+import { cn } from '@/lib/utils';
 
 const Section = ({ children, className, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <section className={`py-16 md:py-24 ${className}`} {...props}>
@@ -23,8 +25,40 @@ const SectionTitle = ({ children, className }: { children: React.ReactNode, clas
 );
 
 const getStyledImage = (img: any) => {
-    if (typeof img === 'string') return { url: img, zoom: 1, x: 0, y: 0 };
-    return { url: img?.url || '', zoom: img?.zoom ?? 1, x: img?.x ?? 0, y: img?.y ?? 0 };
+    if (typeof img === 'string') return { url: img, zoom: 1, x: 0, y: 0, layoutScale: 1, layoutX: 0, layoutY: 0 };
+    return { 
+        url: img?.url || '', 
+        zoom: img?.zoom ?? 1, 
+        x: img?.x ?? 0, 
+        y: img?.y ?? 0,
+        layoutScale: img?.layoutScale ?? 1,
+        layoutX: img?.layoutX ?? 0,
+        layoutY: img?.layoutY ?? 0
+    };
+};
+
+const ImageDisplay = ({ styledImg, alt, className, aspect = "aspect-square" }: { styledImg: any, alt: string, className?: string, aspect?: string }) => {
+    if (!styledImg.url) return <div className={cn("bg-muted", aspect, className)} />;
+    
+    return (
+        <div className={cn("relative overflow-hidden", aspect, className)}>
+            <div 
+                className="relative w-full h-full transition-all duration-300"
+                style={{ 
+                    transform: `scale(${styledImg.layoutScale}) translate(${styledImg.layoutX}px, ${styledImg.layoutY}px)`,
+                    width: '100%',
+                    height: '100%'
+                }}
+            >
+                <div 
+                    className="relative w-full h-full"
+                    style={{ transform: `scale(${styledImg.zoom}) translate(${styledImg.x}px, ${styledImg.y}px)` }}
+                >
+                    <Image src={styledImg.url} alt={alt} fill className="object-cover" />
+                </div>
+            </div>
+        </div>
+    );
 };
 
 const HeroSection = ({ content }: { content: any }) => {
@@ -34,9 +68,16 @@ const HeroSection = ({ content }: { content: any }) => {
             {bg.url && (
                 <div 
                     className="absolute inset-0 opacity-30 pointer-events-none"
-                    style={{ transform: `scale(${bg.zoom}) translate(${bg.x}px, ${bg.y}px)` }}
+                    style={{ 
+                        transform: `scale(${bg.layoutScale}) translate(${bg.layoutX}px, ${bg.layoutY}px)`,
+                    }}
                 >
-                    <Image src={bg.url} layout="fill" objectFit="cover" alt="Background" />
+                    <div 
+                        className="relative w-full h-full"
+                        style={{ transform: `scale(${bg.zoom}) translate(${bg.x}px, ${bg.y}px)` }}
+                    >
+                        <Image src={bg.url} layout="fill" objectFit="cover" alt="Background" />
+                    </div>
                 </div>
             )}
             <div className="relative z-10 flex flex-col items-center justify-center h-full">
@@ -53,16 +94,7 @@ const ProblemSection = ({ content }: { content: any }) => {
         <Section className="bg-white">
             <div className="text-center">
                 <div className="flex flex-col md:flex-row justify-center items-center gap-6">
-                    <div className="relative w-[150px] h-[150px] rounded-full overflow-hidden bg-muted">
-                        {img.url && (
-                            <div 
-                                className="relative w-full h-full"
-                                style={{ transform: `scale(${img.zoom}) translate(${img.x}px, ${img.y}px)` }}
-                            >
-                                <Image src={img.url} fill className="object-cover" alt="Problem" />
-                            </div>
-                        )}
-                    </div>
+                    <ImageDisplay styledImg={img} alt="Problem" className="w-[150px] h-[150px] rounded-full" />
                     <div>
                         <h2 className="text-red-600 text-4xl md:text-6xl font-bold font-headline">{content?.title || "..."}</h2>
                         <p className="max-w-md mx-auto mt-2 text-gray-600">{content?.subtitle || "..."}</p>
@@ -95,13 +127,7 @@ const ChecklistSection = ({ content }: { content: any }) => {
                     <p className="text-lg">{content?.costIntroText || "..."}</p>
                     <ul className="space-y-3">{(content?.costListItems || []).map((item: string, i: number) => <li key={i} className="flex items-center gap-3"><ChevronDown className="h-5 w-5" /> {item}</li>)}</ul>
                 </div>
-                <div className="relative aspect-square w-full max-w-[500px] mx-auto rounded-full overflow-hidden bg-red-700/50">
-                    {img.url && (
-                        <div className="relative w-full h-full" style={{ transform: `scale(${img.zoom}) translate(${img.x}px, ${img.y}px)` }}>
-                            <Image src={img.url} fill className="object-cover" alt="Checklist" />
-                        </div>
-                    )}
-                </div>
+                <ImageDisplay styledImg={img} alt="Checklist" className="w-full max-w-[500px] mx-auto rounded-full" aspect="aspect-square" />
             </div>
         </Section>
     );
@@ -116,13 +142,7 @@ const PainPointSection = ({ content }: { content: any }) => {
                 <SectionTitle className="text-red-600">{content?.title || "..."}</SectionTitle>
             </div>
             <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div className="relative aspect-[4/3] w-full rounded-lg overflow-hidden bg-muted">
-                    {img.url && (
-                        <div className="relative w-full h-full" style={{ transform: `scale(${img.zoom}) translate(${img.x}px, ${img.y}px)` }}>
-                            <Image src={img.url} fill className="object-cover" alt="Pain point" />
-                        </div>
-                    )}
-                </div>
+                <ImageDisplay styledImg={img} alt="Pain point" className="w-full rounded-lg" aspect="aspect-[4/3]" />
                 <div className="space-y-4">
                     {(content?.painPoints || []).map((point: string, i: number) => (
                         <Card key={i} className="p-4 bg-red-50 border-red-200"><p>{point}</p></Card>
@@ -138,13 +158,7 @@ const MetaSection = ({ content }: { content: any }) => {
     return (
         <Section className="bg-white">
             <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden bg-muted">
-                    {img.url && (
-                        <div className="relative w-full h-full" style={{ transform: `scale(${img.zoom}) translate(${img.x}px, ${img.y}px)` }}>
-                            <Image src={img.url} fill className="object-cover" alt="Meta" />
-                        </div>
-                    )}
-                </div>
+                <ImageDisplay styledImg={img} alt="Meta" className="w-full rounded-lg" aspect="aspect-[16/9]" />
                 <div className="text-center">
                     <Bot className="w-20 h-20 mx-auto text-blue-600 mb-4" />
                     <p className="bg-red-600 text-white p-6 rounded-lg text-lg leading-relaxed">{content?.mainText || "..."}</p>
@@ -159,13 +173,7 @@ const WeDoEverythingSection = ({ content }: { content: any }) => {
     return (
         <Section className="bg-red-100">
             <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div className="relative aspect-square w-full max-w-[500px] mx-auto rounded-lg overflow-hidden bg-muted">
-                    {img.url && (
-                        <div className="relative w-full h-full" style={{ transform: `scale(${img.zoom}) translate(${img.x}px, ${img.y}px)` }}>
-                            <Image src={img.url} fill className="object-cover" alt="We Do Everything" />
-                        </div>
-                    )}
-                </div>
+                <ImageDisplay styledImg={img} alt="We Do Everything" className="w-full max-w-[500px] mx-auto rounded-lg" aspect="aspect-square" />
                 <div className="bg-white p-8 rounded-lg shadow-lg">
                     <h2 className="text-2xl font-bold text-red-600 font-headline mb-4">{content?.title || "..."}</h2>
                     <ul className="space-y-3 text-gray-700">{(content?.listItems || []).map((item: string, i: number) => <li key={i} className="flex gap-2"><span>✓</span> {item}</li>)}</ul>

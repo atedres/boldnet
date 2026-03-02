@@ -1,3 +1,4 @@
+
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,8 +20,40 @@ const SectionTitle = ({ children, className }: { children: React.ReactNode, clas
 );
 
 const getStyledImage = (img: any) => {
-    if (typeof img === 'string') return { url: img, zoom: 1, x: 0, y: 0 };
-    return { url: img?.url || '', zoom: img?.zoom ?? 1, x: img?.x ?? 0, y: img?.y ?? 0 };
+    if (typeof img === 'string') return { url: img, zoom: 1, x: 0, y: 0, layoutScale: 1, layoutX: 0, layoutY: 0 };
+    return { 
+        url: img?.url || '', 
+        zoom: img?.zoom ?? 1, 
+        x: img?.x ?? 0, 
+        y: img?.y ?? 0,
+        layoutScale: img?.layoutScale ?? 1,
+        layoutX: img?.layoutX ?? 0,
+        layoutY: img?.layoutY ?? 0
+    };
+};
+
+const ImageContainer = ({ styledImg, alt, className, aspect = "aspect-square" }: { styledImg: any, alt: string, className?: string, aspect?: string }) => {
+    if (!styledImg.url) return <div className={cn("bg-muted rounded-xl", aspect, className)} />;
+    
+    return (
+        <div className={cn("relative overflow-hidden rounded-xl", aspect, className)}>
+            <div 
+                className="relative w-full h-full transition-all duration-300"
+                style={{ 
+                    transform: `scale(${styledImg.layoutScale}) translate(${styledImg.layoutX}px, ${styledImg.layoutY}px)`,
+                    width: '100%',
+                    height: '100%'
+                }}
+            >
+                <div 
+                    className="relative w-full h-full"
+                    style={{ transform: `scale(${styledImg.zoom}) translate(${styledImg.x}px, ${styledImg.y}px)` }}
+                >
+                    <Image src={styledImg.url} alt={alt} fill className="object-cover" />
+                </div>
+            </div>
+        </div>
+    );
 };
 
 const HeroSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => void }) => {
@@ -31,9 +64,16 @@ const HeroSection = ({ content, onCtaClick }: { content: any, onCtaClick: () => 
                 {bg.url && (
                     <div 
                         className="relative w-full h-full"
-                        style={{ transform: `scale(${bg.zoom}) translate(${bg.x}px, ${bg.y}px)` }}
+                        style={{ 
+                            transform: `scale(${bg.layoutScale}) translate(${bg.layoutX}px, ${bg.layoutY}px)`,
+                        }}
                     >
-                        <Image src={bg.url} alt="Background" fill className="object-cover" />
+                        <div 
+                            className="relative w-full h-full"
+                            style={{ transform: `scale(${bg.zoom}) translate(${bg.x}px, ${bg.y}px)` }}
+                        >
+                            <Image src={bg.url} alt="Background" fill className="object-cover" />
+                        </div>
                     </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-red-900/50 to-transparent"></div>
@@ -71,9 +111,16 @@ const ProfessionsSection = ({ content }: { content: any }) => {
                 {bg.url && (
                     <div 
                         className="relative w-full h-full"
-                        style={{ transform: `scale(${bg.zoom}) translate(${bg.x}px, ${bg.y}px)` }}
+                        style={{ 
+                            transform: `scale(${bg.layoutScale}) translate(${bg.layoutX}px, ${bg.layoutY}px)` 
+                        }}
                     >
-                        <Image src={bg.url} alt="Professions background" fill className="object-cover" />
+                        <div 
+                            className="relative w-full h-full"
+                            style={{ transform: `scale(${bg.zoom}) translate(${bg.x}px, ${bg.y}px)` }}
+                        >
+                            <Image src={bg.url} alt="Professions background" fill className="object-cover" />
+                        </div>
                     </div>
                 )}
             </div>
@@ -83,18 +130,9 @@ const ProfessionsSection = ({ content }: { content: any }) => {
                     {(content?.professions || []).map((p: any, index: number) => {
                         const img = getStyledImage(p.image);
                         return (
-                            <div key={index} className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-xl group">
-                                <div className="absolute inset-0">
-                                    {img.url && (
-                                        <div 
-                                            className="relative w-full h-full transition-transform duration-300 group-hover:brightness-110"
-                                            style={{ transform: `scale(${img.zoom}) translate(${img.x}px, ${img.y}px)` }}
-                                        >
-                                            <Image src={img.url} alt={p.name} fill className="object-cover" />
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+                            <div key={index} className="relative group">
+                                <ImageContainer styledImg={img} alt={p.name} aspect="aspect-[3/4]" className="shadow-xl" />
+                                <div className="absolute inset-0 pointer-events-none rounded-xl bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
                                 <h3 className="absolute bottom-4 left-4 text-white font-bold text-xl drop-shadow-md">{p.name}</h3>
                             </div>
                         );
@@ -139,9 +177,16 @@ const ExpertiseSection = ({ content }: { content: any }) => {
                 {bg.url && (
                     <div 
                         className="relative w-full h-full opacity-30"
-                        style={{ transform: `scale(${bg.zoom}) translate(${bg.x}px, ${bg.y}px)` }}
+                        style={{ 
+                            transform: `scale(${bg.layoutScale}) translate(${bg.layoutX}px, ${bg.layoutY}px)`
+                        }}
                     >
-                        <Image src={bg.url} alt="Expertise background" fill className="object-cover" />
+                        <div 
+                            className="relative w-full h-full"
+                            style={{ transform: `scale(${bg.zoom}) translate(${bg.x}px, ${bg.y}px)` }}
+                        >
+                            <Image src={bg.url} alt="Expertise background" fill className="object-cover" />
+                        </div>
                     </div>
                 )}
                 <div className="absolute inset-0 bg-black/50" />
@@ -172,16 +217,7 @@ const BeneficiariesSection = ({ content, onCtaClick }: { content: any, onCtaClic
                         const img = getStyledImage(item.imageUrl);
                         return (
                             <div key={index} className="relative">
-                                <div className="relative rounded-2xl overflow-hidden shadow-lg aspect-[3/2] bg-muted">
-                                    {img.url && (
-                                        <div 
-                                            className="relative w-full h-full"
-                                            style={{ transform: `scale(${img.zoom}) translate(${img.x}px, ${img.y}px)` }}
-                                        >
-                                            <Image src={img.url} alt={item.name} fill className="object-cover" />
-                                        </div>
-                                    )}
-                                </div>
+                                <ImageContainer styledImg={img} alt={item.name} aspect="aspect-[3/2]" className="shadow-lg" />
                                 <div 
                                     className="absolute top-4 left-4 bg-red-600 text-white font-bold text-lg px-6 py-2 rounded-lg"
                                     style={{ clipPath: 'polygon(0 0, 100% 0, 100% 75%, 85% 100%, 0 100%)' }}
@@ -221,16 +257,7 @@ const ResultsSection = ({ content, onCtaClick }: { content: any, onCtaClick: () 
                         <Card className="bg-black/20 p-6 rounded-lg border border-red-500 text-center h-full overflow-hidden">
                             <CardContent className="p-0 mt-4 space-y-4 text-red-200">
                                 {(content?.withoutItems || []).map((item: string, i: number) => <p key={i} className="text-lg">{item}</p>)}
-                                <div className="relative aspect-video mt-4 rounded-lg overflow-hidden bg-black/20">
-                                    {imgWithout.url && (
-                                        <div 
-                                            className="relative w-full h-full"
-                                            style={{ transform: `scale(${imgWithout.zoom}) translate(${imgWithout.x}px, ${imgWithout.y}px)` }}
-                                        >
-                                            <Image src={imgWithout.url} alt="Sans Marque" fill className="object-cover" />
-                                        </div>
-                                    )}
-                                </div>
+                                <ImageContainer styledImg={imgWithout} alt="Sans Marque" aspect="aspect-video" className="mt-4" />
                             </CardContent>
                         </Card>
                     </div>
@@ -239,16 +266,7 @@ const ResultsSection = ({ content, onCtaClick }: { content: any, onCtaClick: () 
                         <Card className="bg-white/90 p-6 rounded-lg text-gray-800 text-center h-full overflow-hidden">
                             <CardContent className="p-0 mt-4 space-y-2">
                                 {(content?.withItems || []).map((item: string, i: number) => <p key={i} className="text-lg">✓ {item}</p>)}
-                                <div className="relative aspect-video mt-4 rounded-lg overflow-hidden bg-muted">
-                                    {imgWith.url && (
-                                        <div 
-                                            className="relative w-full h-full"
-                                            style={{ transform: `scale(${imgWith.zoom}) translate(${imgWith.x}px, ${imgWith.y}px)` }}
-                                        >
-                                            <Image src={imgWith.url} alt="Avec Marque" fill className="object-cover" />
-                                        </div>
-                                    )}
-                                </div>
+                                <ImageContainer styledImg={imgWith} alt="Avec Marque" aspect="aspect-video" className="mt-4" />
                             </CardContent>
                         </Card>
                     </div>
@@ -278,10 +296,19 @@ const MethodSection = ({ content, onCtaClick }: { content: any, onCtaClick: () =
                                     {img.url && (
                                         <div className="w-full md:w-40 flex-shrink-0 aspect-video md:aspect-square relative rounded-lg overflow-hidden bg-muted">
                                             <div 
-                                                className="relative w-full h-full"
-                                                style={{ transform: `scale(${img.zoom}) translate(${img.x}px, ${img.y}px)` }}
+                                                className="relative w-full h-full transition-all duration-300"
+                                                style={{ 
+                                                    transform: `scale(${img.layoutScale}) translate(${img.layoutX}px, ${img.layoutY}px)`,
+                                                    width: '100%',
+                                                    height: '100%'
+                                                }}
                                             >
-                                                <Image src={img.url} alt={step.title} fill className="object-contain" />
+                                                <div 
+                                                    className="relative w-full h-full"
+                                                    style={{ transform: `scale(${img.zoom}) translate(${img.x}px, ${img.y}px)` }}
+                                                >
+                                                    <Image src={img.url} alt={step.title} fill className="object-contain" />
+                                                </div>
                                             </div>
                                         </div>
                                     )}
@@ -356,8 +383,18 @@ const FinalCtaSection = ({ content }: { content: any }) => {
         <section id="finalCta" className="relative py-24 md:py-32 bg-gray-900 text-white overflow-hidden">
             <div className="absolute inset-0 z-0">
                 {bg.url && (
-                    <div className="relative w-full h-full opacity-20" style={{ transform: `scale(${bg.zoom}) translate(${bg.x}px, ${bg.y}px)` }}>
-                        <Image src={bg.url} alt="Office background" fill className="object-cover" />
+                    <div 
+                        className="relative w-full h-full opacity-20" 
+                        style={{ 
+                            transform: `scale(${bg.layoutScale}) translate(${bg.layoutX}px, ${bg.layoutY}px)`
+                        }}
+                    >
+                        <div 
+                            className="relative w-full h-full"
+                            style={{ transform: `scale(${bg.zoom}) translate(${bg.x}px, ${bg.y}px)` }}
+                        >
+                            <Image src={bg.url} alt="Office background" fill className="object-cover" />
+                        </div>
                     </div>
                 )}
             </div>

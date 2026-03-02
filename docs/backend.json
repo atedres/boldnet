@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "Client": {
@@ -21,7 +22,10 @@
         "url": { "type": "string", "format": "uri" },
         "zoom": { "type": "number", "default": 1 },
         "x": { "type": "number", "default": 0 },
-        "y": { "type": "number", "default": 0 }
+        "y": { "type": "number", "default": 0 },
+        "layoutScale": { "type": "number", "default": 1, "description": "Taille de l'élément sur la page" },
+        "layoutX": { "type": "number", "default": 0, "description": "Déplacement horizontal sur la page" },
+        "layoutY": { "type": "number", "default": 0, "description": "Déplacement vertical sur la page" }
       }
     },
     "PersonalBrandingPage": {
