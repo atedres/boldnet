@@ -14,6 +14,18 @@ import { DynamicIcon } from '@/components/ui/dynamic-icon';
 import { PersonalBrandingContactForm } from './PersonalBrandingContactForm';
 import { motion, useInView, useAnimation } from 'framer-motion';
 
+const DEFAULT_SECTION_ORDER = [
+    'hero',
+    'team',
+    'problem',
+    'expertise',
+    'results',
+    'beneficiaries',
+    'timelineMethod',
+    'method',
+    'finalCta',
+];
+
 const SectionTitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
   <h2 className={cn("text-3xl md:text-4xl font-bold text-center font-headline", className)}>{children}</h2>
 );

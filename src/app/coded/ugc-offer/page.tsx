@@ -13,6 +13,19 @@ import { DynamicIcon } from '@/components/ui/dynamic-icon';
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 
+const DEFAULT_SECTION_ORDER = [
+    'hero',
+    'problem',
+    'checklist',
+    'painPoint',
+    'focus',
+    'meta',
+    'timeline',
+    'weDoEverything',
+    'goals',
+    'contact',
+];
+
 const Section = ({ children, className, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <section className={`py-16 md:py-24 ${className}`} {...props}>
         <div className="container mx-auto px-4">{children}</div>
@@ -197,7 +210,7 @@ function UgcOfferContent() {
     const firestore = useFirestore();
     const pageDocRef = useMemoFirebase(() => doc(firestore, 'ugc_offer_pages', 'main'), [firestore]);
     const { data: pageContent, isLoading } = useDoc(pageDocRef);
-    const sectionOrder = useMemo(() => pageContent?.sectionOrder || [], [pageContent]);
+    const sectionOrder = useMemo(() => pageContent?.sectionOrder || DEFAULT_SECTION_ORDER, [pageContent]);
     if (isLoading) return <div className="space-y-8"><Skeleton className="h-screen w-full" /><Skeleton className="h-96 w-full" /></div>;
     return (
         <main dir="rtl" className="bg-white text-gray-800 font-sans">
