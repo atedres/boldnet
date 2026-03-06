@@ -29,7 +29,11 @@ function getYouTubeEmbedUrl(url: string) {
         if (urlObj.hostname === 'youtu.be') {
             videoId = urlObj.pathname.slice(1);
         } else if (urlObj.hostname === 'www.youtube.com' || urlObj.hostname === 'youtube.com') {
-            videoId = urlObj.searchParams.get('v');
+            if (urlObj.pathname.startsWith('/shorts/')) {
+                videoId = urlObj.pathname.split('/')[2];
+            } else {
+                videoId = urlObj.searchParams.get('v');
+            }
         }
     } catch (error) {
         console.error("Invalid YouTube URL:", url);
