@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useFirestore, useMemoFirebase } from '@/firebase';
+import { useEffect, useState, use } from 'react';
+import { useFirestore } from '@/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { Award, Zap, Target, ArrowRight, Presentation, Video } from 'lucide-react';
+import { Zap, ArrowRight, Presentation } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -212,20 +212,22 @@ function DynamicSectionsRenderer({ sections }: { sections: any[] }) {
     );
 }
 
-export default function LandingPage({ params }: { params: { slug: string } }) {
+export default function LandingPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = use(params);
+  const slug = resolvedParams.slug;
   const firestore = useFirestore();
   const [pageData, setPageData] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!firestore || !params.slug) return;
+    if (!firestore || !slug) return;
 
     const fetchPage = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const q = query(collection(firestore, 'landing_pages'), where('slug', '==', params.slug));
+        const q = query(collection(firestore, 'landing_pages'), where('slug', '==', slug));
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
@@ -243,7 +245,7 @@ export default function LandingPage({ params }: { params: { slug: string } }) {
     };
 
     fetchPage();
-  }, [firestore, params.slug]);
+  }, [firestore, slug]);
 
   if (isLoading) {
     return (

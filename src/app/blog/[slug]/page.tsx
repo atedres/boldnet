@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useFirestore, useMemoFirebase } from '@/firebase';
+import { useEffect, useState, use } from 'react';
+import { useFirestore } from '@/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { Award, Zap, Target, ArrowRight, Presentation, Video } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -210,7 +210,9 @@ function DynamicSectionsRenderer({ sections }: { sections: any[] }) {
     );
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
+export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = use(params);
+  const slug = resolvedParams.slug;
   const firestore = useFirestore();
   const [postData, setPostData] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -218,13 +220,13 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   const { language } = useLanguage();
 
   useEffect(() => {
-    if (!firestore || !params.slug) return;
+    if (!firestore || !slug) return;
 
     const fetchPost = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const q = query(collection(firestore, 'blog_posts'), where('slug', '==', params.slug));
+        const q = query(collection(firestore, 'blog_posts'), where('slug', '==', slug));
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
@@ -242,7 +244,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     };
 
     fetchPost();
-  }, [firestore, params.slug]);
+  }, [firestore, slug]);
   
   const renderHeader = () => {
       if (!postData) return null;
