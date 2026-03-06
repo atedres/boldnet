@@ -11,7 +11,7 @@ import Footer from '../components/footer';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-// Helper to get YouTube embed URL
+// Helper to get YouTube embed URL with autoplay enabled
 function getYouTubeEmbedUrl(url: string) {
     if (!url) return null;
     let videoId = null;
@@ -28,7 +28,10 @@ function getYouTubeEmbedUrl(url: string) {
     }
 
     if (videoId) {
-        return `https://www.youtube.com/embed/${videoId}`;
+        // autoplay=1 starts the video immediately
+        // mute=1 is required by most browsers to allow autoplay
+        // rel=0 prevents showing related videos from other channels
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0`;
     }
     return null;
 }
@@ -37,8 +40,6 @@ const PortfolioItemCard = ({ item, index }: { item: any; index: number }) => {
     const embedUrl = item.videoUrl ? getYouTubeEmbedUrl(item.videoUrl) : null;
     
     // Pattern logic for asymmetrical grid (Hello Monday style)
-    // index % 3 === 0 -> Big item (Full width or nearly full)
-    // index % 3 === 1 or 2 -> Medium items
     const isLarge = index % 3 === 0;
 
     const Content = () => (

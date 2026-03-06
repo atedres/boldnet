@@ -31,7 +31,7 @@ function getYouTubeEmbedUrl(url: string) {
     }
 
     if (videoId) {
-        return `https://www.youtube.com/embed/${videoId}`;
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0`;
     }
     return null;
 }

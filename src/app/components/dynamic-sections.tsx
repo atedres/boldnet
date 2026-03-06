@@ -37,7 +37,7 @@ function getYouTubeEmbedUrl(url: string) {
     }
 
     if (videoId) {
-        return `https://www.youtube.com/embed/${videoId}`;
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0`;
     }
     return null;
 }
@@ -118,7 +118,7 @@ function TextImageSection({ content }: { content: any }) {
             />
           </div>
           <div className="space-y-4">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl font-headline">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl font-headline text-white">
               {content.title?.[language] || content.title}
             </h2>
             <p className="text-muted-foreground md:text-xl/relaxed">
@@ -237,5 +237,3 @@ export default function DynamicSections() {
     </>
   );
 }
-
-    
