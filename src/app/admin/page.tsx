@@ -2,7 +2,7 @@
 import { useUser, FirebaseClientProvider, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code, Mail, Inbox, Star, UserSquare, Rss, GalleryHorizontal, Footprints } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Briefcase, Workflow, Layers, Palette, FileText, ChevronDown, Settings, Presentation, Code, Mail, Inbox, Star, UserSquare, Rss, GalleryHorizontal, Footprints, ExternalLink } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -26,7 +26,7 @@ import ClientManagement from '@/app/admin/components/client-management';
 import ServiceManagement from '@/app/admin/components/service-management';
 import FunnelStepManagement from '@/app/admin/components/funnel-step-management';
 import SectionManagement from '@/app/admin/components/section-management';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import ThemeManagement from './components/theme-management';
 import QuoteRequestManagement from './components/quote-request-management';
 import { cn } from '@/lib/utils';
@@ -42,8 +42,9 @@ import BlogManagement from './components/blog-management';
 import PersonalBrandingManagement from './components/personal-branding-management';
 import PortfolioManagement from './components/portfolio-management';
 import FooterManagement from './components/footer-management';
+import Link from 'next/link';
 
-type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'footer' | 'quotes' | 'contacts' | 'landing-pages' | 'coded-landing-pages' | 'testimonials' | 'team' | 'blog' | 'personal-branding' | 'portfolio';
+type AdminSection = 'dashboard' | 'clients' | 'services' | 'funnel' | 'sections' | 'theme' | 'footer' | 'quotes' | 'contacts' | 'landing-pages' | 'coded-landing-pages' | 'testimonials' | 'team' | 'blog' | 'personal-branding' | 'portfolio' | 'sanity-blog';
 
 function AdminDashboard() {
   const { user, isUserLoading } = useUser();
@@ -97,7 +98,8 @@ function AdminDashboard() {
     'personal-branding': 'Personal Branding Page',
     testimonials: 'Témoignages',
     team: 'Équipe',
-    blog: 'Blog',
+    blog: 'Blog (Firestore Legacy)',
+    'sanity-blog': 'Gestion du Blog (Sanity)',
     portfolio: 'Portfolio'
   };
 
@@ -133,6 +135,25 @@ function AdminDashboard() {
         return <BlogManagement />;
       case 'portfolio':
         return <PortfolioManagement />;
+      case 'sanity-blog':
+        return (
+            <div className="w-full max-w-2xl mx-auto space-y-8">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Sanity CMS</CardTitle>
+                        <CardDescription>Gérez vos articles de blog avec Sanity Studio.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex flex-col gap-4">
+                        <p className="text-sm text-muted-foreground">Cliquez sur le bouton ci-dessous pour ouvrir l'interface d'édition complète. Vous pourrez y gérer les articles, les auteurs et les catégories.</p>
+                        <Button asChild size="lg" className="w-full">
+                            <Link href="/admin/studio" target="_blank">
+                                <ExternalLink className="mr-2 h-4 w-4" /> Ouvrir Sanity Studio
+                            </Link>
+                        </Button>
+                    </CardContent>
+                </Card>
+            </div>
+        );
       case 'dashboard':
       default:
         return (
@@ -249,12 +270,12 @@ function AdminDashboard() {
                 </SidebarMenuItem>
                  <SidebarMenuItem>
                     <SidebarMenuButton 
-                        onClick={() => setActiveSection('blog')}
-                        isActive={activeSection === 'blog'}
+                        onClick={() => setActiveSection('sanity-blog')}
+                        isActive={activeSection === 'sanity-blog'}
                         className="data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground"
                         >
                         <Rss />
-                        Blog
+                        Blog (Sanity)
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
