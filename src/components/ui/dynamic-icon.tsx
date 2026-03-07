@@ -2,20 +2,22 @@
 
 import React from 'react';
 import { 
-  PenTool, Code, BarChart3, Megaphone, Paintbrush, Camera, Video,
-  Server, Cloud, Database, ShieldCheck, Settings, Rocket, Target,
-  Lightbulb, Users, Briefcase, MessageSquare, Zap, Globe, Award,
-  Film, Scissors, Send, Globe2, ThumbsUp, Heart, HelpCircle,
-  Compass, MousePointerClick, RefreshCw, CircleDollarSign, TrendingUp, UserPlus,
+  Zap, Compass, Target, Lightbulb, BarChart3, HelpCircle,
+  PenTool, Code, Megaphone, Paintbrush, Camera, Video,
+  Server, Cloud, Database, ShieldCheck, Settings, Rocket,
+  Users, Briefcase, MessageSquare, Globe, Award,
+  Film, Scissors, Send, Globe2, ThumbsUp, Heart,
+  MousePointerClick, RefreshCw, CircleDollarSign, TrendingUp, UserPlus,
   PenSquare, Lamp, Link as LinkIcon
 } from 'lucide-react';
 
 const iconMap: Record<string, React.FC<any>> = {
-  PenTool, Code, BarChart3, Megaphone, Paintbrush, Camera, Video,
-  Server, Cloud, Database, ShieldCheck, Settings, Rocket, Target,
-  Lightbulb, Users, Briefcase, MessageSquare, Zap, Globe, Award,
+  Zap, Compass, Target, Lightbulb, BarChart3, HelpCircle,
+  PenTool, Code, Megaphone, Paintbrush, Camera, Video,
+  Server, Cloud, Database, ShieldCheck, Settings, Rocket,
+  Users, Briefcase, MessageSquare, Globe, Award,
   Film, Scissors, Send, Globe2, ThumbsUp, Heart,
-  Compass, MousePointerClick, RefreshCw, CircleDollarSign, TrendingUp, UserPlus,
+  MousePointerClick, RefreshCw, CircleDollarSign, TrendingUp, UserPlus,
   PenSquare, Lamp, LinkIcon
 };
 

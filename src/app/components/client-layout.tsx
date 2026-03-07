@@ -19,10 +19,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   const isSanityStudio = pathname?.startsWith('/admin/studio');
 
-  // Prevent flicker by not rendering site-specific UI during hydration or on Studio pages
   if (!mounted) return <div className="min-h-screen bg-white" />;
 
-  // Studio Sanity total isolation: NO site background, NO site providers
+  // Absolute isolation for Sanity Studio to prevent flickering and theme conflicts
   if (isSanityStudio) {
     return (
       <div className="sanity-studio-container fixed inset-0 z-[9999] bg-white overflow-auto">
