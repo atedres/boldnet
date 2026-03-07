@@ -19,9 +19,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   const isSanityStudio = pathname?.startsWith('/admin/studio');
 
-  if (!mounted) return <div className="min-h-screen bg-white" />;
+  // SSR safety: always return a neutral container until client-side hydration
+  if (!mounted) {
+    return <div className="min-h-screen bg-white" aria-hidden="true" />;
+  }
 
   // Absolute isolation for Sanity Studio to prevent flickering and theme conflicts
+  // We return early without ANY site-specific providers or styles
   if (isSanityStudio) {
     return (
       <div className="sanity-studio-container fixed inset-0 z-[9999] bg-white overflow-auto">
