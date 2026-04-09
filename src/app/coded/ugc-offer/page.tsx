@@ -1,228 +1,248 @@
 'use client';
 
-import { ArrowLeft, CheckCircle, ChevronDown, Plus, MousePointerClick, RefreshCw, CircleDollarSign, TrendingUp, UserPlus, Film, Bot, PenSquare, Camera, Lamp, Users, PenTool, Link as LinkIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
-import { FirebaseClientProvider, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
-import { doc } from 'firebase/firestore';
-import Link from 'next/link';
-import { SiteLogo } from '../personal-branding/components';
-import { Skeleton } from '@/components/ui/skeleton';
-import { DynamicIcon } from '@/components/ui/dynamic-icon';
-import { useMemo } from 'react';
-import { cn } from '@/lib/utils';
-
-const DEFAULT_SECTION_ORDER = [
-    'hero',
-    'problem',
-    'checklist',
-    'painPoint',
-    'focus',
-    'meta',
-    'timeline',
-    'weDoEverything',
-    'goals',
-    'contact',
-];
-
-const Section = ({ children, className, ...props }: React.HTMLAttributes<HTMLElement>) => (
-    <section className={`py-16 md:py-24 ${className}`} {...props}>
-        <div className="container mx-auto px-4">{children}</div>
-    </section>
-);
-
-const SectionTitle = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-    <h2 className={`text-3xl md:text-5xl font-bold text-center font-headline ${className}`}>{children}</h2>
-);
-
-const getStyledImage = (img: any) => {
-    if (typeof img === 'string') return { url: img, zoom: 1, x: 0, y: 0, layoutScale: 1, layoutX: 0, layoutY: 0 };
-    return { 
-        url: img?.url || '', 
-        zoom: img?.zoom ?? 1, 
-        x: img?.x ?? 0, 
-        y: img?.y ?? 0,
-        layoutScale: img?.layoutScale ?? 1,
-        layoutX: img?.layoutX ?? 0,
-        layoutY: img?.layoutY ?? 0
-    };
-};
-
-const ImageDisplay = ({ styledImg, alt, className, aspect = "aspect-square" }: { styledImg: any, alt: string, className?: string, aspect?: string }) => {
-    if (!styledImg.url) return <div className={cn("bg-muted", aspect, className)} />;
-    
-    return (
-        <div 
-            className="relative transition-all duration-300"
-            style={{ 
-                transform: `translate(${styledImg.layoutX || 0}px, ${styledImg.layoutY || 0}px) scale(${styledImg.layoutScale || 1})`,
-                zIndex: (styledImg.layoutScale > 1 || styledImg.layoutX !== 0 || styledImg.layoutY !== 0) ? 10 : 1
-            }}
-        >
-            <div className={cn("relative overflow-hidden", aspect, className)}>
-                <div 
-                    className="relative w-full h-full transition-transform duration-300"
-                    style={{ transform: `scale(${styledImg.zoom || 1}) translate(${styledImg.x || 0}px, ${styledImg.y || 0}px)` }}
-                >
-                    <Image src={styledImg.url} alt={alt} fill className="object-cover" />
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const HeroSection = ({ content }: { content: any }) => {
-    const bg = getStyledImage(content?.backgroundImageUrl);
-    return (
-        <Section className="bg-gray-900 text-white text-center !py-0 relative h-[50vh] md:h-[60vh] overflow-hidden">
-            {bg.url && (
-                <div 
-                    className="absolute inset-0 opacity-30 transition-all duration-300"
-                    style={{ 
-                        transform: `translate(${bg.layoutX}px, ${bg.layoutY}px) scale(${bg.layoutScale})`,
-                    }}
-                >
-                    <div 
-                        className="relative w-full h-full"
-                        style={{ transform: `scale(${bg.zoom}) translate(${bg.x}px, ${bg.y}px)` }}
-                    >
-                        <Image src={bg.url} layout="fill" objectFit="cover" alt="Background" />
-                    </div>
-                </div>
-            )}
-            <div className="relative z-10 flex flex-col items-center justify-center h-full">
-                <div className="flex justify-center mb-4 h-16 w-16 relative"><SiteLogo /></div>
-                <h1 className="text-3xl md:text-5xl font-bold max-w-3xl mx-auto">{content?.title || "..."}</h1>
-            </div>
-        </Section>
-    );
-};
-
-const ProblemSection = ({ content }: { content: any }) => {
-    const img = getStyledImage(content?.mainImageUrl);
-    return (
-        <Section className="bg-white">
-            <div className="text-center">
-                <div className="flex flex-col md:flex-row justify-center items-center gap-6">
-                    <div className="w-[150px] h-[150px] flex-shrink-0">
-                        <ImageDisplay styledImg={img} alt="Problem" className="rounded-full shadow-lg" aspect="aspect-square" />
-                    </div>
-                    <div>
-                        <h2 className="text-red-600 text-4xl md:text-6xl font-bold font-headline">{content?.title || "..."}</h2>
-                        <p className="max-w-md mx-auto mt-2 text-gray-600">{content?.subtitle || "..."}</p>
-                    </div>
-                </div>
-                <div className="grid grid-cols-3 md:grid-cols-5 gap-4 max-w-3xl mx-auto mt-12">
-                    {(content?.metrics || []).map((metric: any, index: number) => (
-                        <div key={index} className="text-center">
-                            <DynamicIcon iconName={metric.iconName} className="w-8 h-8 mx-auto text-red-600" />
-                            <p className="mt-2 text-sm">{metric.label}</p>
-                        </div>
-                    ))}
-                </div>
-                <Button asChild size="lg" className="mt-12 bg-red-600 hover:bg-red-700 text-white text-lg">
-                    <Link href="#contact">{content?.ctaButtonText || "Prendre rendez-vous"}</Link>
-                </Button>
-            </div>
-        </Section>
-    );
-};
-
-const ChecklistSection = ({ content }: { content: any }) => {
-    const img = getStyledImage(content?.mainImageUrl);
-    return (
-        <Section className="bg-red-600 text-white">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div className="space-y-6">
-                    <p className="text-lg">{content?.introText || "..."}</p>
-                    <ul className="space-y-3">{(content?.positiveListItems || []).map((item: string, i: number) => <li key={i} className="flex items-center gap-3"><CheckCircle className="h-5 w-5" /> {item}</li>)}</ul>
-                    <p className="text-lg">{content?.costIntroText || "..."}</p>
-                    <ul className="space-y-3">{(content?.costListItems || []).map((item: string, i: number) => <li key={i} className="flex items-center gap-3"><ChevronDown className="h-5 w-5" /> {item}</li>)}</ul>
-                </div>
-                <div className="w-full max-w-[500px] mx-auto">
-                    <ImageDisplay styledImg={img} alt="Checklist" className="rounded-full shadow-2xl" aspect="aspect-square" />
-                </div>
-            </div>
-        </Section>
-    );
-};
-
-const PainPointSection = ({ content }: { content: any }) => {
-    const img = getStyledImage(content?.mainImageUrl);
-    return (
-        <Section className="bg-white">
-            <div className="text-center mb-12">
-                <p className="text-gray-500 text-lg">{content?.subtitle || "..."}</p>
-                <SectionTitle className="text-red-600">{content?.title || "..."}</SectionTitle>
-            </div>
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-                <ImageDisplay styledImg={img} alt="Pain point" className="rounded-lg shadow-xl" aspect="aspect-[4/3]" />
-                <div className="space-y-4">
-                    {(content?.painPoints || []).map((point: string, i: number) => (
-                        <Card key={i} className="p-4 bg-red-50 border-red-200"><p>{point}</p></Card>
-                    ))}
-                </div>
-            </div>
-        </Section>
-    );
-};
-
-const MetaSection = ({ content }: { content: any }) => {
-    const img = getStyledImage(content?.mainImageUrl);
-    return (
-        <Section className="bg-white">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-                <ImageDisplay styledImg={img} alt="Meta" className="rounded-lg shadow-xl" aspect="aspect-[16/9]" />
-                <div className="text-center">
-                    <Bot className="w-20 h-20 mx-auto text-blue-600 mb-4" />
-                    <p className="bg-red-600 text-white p-6 rounded-lg text-lg leading-relaxed">{content?.mainText || "..."}</p>
-                </div>
-            </div>
-        </Section>
-    );
-};
-
-const WeDoEverythingSection = ({ content }: { content: any }) => {
-    const img = getStyledImage(content?.mainImageUrl);
-    return (
-        <Section className="bg-red-100">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div className="w-full max-w-[500px] mx-auto">
-                    <ImageDisplay styledImg={img} alt="We Do Everything" className="rounded-lg shadow-xl" aspect="aspect-square" />
-                </div>
-                <div className="bg-white p-8 rounded-lg shadow-lg">
-                    <h2 className="text-2xl font-bold text-red-600 font-headline mb-4">{content?.title || "..."}</h2>
-                    <ul className="space-y-3 text-gray-700">{(content?.listItems || []).map((item: string, i: number) => <li key={i} className="flex gap-2"><span>✓</span> {item}</li>)}</ul>
-                    <Button asChild size="lg" className="mt-6 w-full bg-red-600 hover:bg-red-700 text-white text-lg"><Link href="#contact">{content?.ctaButtonText || "Commencer"}</Link></Button>
-                    <p className="text-center text-sm text-gray-500 mt-2">{content?.ctaSubtitle || "..."}</p>
-                </div>
-            </div>
-        </Section>
-    );
-};
-
-const sectionComponents: Record<string, React.FC<any>> = {
-    hero: HeroSection, problem: ProblemSection, checklist: ChecklistSection, painPoint: PainPointSection, focus: ({content}) => null, meta: MetaSection, timeline: ({content}) => null, weDoEverything: WeDoEverythingSection, goals: ({content}) => null, contact: ({content}) => <div id="contact" className="py-20 text-center"><Button asChild><Link href="/quote">Demander un devis</Link></Button></div>
-};
-
-function UgcOfferContent() {
-    const firestore = useFirestore();
-    const pageDocRef = useMemoFirebase(() => doc(firestore, 'ugc_offer_pages', 'main'), [firestore]);
-    const { data: pageContent, isLoading } = useDoc(pageDocRef);
-    const sectionOrder = useMemo(() => pageContent?.sectionOrder || DEFAULT_SECTION_ORDER, [pageContent]);
-    if (isLoading) return <div className="space-y-8"><Skeleton className="h-screen w-full" /><Skeleton className="h-96 w-full" /></div>;
-    return (
-        <main dir="rtl" className="bg-white text-gray-800 font-sans">
-             {sectionOrder.map((sectionKey: string) => {
-                const Component = sectionComponents[sectionKey];
-                if (!Component || !pageContent?.[sectionKey]) return null;
-                return <Component key={sectionKey} content={pageContent[sectionKey]} />;
-            })}
-        </main>
-    );
-}
+import { ChevronDown, CheckCircle, TrendingUp, Film, Bot, Camera, Users, PenTool, Lamp, PenSquare, UserPlus, CircleDollarSign } from 'lucide-react';
 
 export default function UgcOfferPage() {
-    return <FirebaseClientProvider><UgcOfferContent /></FirebaseClientProvider>;
+  return (
+    <main dir="rtl" className="font-sans bg-white text-gray-900">
+
+      {/* ===== HERO ===== */}
+      <section className="relative bg-[#e8231a] text-white min-h-[90vh] flex flex-col items-center justify-center text-center px-6 py-20 overflow-hidden">
+        <div className="absolute top-6 left-6 right-6 flex justify-between items-center">
+          <span className="text-white font-bold text-xl">BOLDNET DIGITAL</span>
+        </div>
+
+        <div className="max-w-3xl mx-auto z-10">
+          <p className="text-lg mb-4 opacity-90">إذا كنت تبحث عن فيديوهات عادية</p>
+          <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+            BOLDNET ليست الخيار المناسب<br />لك كـ Seller
+          </h1>
+          <a
+            href="#contact"
+            className="inline-block mt-6 bg-white text-[#e8231a] font-bold text-lg px-10 py-4 rounded-full hover:bg-gray-100 transition"
+          >
+            تواصل معنا الآن
+          </a>
+        </div>
+
+        {/* Decorative circle */}
+        <div className="absolute bottom-[-80px] left-1/2 -translate-x-1/2 w-[300px] h-[300px] rounded-full bg-white opacity-5" />
+      </section>
+
+      {/* ===== STATS BAR ===== */}
+      <section className="bg-white py-12 border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          {[
+            { label: 'CTR', value: '۱٫۲٪' },
+            { label: 'CPM', value: '۳۵ دولار' },
+            { label: 'المبيعات الشهرية', value: '+۵۰۰' },
+            { label: 'العملاء المتوقعون', value: '×۳' },
+          ].map((s) => (
+            <div key={s.label}>
+              <p className="text-3xl font-extrabold text-[#e8231a]">{s.value}</p>
+              <p className="text-gray-500 mt-1 text-sm">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== PROBLEM ===== */}
+      <section className="bg-white py-20 px-6">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-12">
+          <div className="w-40 h-40 rounded-full bg-gray-200 overflow-hidden flex-shrink-0 mx-auto">
+            <div className="w-full h-full bg-red-100 flex items-center justify-center">
+              <TrendingUp className="w-16 h-16 text-[#e8231a]" />
+            </div>
+          </div>
+          <div className="text-right flex-1">
+            <h2 className="text-4xl md:text-6xl font-extrabold text-[#e8231a]">المشكلة</h2>
+            <p className="text-gray-600 mt-4 text-lg leading-relaxed max-w-xl">
+              نحن في 2026 حتى لو غيّرت التسويق. الرقمي في البداية الإلكترونية تظل أصعب مهارة.
+              هنا يبدأ الفشل في التجربة الإلكترونية. وهنا يأتي BOLDNET
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== WHAT OTHERS DO vs BOLDNET ===== */}
+      <section className="bg-gray-50 py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-12">ما يقدمه المنافسون</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Others */}
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+              <h3 className="text-xl font-bold text-gray-700 mb-6">ما يقدمه الآخرون</h3>
+              <ul className="space-y-4">
+                {[
+                  'فيديوهات 10000',
+                  'مونتاج',
+                  'كتابة سكريبت',
+                  'Content planning',
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-3 text-gray-500">
+                    <ChevronDown className="w-5 h-5 text-red-400 flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* BOLDNET */}
+            <div className="bg-[#e8231a] text-white rounded-2xl p-8 shadow-sm">
+              <h3 className="text-xl font-bold mb-6">في BOLDNET نركز على العكس</h3>
+              <ul className="space-y-4">
+                {[
+                  'فيديوهات UGC تحول المشاهد لعميل',
+                  'إنتاج احترافي في بيئة واحدة',
+                  'كل شيء من A إلى Z',
+                  'نتائج حقيقية وقابلة للقياس',
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== PAIN POINT — VIRAL VIDEOS ===== */}
+      <section className="bg-white py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <p className="text-center text-gray-500 text-lg mb-4">لماذا تفشل الفيديوهات؟ المشكل الحقيقي:</p>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-center text-[#e8231a] mb-12">
+            لأنها متشابهة!
+          </h2>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="aspect-[4/3] bg-red-50 rounded-2xl flex items-center justify-center">
+              <Film className="w-24 h-24 text-[#e8231a] opacity-40" />
+            </div>
+            <div className="space-y-4">
+              {[
+                'لأنه نفس القالب يستخدمه الجميع',
+                'لأنها لا تصل للجمهور المناسب',
+                'لأن المشاهد لا يتفاعل معها',
+                'لأنها لا تولّد مبيعات حقيقية',
+              ].map((point, i) => (
+                <div key={i} className="bg-red-50 border border-red-100 rounded-xl p-4 text-gray-700">
+                  {point}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== SERVICES GRID ===== */}
+      <section className="bg-red-50 py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl font-extrabold text-center text-[#e8231a] mb-12">خدماتنا</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            {[
+              { icon: Camera, label: 'تصوير احترافي' },
+              { icon: Film, label: 'مونتاج وإخراج' },
+              { icon: PenTool, label: 'كتابة إبداعية' },
+              { icon: Users, label: 'UGC Creators' },
+              { icon: Bot, label: 'Ads Strategy' },
+              { icon: Lamp, label: 'Brand Identity' },
+            ].map(({ icon: Icon, label }) => (
+              <div key={label} className="bg-white rounded-2xl p-6 flex flex-col items-center text-center shadow-sm">
+                <Icon className="w-10 h-10 text-[#e8231a] mb-3" />
+                <p className="font-semibold text-gray-700">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== META SECTION ===== */}
+      <section className="bg-white py-20 px-6">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div className="aspect-video bg-gray-100 rounded-2xl flex items-center justify-center">
+            <Bot className="w-20 h-20 text-blue-500 opacity-40" />
+          </div>
+          <div className="text-right">
+            <h2 className="text-3xl font-extrabold text-gray-800 mb-6">
+              تعرف ما تريـــده META وهذا ما توفره لها
+            </h2>
+            <div className="bg-[#e8231a] text-white p-6 rounded-xl text-lg leading-relaxed space-y-3">
+              {[
+                'مشاهدة من أول ثانية',
+                'مشاعر قوية',
+                'قصة أصيلة',
+                'كأس Arabian Rose',
+              ].map((item, i) => (
+                <p key={i} className="flex items-center gap-3">
+                  <span className="bg-white text-[#e8231a] rounded-full w-7 h-7 flex items-center justify-center font-bold text-sm flex-shrink-0">
+                    {i + 1}
+                  </span>
+                  {item}
+                </p>
+              ))}
+            </div>
+            <p className="mt-4 text-gray-500">
+              وهذا يجلب مشتركين جدد من المكريترين بلكان —{' '}
+              <span className="font-semibold text-gray-700">LANDING PAGES</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== WE DO EVERYTHING ===== */}
+      <section className="bg-red-50 py-20 px-6">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div className="aspect-square max-w-sm mx-auto bg-white rounded-2xl shadow-sm flex items-center justify-center">
+            <PenSquare className="w-24 h-24 text-[#e8231a] opacity-30" />
+          </div>
+          <div className="bg-white p-8 rounded-2xl shadow-sm text-right">
+            <h2 className="text-2xl font-extrabold text-[#e8231a] mb-6">تذكير BOLDNET بكل شيء:</h2>
+            <ul className="space-y-3 text-gray-700">
+              {[
+                'نصنع فيديوهات UGC بجودة إعلانات كبرى',
+                'فريق متخصص في صناعة المحتوى الرقمي',
+                'نتحمل مسؤولية الإنتاج والتوزيع',
+                'نتابع الأداء ونحسّن الحملات',
+                'LANDING PAGES بتصميم احترافي',
+              ].map((item) => (
+                <li key={item} className="flex items-center gap-3">
+                  <span className="text-[#e8231a] font-bold">✓</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== FINAL CTA ===== */}
+      <section id="contact" className="bg-[#e8231a] py-24 px-6 text-white text-center">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-6">أما إن كنت تريـده</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 my-12">
+            {[
+              { icon: UserPlus, label: 'عملاء أكثر' },
+              { icon: CircleDollarSign, label: 'CTR أعلى' },
+              { icon: TrendingUp, label: 'CPM أفضل' },
+              { icon: Film, label: 'محتوى يبيع' },
+            ].map(({ icon: Icon, label }) => (
+              <div key={label} className="bg-white/10 rounded-2xl p-6 flex flex-col items-center gap-3">
+                <Icon className="w-8 h-8" />
+                <p className="font-semibold text-sm">{label}</p>
+              </div>
+            ))}
+          </div>
+          <a
+            href="https://wa.me/YOURNUMBER"
+            className="inline-block bg-white text-[#e8231a] font-extrabold text-xl px-12 py-5 rounded-full hover:bg-gray-100 transition"
+          >
+            أسأل المتخصصة الآن
+          </a>
+        </div>
+      </section>
+
+    </main>
+  );
 }
