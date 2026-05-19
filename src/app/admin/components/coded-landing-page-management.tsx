@@ -60,18 +60,6 @@ export default function CodedLandingPageManagement() {
     }
   }
 
-  const handleDelete = async () => {
-    if (!deletingPage) return;
-    try {
-      await deleteDoc(doc(firestore, 'coded_landing_pages', deletingPage.id));
-      toast({ title: 'Page codée supprimée' });
-      setDeletingPage(null);
-    } catch (error) {
-       console.error(error);
-      toast({ variant: 'destructive', title: 'Erreur', description: 'Impossible de supprimer la page.' });
-    }
-  }
-
   const handleAddPersonalBrandingPage = async () => {
     const pageExists = pages?.some(p => p.slug === 'personal-branding');
     if (pageExists) {
@@ -96,7 +84,44 @@ export default function CodedLandingPageManagement() {
         toast({variant: 'destructive', title: 'Error creating coded page'});
     }
   }
-  
+
+  const handleAddVslOfferPage = async () => {
+    const pageExists = pages?.some(p => p.slug === 'vsl-offer');
+    if (pageExists) {
+        toast({
+            variant: 'destructive',
+            title: 'Page already exists',
+            description: 'The VSL Offer page has already been added.',
+        });
+        return;
+    }
+
+    try {
+        const newPageData = {
+            title: 'VSL Offer LP',
+            slug: 'vsl-offer',
+            createdAt: serverTimestamp(),
+        };
+        await addDocumentNonBlocking(codedPagesCollection, newPageData);
+        toast({ title: 'VSL Offer LP Added', description: 'You can now see it in the list.' });
+    } catch(e) {
+        console.error(e);
+        toast({ variant: 'destructive', title: 'Error creating coded page' });
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!deletingPage) return;
+    try {
+      await deleteDoc(doc(firestore, 'coded_landing_pages', deletingPage.id));
+      toast({ title: 'Page codée supprimée' });
+      setDeletingPage(null);
+    } catch (error) {
+       console.error(error);
+      toast({ variant: 'destructive', title: 'Erreur', description: 'Impossible de supprimer la page.' });
+    }
+  }
+
   const copyLink = (slug: string) => {
     if (typeof window === 'undefined') return;
     const url = `${window.location.origin}/coded/${slug}`;
@@ -105,10 +130,10 @@ export default function CodedLandingPageManagement() {
   }
 
   const handleEdit = (page: any) => {
-    if (page.slug === 'personal-branding' || page.slug === 'ugc-offer') {
+    if (page.slug === 'personal-branding' || page.slug === 'ugc-offer' || page.slug === 'vsl-offer') {
         setEditingPage(page);
     } else {
-        toast({ title: 'Not Editable', description: 'Only the Personal Branding and UGC Offer pages are editable for now.' });
+        toast({ title: 'Not Editable', description: 'Only the Personal Branding, UGC Offer, and VSL Offer pages are editable for now.' });
     }
   };
   
@@ -118,6 +143,28 @@ export default function CodedLandingPageManagement() {
 
   if (editingPage?.slug === 'ugc-offer') {
     return <UgcOfferManagement onBack={() => setEditingPage(null)} />
+  }
+
+  if (editingPage?.slug === 'vsl-offer') {
+    return (
+      <div className="w-full max-w-2xl mx-auto">
+        <Card>
+          <CardHeader>
+            <CardTitle>VSL Offer LP</CardTitle>
+            <CardDescription>
+              This is a fully coded landing page. To edit its content (videos, WhatsApp number, reviews), update the file directly at{' '}
+              <code className="text-xs bg-muted px-1 py-0.5 rounded">src/app/coded/vsl-offer.tsx</code>.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <Button variant="outline" onClick={() => copyLink('vsl-offer')}>
+              <LinkIcon className="mr-2 h-4 w-4" /> Copy Page Link
+            </Button>
+            <Button variant="ghost" onClick={() => setEditingPage(null)}>← Back</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
@@ -132,6 +179,7 @@ export default function CodedLandingPageManagement() {
            <div className="flex gap-2 flex-wrap">
             <Button onClick={handleAddUgcOfferPage}><Plus className="mr-2 h-4 w-4" /> Add UGC Offer Page</Button>
             <Button onClick={handleAddPersonalBrandingPage}><Plus className="mr-2 h-4 w-4" /> Add Personal Branding Page</Button>
+            <Button onClick={handleAddVslOfferPage}><Plus className="mr-2 h-4 w-4" /> Add VSL Offer LP</Button>
             <Button onClick={handleAddNew} disabled><Plus className="mr-2 h-4 w-4" /> Add New</Button>
           </div>
         </CardHeader>
@@ -171,7 +219,7 @@ export default function CodedLandingPageManagement() {
                                         <LinkIcon className="h-4 w-4" />
                                         <span className="sr-only">Copy Link</span>
                                     </Button>
-                                    <Button variant="ghost" size="icon" onClick={() => handleEdit(page)} disabled={page.slug !== 'personal-branding' && page.slug !== 'ugc-offer'}>
+                                    <Button variant="ghost" size="icon" onClick={() => handleEdit(page)} disabled={page.slug !== 'personal-branding' && page.slug !== 'ugc-offer' && page.slug !== 'vsl-offer'}>
                                         <Edit2 className="h-4 w-4" />
                                         <span className="sr-only">Modifier</span>
                                     </Button>
