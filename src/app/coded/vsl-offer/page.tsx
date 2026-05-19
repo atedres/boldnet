@@ -121,7 +121,7 @@ export default function VslOfferPage() {
             >
               <div className="aspect-[9/16] w-full">
                 <iframe
-                  src={`https://www.youtube.com/embed/${id}`}
+                  src={`https://youtube.com/shorts/_pelvzsZ76U?si=VtfDCyC05rzekAUt${id}`}
                   title={`نموذج ${i + 1}`}
                   loading="lazy"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
