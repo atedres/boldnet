@@ -1,5 +1,6 @@
 'use client';
 import { MessageCircle, ArrowLeft, Star } from "lucide-react";
+import Script from "next/script";
 
 const WHATSAPP_NUMBER = "212719802571";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
@@ -15,11 +16,10 @@ const SHORTS_IDS = [
 ];
 
 const BRANDS = [
-  { name: "Amouddou Family", src: "/images/brands/amouddou-family.webp" },
-  { name: "SSA", src: "/images/brands/ssa.jpg" },
-  { name: "Legacy", src: "/images/brands/legacy.webp" },
-  { name: "Widyan Ljanna", src: "/images/brands/widyan-ljanna.webp" },
-  { name: "Green Chat", src: "/images/brands/green-chat.webp" },
+  { name: "Amouddou Family", src: "/images/brands/hvk7g6shljnjwsavcpxq.webp" },
+  { name: "SSA", src: "/images/brands/441314659_1131010098099626_5314583930780332151_n-2.jpg" },
+  { name: "Legacy", src: "/images/brands/accsoox3c4dc4sqsw66v.webp" },
+  { name: "Widyan Ljanna", src: "/images/brands/cbskzeipufnwvan4o14h.webp" },
 ];
 
 const REVIEWS: string[] = [
@@ -58,7 +58,27 @@ function GhostButton({ label, href = "#work" }: { label: string; href?: string }
 
 export default function VslOfferPage() {
   return (
-    <main
+    <>
+      {/* Meta Pixel */}
+      <Script id="meta-pixel" strategy="afterInteractive">{`
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '27155448247429810');
+        fbq('track', 'PageView');
+      `}</Script>
+      <noscript>
+        <img height="1" width="1" style={{ display: "none" }}
+          src="https://www.facebook.com/tr?id=27155448247429810&ev=PageView&noscript=1"
+        />
+      </noscript>
+
+      <main
       className="relative overflow-hidden min-h-screen text-white"
       style={{
         background: "oklch(0.15 0.04 20)",
@@ -146,7 +166,7 @@ export default function VslOfferPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 md:grid-cols-4">
           {BRANDS.map((brand, i) => (
             <div
               key={i}
@@ -239,5 +259,6 @@ export default function VslOfferPage() {
         © {new Date().getFullYear()} — جميع الحقوق محفوظة
       </footer>
     </main>
+    </>
   );
 }
