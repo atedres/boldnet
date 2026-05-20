@@ -4,19 +4,22 @@ import { MessageCircle, ArrowLeft, Star } from "lucide-react";
 const WHATSAPP_NUMBER = "212719802571";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
-// TODO: Replace with your real YouTube video IDs
 const MAIN_VIDEO_ID = "Cqz-ukhWSW0";
 const SHORTS_IDS = [
-  "dQw4w9WgXcQ",
-  "dQw4w9WgXcQ",
-  "dQw4w9WgXcQ",
-  "dQw4w9WgXcQ",
-  "dQw4w9WgXcQ",
-  "dQw4w9WgXcQ",
+  "A0U30aTBjnE",
+  "HzEmRMQ7Mto",
+  "_pelvzsZ76U",
+  "GfA9djqOP0k",
+  "xjsc4b17Lkc",
+  "wJXxNTBM8ME",
 ];
 
 const BRANDS = [
   { name: "Amouddou Family", src: "/images/brands/amouddou-family.webp" },
+  { name: "SSA", src: "/images/brands/ssa.jpg" },
+  { name: "Legacy", src: "/images/brands/legacy.webp" },
+  { name: "Widyan Ljanna", src: "/images/brands/widyan-ljanna.webp" },
+  { name: "Green Chat", src: "/images/brands/green-chat.webp" },
 ];
 
 const REVIEWS: string[] = [
@@ -121,7 +124,7 @@ export default function VslOfferPage() {
             >
               <div className="aspect-[9/16] w-full">
                 <iframe
-                  src={`https://youtube.com/shorts/_pelvzsZ76U?si=VtfDCyC05rzekAUt${id}`}
+                  src={`https://www.youtube.com/embed/${id}`}
                   title={`نموذج ${i + 1}`}
                   loading="lazy"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -143,7 +146,7 @@ export default function VslOfferPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-6">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
           {BRANDS.map((brand, i) => (
             <div
               key={i}
