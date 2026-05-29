@@ -10,7 +10,7 @@ const MAIN_VIDEO_ID = "Cqz-ukhWSW0";
 const SHORTS_IDS = [
   "A0U30aTBjnE",
   "HzEmRMQ7Mto",
-  "_pelvzsZ76U",
+  "GNLWQNCHfsY",
   "GfA9djqOP0k",
   "xjsc4b17Lkc",
   "wJXxNTBM8ME",
@@ -120,19 +120,13 @@ function ContactForm() {
 
       {/* Service */}
       <div className="space-y-1.5">
-        <label className="block text-sm font-semibold text-white/80">شنو اللي كتحتاج؟</label>
-        <select required value={formData.service}
+        <label className="block text-sm font-semibold text-white/80">شنو الخدمة لي محتاج؟</label>
+        <input type="text" required placeholder="اكتب الخدمة لي محتاج..."
+          value={formData.service}
           onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-          className="w-full rounded-xl border border-white/12 px-4 py-3 text-sm text-white outline-none transition-all focus:border-red-500/60 focus:ring-2 focus:ring-red-500/20"
+          className="w-full rounded-xl border border-white/12 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-all focus:border-red-500/60 focus:ring-2 focus:ring-red-500/20"
           style={{ background: "rgba(255,255,255,0.06)" }}
-        >
-          <option value="" disabled className="bg-[#150404] text-white">اختار الخدمة...</option>
-          <option value="short-videos" className="bg-[#150404] text-white">فيديوهات قصيرة (ريلز / شورتس)</option>
-          <option value="strategy" className="bg-[#150404] text-white">استراتيجية محتوى</option>
-          <option value="brand-video" className="bg-[#150404] text-white">فيديو براند كامل</option>
-          <option value="ads" className="bg-[#150404] text-white">إعلانات مدفوعة</option>
-          <option value="other" className="bg-[#150404] text-white">خدمة أخرى</option>
-        </select>
+        />
       </div>
 
       {/* Business description */}
@@ -169,7 +163,6 @@ function ContactForm() {
         )}
       </button>
 
-      <p className="text-center text-xs text-white/35">🔒 معلوماتك محفوظة ومابغادتش تتشارك</p>
     </form>
   );
 }
@@ -236,7 +229,7 @@ export default function VslOfferPage() {
             </span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-white/65 md:text-xl fade-up fade-up-d2">
-            حبس كاع داكشي لي كدير وتفرج فهاد الفيديو — غادي يبدل نظرتك كلياً
+            حبس كاع داكشي لي كدير وتفرج فهاد الفيديو
           </p>
 
           <div className="mx-auto mt-10 flex flex-wrap items-center justify-center gap-6 fade-up fade-up-d2">
@@ -287,7 +280,7 @@ export default function VslOfferPage() {
         {/* WORK */}
         <section id="work" className="relative mx-auto max-w-7xl px-5 py-24 md:py-32">
           <div className="mb-14 text-center">
-            <div className="section-line mb-4 justify-center text-sm font-bold text-red-500">نماذج من شغلنا</div>
+            <div className="section-line mb-4 justify-center text-sm font-bold text-red-500">نماذج من عملنا</div>
             <h2 className="text-3xl font-black md:text-5xl">فيديوهات حققات نتائج</h2>
             <p className="mt-4 text-base text-white/60 md:text-lg">شوف بعين راسك خدمة لي كدارو لعملائنا</p>
           </div>
@@ -380,7 +373,7 @@ export default function VslOfferPage() {
                   </span>
                 </h2>
                 <p className="mt-5 text-base text-white/70 md:text-lg leading-relaxed">
-                  عبي الفورم وغادي نتواصلو معك خلال 24 ساعة — أو تواصل معانا مباشرة فالواتساب.
+                  عمر الفورم وغادي نتواصلو معك فأقل من 30 دقيقة أو تواصل معانا مباشرة فالواتساب.
                 </p>
                 <div className="mt-8 space-y-3">
                   {["محتوى يحقق نتائج قابلة للقياس","فريق متخصص في البراندات المغربية","تسليم سريع وبجودة عالية"].map((item,i) => (
@@ -409,7 +402,7 @@ export default function VslOfferPage() {
               {/* Right: form */}
               <div className="p-8 md:p-12 border-t border-white/8 md:border-t-0 md:border-r border-white/8">
                 <h3 className="text-lg font-black text-white">ابعث طلبك الآن</h3>
-                <p className="mt-1 text-sm text-white/50">استشارة أولى مجانية — بلا التزام</p>
+                <p className="mt-1 text-sm text-white/50">استشارة أولى مجانية</p>
                 <ContactForm />
               </div>
             </div>
