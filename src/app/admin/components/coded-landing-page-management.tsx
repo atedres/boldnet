@@ -38,21 +38,11 @@ export default function CodedLandingPageManagement() {
   const handleAddUgcOfferPage = async () => {
     const pageExists = pages?.some(p => p.slug === 'ugc-offer');
     if (pageExists) {
-        toast({
-            variant: 'destructive',
-            title: 'Page already exists',
-            description: 'The UGC Offer page has already been added.',
-        });
+        toast({ variant: 'destructive', title: 'Page already exists', description: 'The UGC Offer page has already been added.' });
         return;
     }
-    
     try {
-        const newPageData = {
-            title: `UGC Offer Page`,
-            slug: `ugc-offer`,
-            createdAt: serverTimestamp(),
-        };
-        await addDocumentNonBlocking(codedPagesCollection, newPageData);
+        await addDocumentNonBlocking(codedPagesCollection, { title: `UGC Offer Page`, slug: `ugc-offer`, createdAt: serverTimestamp() });
         toast({ title: 'UGC Offer Page Added', description: 'You can now see it in the list.' });
     } catch(e) {
         console.error(e);
@@ -63,21 +53,11 @@ export default function CodedLandingPageManagement() {
   const handleAddPersonalBrandingPage = async () => {
     const pageExists = pages?.some(p => p.slug === 'personal-branding');
     if (pageExists) {
-        toast({
-            variant: 'destructive',
-            title: 'Page already exists',
-            description: 'The Personal Branding page has already been added.',
-        });
+        toast({ variant: 'destructive', title: 'Page already exists', description: 'The Personal Branding page has already been added.' });
         return;
     }
-    
     try {
-        const newPageData = {
-            title: `Personal Branding Page`,
-            slug: `personal-branding`,
-            createdAt: serverTimestamp(),
-        };
-        await addDocumentNonBlocking(codedPagesCollection, newPageData);
+        await addDocumentNonBlocking(codedPagesCollection, { title: `Personal Branding Page`, slug: `personal-branding`, createdAt: serverTimestamp() });
         toast({ title: 'Personal Branding Page Added', description: 'You can now manage its content.' });
     } catch(e) {
         console.error(e);
@@ -88,27 +68,38 @@ export default function CodedLandingPageManagement() {
   const handleAddVslOfferPage = async () => {
     const pageExists = pages?.some(p => p.slug === 'vsl-offer');
     if (pageExists) {
-        toast({
-            variant: 'destructive',
-            title: 'Page already exists',
-            description: 'The VSL Offer page has already been added.',
-        });
+        toast({ variant: 'destructive', title: 'Page already exists', description: 'The VSL Offer page has already been added.' });
         return;
     }
-
     try {
-        const newPageData = {
-            title: 'VSL Offer LP',
-            slug: 'vsl-offer',
-            createdAt: serverTimestamp(),
-        };
-        await addDocumentNonBlocking(codedPagesCollection, newPageData);
+        await addDocumentNonBlocking(codedPagesCollection, { title: 'VSL Offer LP', slug: 'vsl-offer', createdAt: serverTimestamp() });
         toast({ title: 'VSL Offer LP Added', description: 'You can now see it in the list.' });
     } catch(e) {
         console.error(e);
         toast({ variant: 'destructive', title: 'Error creating coded page' });
     }
   }
+
+  // ── VSL Offer 2 ────────────────────────────────────────────────────────────
+  const handleAddVslOffer2Page = async () => {
+    const pageExists = pages?.some(p => p.slug === 'vsl-offer-2');
+    if (pageExists) {
+        toast({ variant: 'destructive', title: 'Page already exists', description: 'The VSL Offer 2 page has already been added.' });
+        return;
+    }
+    try {
+        await addDocumentNonBlocking(codedPagesCollection, {
+            title: 'VSL Offer 2 LP',
+            slug: 'vsl-offer-2',
+            createdAt: serverTimestamp(),
+        });
+        toast({ title: 'VSL Offer 2 LP Added', description: 'You can now see it in the list.' });
+    } catch(e) {
+        console.error(e);
+        toast({ variant: 'destructive', title: 'Error creating coded page' });
+    }
+  }
+  // ──────────────────────────────────────────────────────────────────────────
 
   const handleDelete = async () => {
     if (!deletingPage) return;
@@ -130,13 +121,15 @@ export default function CodedLandingPageManagement() {
   }
 
   const handleEdit = (page: any) => {
-    if (page.slug === 'personal-branding' || page.slug === 'ugc-offer' || page.slug === 'vsl-offer') {
+    const editableSlugs = ['personal-branding', 'ugc-offer', 'vsl-offer', 'vsl-offer-2'];
+    if (editableSlugs.includes(page.slug)) {
         setEditingPage(page);
     } else {
-        toast({ title: 'Not Editable', description: 'Only the Personal Branding, UGC Offer, and VSL Offer pages are editable for now.' });
+        toast({ title: 'Not Editable', description: 'Only specific pages are editable for now.' });
     }
   };
   
+  // ── Edit views ─────────────────────────────────────────────────────────────
   if (editingPage?.slug === 'personal-branding') {
     return <PersonalBrandingManagement onBack={() => setEditingPage(null)} />
   }
@@ -152,8 +145,8 @@ export default function CodedLandingPageManagement() {
           <CardHeader>
             <CardTitle>VSL Offer LP</CardTitle>
             <CardDescription>
-              This is a fully coded landing page. To edit its content (videos, WhatsApp number, reviews), update the file directly at{' '}
-              <code className="text-xs bg-muted px-1 py-0.5 rounded">src/app/coded/vsl-offer.tsx</code>.
+              This is a fully coded landing page. To edit its content, update the file directly at{' '}
+              <code className="text-xs bg-muted px-1 py-0.5 rounded">src/app/coded/vsl-offer/page.tsx</code>.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
@@ -167,6 +160,31 @@ export default function CodedLandingPageManagement() {
     );
   }
 
+  if (editingPage?.slug === 'vsl-offer-2') {
+    return (
+      <div className="w-full max-w-2xl mx-auto">
+        <Card>
+          <CardHeader>
+            <CardTitle>VSL Offer 2 LP</CardTitle>
+            <CardDescription>
+              This is a fully coded landing page. To edit its content, update the file directly at{' '}
+              <code className="text-xs bg-muted px-1 py-0.5 rounded">src/app/coded/vsl-offer-2/page.tsx</code>.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <Button variant="outline" onClick={() => copyLink('vsl-offer-2')}>
+              <LinkIcon className="mr-2 h-4 w-4" /> Copy Page Link
+            </Button>
+            <Button variant="ghost" onClick={() => setEditingPage(null)}>← Back</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+  // ──────────────────────────────────────────────────────────────────────────
+
+  const editableSlugs = ['personal-branding', 'ugc-offer', 'vsl-offer', 'vsl-offer-2'];
+
   return (
     <>
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-8">
@@ -176,10 +194,11 @@ export default function CodedLandingPageManagement() {
             <CardTitle>Coded Landing Pages</CardTitle>
             <CardDescription>Manage metadata for manually coded pages.</CardDescription>
           </div>
-           <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap">
             <Button onClick={handleAddUgcOfferPage}><Plus className="mr-2 h-4 w-4" /> Add UGC Offer Page</Button>
             <Button onClick={handleAddPersonalBrandingPage}><Plus className="mr-2 h-4 w-4" /> Add Personal Branding Page</Button>
             <Button onClick={handleAddVslOfferPage}><Plus className="mr-2 h-4 w-4" /> Add VSL Offer LP</Button>
+            <Button onClick={handleAddVslOffer2Page}><Plus className="mr-2 h-4 w-4" /> Add VSL Offer 2 LP</Button>
             <Button onClick={handleAddNew} disabled><Plus className="mr-2 h-4 w-4" /> Add New</Button>
           </div>
         </CardHeader>
@@ -198,41 +217,45 @@ export default function CodedLandingPageManagement() {
                 </div>
             </div>
           )}
-           {!isLoading && pages && pages.length > 0 && (
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Title</TableHead>
-                            <TableHead>Slug</TableHead>
-                            <TableHead>Created At</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {pages.map((page: any) => (
-                            <TableRow key={page.id}>
-                                <TableCell className="font-medium">{page.title}</TableCell>
-                                <TableCell className="text-muted-foreground">/coded/{page.slug}</TableCell>
-                                <TableCell>{page.createdAt ? format(page.createdAt.toDate(), 'PPP') : 'N/A'}</TableCell>
-                                <TableCell className="text-right">
-                                    <Button variant="ghost" size="icon" title="Copy Link" onClick={() => copyLink(page.slug)}>
-                                        <LinkIcon className="h-4 w-4" />
-                                        <span className="sr-only">Copy Link</span>
-                                    </Button>
-                                    <Button variant="ghost" size="icon" onClick={() => handleEdit(page)} disabled={page.slug !== 'personal-branding' && page.slug !== 'ugc-offer' && page.slug !== 'vsl-offer'}>
-                                        <Edit2 className="h-4 w-4" />
-                                        <span className="sr-only">Modifier</span>
-                                    </Button>
-                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => setDeletingPage(page)}>
-                                        <Trash2 className="h-4 w-4" />
-                                        <span className="sr-only">Supprimer</span>
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            )}
+          {!isLoading && pages && pages.length > 0 && (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Title</TableHead>
+                  <TableHead>Slug</TableHead>
+                  <TableHead>Created At</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {pages.map((page: any) => (
+                  <TableRow key={page.id}>
+                    <TableCell className="font-medium">{page.title}</TableCell>
+                    <TableCell className="text-muted-foreground">/coded/{page.slug}</TableCell>
+                    <TableCell>{page.createdAt ? format(page.createdAt.toDate(), 'PPP') : 'N/A'}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="icon" title="Copy Link" onClick={() => copyLink(page.slug)}>
+                        <LinkIcon className="h-4 w-4" />
+                        <span className="sr-only">Copy Link</span>
+                      </Button>
+                      <Button
+                        variant="ghost" size="icon"
+                        onClick={() => handleEdit(page)}
+                        disabled={!editableSlugs.includes(page.slug)}
+                      >
+                        <Edit2 className="h-4 w-4" />
+                        <span className="sr-only">Edit</span>
+                      </Button>
+                      <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => setDeletingPage(page)}>
+                        <Trash2 className="h-4 w-4" />
+                        <span className="sr-only">Supprimer</span>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>
@@ -252,5 +275,3 @@ export default function CodedLandingPageManagement() {
     </>
   );
 }
-
-    
