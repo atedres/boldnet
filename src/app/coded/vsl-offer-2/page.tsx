@@ -17,10 +17,10 @@ const SHORTS_IDS = [
 ];
 
 const BRANDS = [
-  { name: "Amouddou Family", src: "/images/brands/hvk7g6shljnjwsavcpxq.webp" },
-  { name: "SSA", src: "/images/brands/441314659_1131010098099626_5314583930780332151_n-2.jpg" },
-  { name: "Legacy", src: "/images/brands/accsoox3c4dc4sqsw66v.webp" },
-  { name: "Widyan Ljanna", src: "/images/brands/cbskzeipufnwvan4o14h.webp" },
+  { name: "Amouddou Family", src: "/images/brands/amouddou-family.webp" },
+  { name: "SSA", src: "/images/brands/ssa.jpg" },
+  { name: "Legacy", src: "/images/brands/legacy.webp" },
+  { name: "Widyan Ljanna", src: "/images/brands/widyan-ljanna.webp" },
 ];
 
 const REVIEWS: string[] = [
