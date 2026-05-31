@@ -38,11 +38,17 @@ const STATS = [
 ];
 
 function WhatsAppButton({ label, className = "" }: { label: string; className?: string }) {
+  const handleClick = () => {
+    if (typeof window !== "undefined" && (window as any).fbq) {
+      (window as any).fbq('track', 'Contact');
+    }
+  };
   return (
     <a
       href={WHATSAPP_URL}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={handleClick}
       className={`group inline-flex items-center justify-center gap-3 rounded-full bg-gradient-to-r from-red-600 to-red-700 px-8 py-4 text-base font-bold text-white shadow-[0_8px_32px_-4px_rgba(220,38,38,0.5)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_12px_40px_-4px_rgba(220,38,38,0.7)] md:text-lg ${className}`}
     >
       <MessageCircle className="h-5 w-5 transition-transform group-hover:rotate-12" />
@@ -75,6 +81,9 @@ function ContactForm() {
     await new Promise((r) => setTimeout(r, 1200));
     setLoading(false);
     setSubmitted(true);
+    if (typeof window !== "undefined" && (window as any).fbq) {
+      (window as any).fbq('track', 'Lead');
+    }
   };
 
   if (submitted) {
@@ -179,12 +188,12 @@ export default function VslOfferPage() {
         t.src=v;s=b.getElementsByTagName(e)[0];
         s.parentNode.insertBefore(t,s)}(window, document,'script',
         'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '27155448247429810');
+        fbq('init', '2047490192829442');
         fbq('track', 'PageView');
       `}</Script>
       <noscript>
         <img height="1" width="1" style={{ display: "none" }}
-          src="https://www.facebook.com/tr?id=27155448247429810&ev=PageView&noscript=1" />
+          src="https://www.facebook.com/tr?id=2047490192829442&ev=PageView&noscript=1" />
       </noscript>
 
       <style>{`
