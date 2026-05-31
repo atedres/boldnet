@@ -77,15 +77,31 @@ function ContactForm() {
   const [loading, setLoading] = useState(false);
   const MAX_CHARS = 500;
 
+  const SHEET_URL = "https://script.google.com/macros/s/AKfycbwB5Znrg5WdqYoO9rLOwbnFSGCFhS673tLjL8SOfwKjK7RJ9TxMCHLXFku-0zLjOZ-KEw/exec";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1200));
-    setLoading(false);
-    setSubmitted(true);
+    try {
+      await fetch(SHEET_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          service: formData.service,
+          business: formData.business,
+        }),
+      });
+    } catch (err) {
+      console.error("Sheet error:", err);
+    }
     if (typeof window !== "undefined" && (window as any).fbq) {
       (window as any).fbq('track', 'Lead');
     }
+    setLoading(false);
+    setSubmitted(true);
     router.push("/coded/vsl-offer-2/thank-you");
   };
 
