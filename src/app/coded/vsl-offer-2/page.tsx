@@ -2,6 +2,7 @@
 import { MessageCircle, ArrowLeft, Star, Send, Zap, TrendingUp, Users, CheckCircle } from "lucide-react";
 import Script from "next/script";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const WHATSAPP_NUMBER = "212719802571";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
@@ -70,6 +71,7 @@ function GhostButton({ label, href = "#work" }: { label: string; href?: string }
 }
 
 function ContactForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState({ name: "", phone: "", service: "", business: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -84,6 +86,7 @@ function ContactForm() {
     if (typeof window !== "undefined" && (window as any).fbq) {
       (window as any).fbq('track', 'Lead');
     }
+    router.push("/coded/vsl-offer-2/thank-you");
   };
 
   if (submitted) {
