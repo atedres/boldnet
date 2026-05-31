@@ -77,7 +77,7 @@ function ContactForm() {
   const [loading, setLoading] = useState(false);
   const MAX_CHARS = 500;
 
-  const SHEET_URL = "https://script.google.com/macros/s/AKfycbwB5Znrg5WdqYoO9rLOwbnFSGCFhS673tLjL8SOfwKjK7RJ9TxMCHLXFku-0zLjOZ-KEw/exec";
+  const SHEET_URL = "https://script.google.com/macros/s/AKfycbx8gxXpHbO_5LkVJQhHzY62s2qVh6fcQTDIGY1tmxG665UD9PATAto1wOwGmadw1xOBuw/exec";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
