@@ -81,6 +81,25 @@ export default function CodedLandingPageManagement() {
   }
 
   // ── VSL Offer 2 ────────────────────────────────────────────────────────────
+  const handleAddCoachConsultantPage = async () => {
+    const pageExists = pages?.some(p => p.slug === 'coach-consultant');
+    if (pageExists) {
+        toast({ variant: 'destructive', title: 'Page already exists', description: 'The Coach & Consultant page has already been added.' });
+        return;
+    }
+    try {
+        await addDocumentNonBlocking(codedPagesCollection, {
+            title: 'Coach & Consultant VSL',
+            slug: 'coach-consultant',
+            createdAt: serverTimestamp(),
+        });
+        toast({ title: 'Coach & Consultant VSL Added', description: 'You can now see it in the list.' });
+    } catch(e) {
+        console.error(e);
+        toast({ variant: 'destructive', title: 'Error creating coded page' });
+    }
+  };
+
   const handleAddVslOffer2Page = async () => {
     const pageExists = pages?.some(p => p.slug === 'vsl-offer-2');
     if (pageExists) {
@@ -199,6 +218,7 @@ export default function CodedLandingPageManagement() {
             <Button onClick={handleAddPersonalBrandingPage}><Plus className="mr-2 h-4 w-4" /> Add Personal Branding Page</Button>
             <Button onClick={handleAddVslOfferPage}><Plus className="mr-2 h-4 w-4" /> Add VSL Offer LP</Button>
             <Button onClick={handleAddVslOffer2Page}><Plus className="mr-2 h-4 w-4" /> Add VSL Offer 2 LP</Button>
+            <Button onClick={handleAddCoachConsultantPage}><Plus className="mr-2 h-4 w-4" /> Add Coach &amp; Consultant LP</Button>
             <Button onClick={handleAddNew} disabled><Plus className="mr-2 h-4 w-4" /> Add New</Button>
           </div>
         </CardHeader>
