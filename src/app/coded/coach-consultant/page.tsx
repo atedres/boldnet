@@ -388,7 +388,11 @@ export default function CoachConsultantPage() {
       } catch (e) { /* le tracking ne doit jamais casser la page */ }
     }
 
-    /* --- événement de conversion, envoyé à tous les pixels actifs --- */
+    /* --- événement de conversion ------------------------------------------
+       RÉSERVÉ au formulaire envoyé : nom, activité, email, WhatsApp, objectif
+       et case cochée. C'est l'action qui demande un vrai effort, donc la seule
+       sur laquelle Meta doit optimiser. Voir trackContact() plus bas.
+       ---------------------------------------------------------------------- */
     function trackLead(source){
       try {
         if (window.gtag)  gtag('event', 'generate_lead', { method: source });
@@ -397,10 +401,23 @@ export default function CoachConsultantPage() {
       } catch (e) { /* le tracking ne doit jamais casser la page */ }
     }
 
+    /* --- clic WhatsApp -----------------------------------------------------
+       Volontairement un événement DIFFÉRENT de Lead. Cliquer un bouton vert
+       ne coûte rien au visiteur : si Meta optimise là-dessus, il livre les
+       gens qui cliquent sur tout. On garde la mesure, sans en faire la cible.
+       ---------------------------------------------------------------------- */
+    function trackContact(source){
+      try {
+        if (window.gtag)  gtag('event', 'contact', { method: source });
+        if (window.fbq)   fbq('track', 'Contact', { content_name: source });
+        if (window.ttq)   ttq.track('Contact', { content_name: source });
+      } catch (e) { /* le tracking ne doit jamais casser la page */ }
+    }
+
     const waHref = 'https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(CONFIG.whatsappMessage);
     [document.getElementById('waFab'), document.getElementById('waInline'), document.getElementById('waMeta')].forEach(function(a){
       a.href = waHref; a.target = '_blank'; a.rel = 'noopener';
-      a.addEventListener('click', function(){ trackLead('whatsapp'); });
+      a.addEventListener('click', function(){ trackContact('whatsapp'); });
     });
 
     const nav = document.getElementById('nav');
