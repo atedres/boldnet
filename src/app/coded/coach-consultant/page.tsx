@@ -249,8 +249,7 @@ export default function CoachConsultantPage() {
       // 5) Tracking — laissez vide pour désactiver. Aucun script n'est chargé si le champ est vide.
       analytics: {
         ga4:         "",   // ex : "G-XXXXXXXXXX"
-        metaPixel:   "",   // ex : "1234567890123456"
-        tiktokPixel: ""    // ex : "CXXXXXXXXXXXXXXXXXXX"
+        metaPixel:   "1065111722548384",        tiktokPixel: ""    // ex : "CXXXXXXXXXXXXXXXXXXX"
       }
     };
 
