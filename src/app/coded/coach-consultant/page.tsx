@@ -161,15 +161,7 @@ const STYLES = `/* polices auto-hébergées : aucune requête externe, aucune d�
 }.bnlp input::placeholder,.bnlp textarea::placeholder{color:#6E6663}.bnlp input:focus,.bnlp select:focus,.bnlp textarea:focus{outline:none;border-color:var(--red);background:var(--raise)}.bnlp select{appearance:none;
   background-image:linear-gradient(45deg,transparent 50%,var(--red-lite) 50%),linear-gradient(135deg,var(--red-lite) 50%,transparent 50%);
   background-position:calc(100% - 19px) 22px,calc(100% - 13px) 22px;background-size:6px 6px,6px 6px;background-repeat:no-repeat}.bnlp textarea{resize:vertical;min-height:104px}.bnlp .consent{grid-column:1/-1;display:flex;gap:11px;align-items:flex-start;color:var(--muted);font-size:13px;line-height:1.5}.bnlp .consent input{width:16px;height:16px;accent-color:var(--red);flex:none;margin-top:2px;padding:0}.bnlp .factions{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:4px}.bnlp .fnote{font-family:var(--f-mono);font-size:10.5px;color:var(--muted)}.bnlp .msg{grid-column:1/-1;font-size:14.5px;padding:14px 16px;border:1px solid var(--line);display:none}.bnlp .msg.ok{display:block;border-color:rgba(127,176,105,.5);color:var(--ok)}.bnlp .msg.err{display:block;border-color:var(--line-strong);color:var(--red-lite)}.bnlp footer{padding-block:44px;border-top:1px solid var(--line);background:var(--ink)}.bnlp .foot{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center;
-  font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}/* ---------- WhatsApp ---------- */
-.bnlp .wa-fab{
-  position:fixed;right:20px;bottom:20px;z-index:70;display:flex;align-items:center;gap:11px;
-  background:#1F8A4C;color:#fff;padding:13px 20px 13px 16px;border-radius:999px;
-  box-shadow:0 16px 40px -14px rgba(0,0,0,.9);font-weight:600;font-size:14.5px;
-  transition:transform .3s cubic-bezier(.2,.7,.3,1),background .3s;
-}.bnlp .wa-fab:hover{background:#25A65C;transform:translateY(-3px)}.bnlp .wa-fab svg{width:22px;height:22px;fill:#fff;flex:none}.bnlp .wa-fab .ring{position:absolute;inset:0;border-radius:999px;border:1px solid rgba(37,166,92,.65);animation:bnlp-ring 3.2s ease-out infinite;pointer-events:none}
-@keyframes bnlp-ring{0%{transform:scale(1);opacity:.7}70%,100%{transform:scale(1.28);opacity:0}}
-/* ---------- bannière de consentement ---------- */
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}/* ---------- bannière de consentement ---------- */
 .bnlp .cookiebar{
   position:fixed;left:0;right:0;bottom:0;z-index:95;
   background:rgba(10,8,7,.97);border-top:1px solid var(--line);
@@ -189,12 +181,10 @@ const STYLES = `/* polices auto-hébergées : aucune requête externe, aucune d�
 .bnlp .cookiebar .yes:hover{background:var(--red-lite)}
 .bnlp .cookiebar .no{background:transparent;color:var(--muted);border:1px solid var(--line)}
 .bnlp .cookiebar .no:hover{color:var(--text);border-color:var(--red-lite)}
-.bnlp .cookiebar.is-open ~ .wa-fab{bottom:112px;transition:bottom .34s cubic-bezier(.2,.7,.3,1),transform .3s cubic-bezier(.2,.7,.3,1),background .3s}
 @media (max-width:660px){
   .bnlp .cookiebar .inner{gap:14px}
   .bnlp .cookiebar .acts{width:100%}
   .bnlp .cookiebar .acts button{flex:1}
-  .bnlp .cookiebar.is-open ~ .wa-fab{bottom:186px}
 }/* ---------- révélations ---------- */
 .bnlp .rv{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.7,.3,1),transform .9s cubic-bezier(.2,.7,.3,1)}.bnlp .rv.in{opacity:1;transform:none}/* ---------- tarif ---------- */
 .bnlp .price{display:grid;grid-template-columns:1.3fr .7fr;border:1px solid var(--line-strong);background:var(--surface)}.bnlp .price-in{padding:clamp(28px,3.2vw,44px)}.bnlp .price-in h3{margin-bottom:8px}.bnlp .price-in>p{color:var(--muted);font-size:15.5px;line-height:1.65}.bnlp .price-list{list-style:none;margin:22px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:11px 26px}.bnlp .price-list li{position:relative;padding-left:19px;font-size:15px;color:var(--text);line-height:1.5}.bnlp .price-list li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;background:var(--red)}.bnlp .price-side{padding:clamp(28px,3.2vw,44px);border-left:1px solid var(--line);display:flex;flex-direction:column;
@@ -219,8 +209,15 @@ const STYLES = `/* polices auto-hébergées : aucune requête externe, aucune d�
   .bnlp .deliv .card,.bnlp .deliv .card:nth-child(4){grid-column:span 1}
   .bnlp .deliv .card:nth-child(5){grid-column:1/-1}
 }
-@media (max-width:660px){.bnlp{font-size:16px}.bnlp .fgrid{grid-template-columns:1fr}.bnlp .deliv{grid-template-columns:1fr}.bnlp .deliv .card,.bnlp .deliv .card:nth-child(4),.bnlp .deliv .card:nth-child(5){grid-column:1/-1}.bnlp .lane{grid-template-columns:1fr;gap:8px}.bnlp .lane .n{padding-top:0}.bnlp .link{grid-template-columns:auto 1fr;row-gap:6px}.bnlp .link em{grid-column:2}.bnlp .nav .btn{display:none}.bnlp .hero{padding-top:100px}.bnlp .wa-fab span{display:none}.bnlp .wa-fab{padding:15px;border-radius:50%}
+@media (max-width:660px){.bnlp{font-size:16px}.bnlp .fgrid{grid-template-columns:1fr}.bnlp .deliv{grid-template-columns:1fr}.bnlp .deliv .card,.bnlp .deliv .card:nth-child(4),.bnlp .deliv .card:nth-child(5){grid-column:1/-1}.bnlp .lane{grid-template-columns:1fr;gap:8px}.bnlp .lane .n{padding-top:0}.bnlp .link{grid-template-columns:auto 1fr;row-gap:6px}.bnlp .link em{grid-column:2}.bnlp .nav .btn{display:none}.bnlp .hero{padding-top:100px}
 }
+/* ---------- bouton WhatsApp global du site ----------
+   Le layout de boldnetdigital.com monte un bouton WhatsApp flottant sur toutes
+   les pages. Sur cette landing page on le masque : une seule action mise en
+   avant, le formulaire. Le numéro reste lisible dans les coordonnées, cliquable
+   pour qui préfère écrire. Cette règle ne s'applique que sur cette page.
+   ---------------------------------------------------------------------- */
+body > a[href*="wa.me"]{display:none!important}
 @media (prefers-reduced-motion:reduce){.bnlp *,.bnlp *::before,.bnlp *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}.bnlp .rv{opacity:1;transform:none}.bnlp{scroll-behavior:auto}
 }
 `;
@@ -414,8 +411,12 @@ export default function CoachConsultantPage() {
       } catch (e) { /* le tracking ne doit jamais casser la page */ }
     }
 
+    /* WhatsApp reste joignable, mais uniquement comme ligne de coordonnées :
+       plus de bouton flottant ni de gros CTA vert. Le formulaire est la seule
+       action mise en avant — c'est lui qui qualifie et qui déclenche Lead. */
     const waHref = 'https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(CONFIG.whatsappMessage);
-    [document.getElementById('waFab'), document.getElementById('waInline'), document.getElementById('waMeta')].forEach(function(a){
+    [document.getElementById('waMeta')].forEach(function(a){
+      if (!a) return;
       a.href = waHref; a.target = '_blank'; a.rel = 'noopener';
       a.addEventListener('click', function(){ trackContact('whatsapp'); });
     });
@@ -1008,10 +1009,6 @@ export default function CoachConsultantPage() {
               <a href="https://boldnetdigital.com" target="_blank" rel="noopener"><span>Site web</span><b>boldnetdigital.com</b></a>
               <div><span>Studio</span><b>Abdelmoumen, Casablanca</b></div>
             </div>
-            <a className="btn btn-wa" id="waInline" href="#" style={{marginTop: "26px"}}>
-              <svg viewBox="0 0 24 24" aria-hidden="true" style={{width: "19px", height: "19px", fill: "#fff"}}><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.2-.6-.4M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2m0 18.2c-1.6 0-3.2-.4-4.5-1.2l-.3-.2-3 .8.8-2.9-.2-.3a8.3 8.3 0 1 1 7.2 3.8"/></svg>
-              Discuter directement sur WhatsApp
-            </a>
           </div>
 
           <form id="leadForm" className="rv" novalidate>
@@ -1098,11 +1095,6 @@ export default function CoachConsultantPage() {
         </div>
       </div>
 
-      <a className="wa-fab" id="waFab" href="#" aria-label="Écrire sur WhatsApp">
-        <span className="ring" aria-hidden="true"></span>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.2-.6-.4M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2m0 18.2c-1.6 0-3.2-.4-4.5-1.2l-.3-.2-3 .8.8-2.9-.2-.3a8.3 8.3 0 1 1 7.2 3.8"/></svg>
-        <span>WhatsApp</span>
-      </a>
     </div>
   );
 }
