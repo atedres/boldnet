@@ -757,7 +757,7 @@ export default function CoachConsultantPage() {
 
       <section className="hero" id="top">
         <div className="wrap hero-in">
-          <span className="slate">Coachs &amp; consultants indépendants · Casablanca</span>
+          <span className="slate">CEO, fondateurs &amp; dirigeants · Casablanca</span>
           <h1 className="h1">Construire un contenu<br /><em>qui vend pour vous.</em></h1>
           <p className="h1-sub">Avec <b>2 heures par mois</b> de votre temps. Rien de plus.</p>
 
@@ -974,7 +974,7 @@ export default function CoachConsultantPage() {
             </details>
             <details>
               <summary>Combien de vidéos je reçois chaque mois&nbsp;?</summary>
-              <div><p>Il n'y a pas de volume standard, et c'est volontaire. Le nombre est défini pendant l'appel stratégie, en fonction de votre offre, de votre rythme de publication et des réseaux que vous visez — un consultant qui vend un accompagnement long n'a pas besoin de la même cadence qu'un coach qui remplit des sessions courtes.</p>
+              <div><p>Il n'y a pas de volume standard, et c'est volontaire. Le nombre est défini pendant l'appel stratégie, en fonction de votre offre, de votre rythme de publication et des réseaux que vous visez — un dirigeant qui vend un contrat annuel n'a pas besoin de la même cadence qu'un fondateur qui lance une nouvelle offre.</p>
               <p>Ce qui est fixe : une session de 2h par mois, et un mois de contenu produit et publié à partir de cette session.</p></div>
             </details>
             <details>
@@ -1023,7 +1023,7 @@ export default function CoachConsultantPage() {
               </div>
               <div className="field">
                 <label htmlFor="entreprise">Votre activité *</label>
-                <input id="entreprise" name="entreprise" type="text" placeholder="Coach business, consultant RH…" required={true} autoComplete="organization-title" />
+                <input id="entreprise" name="entreprise" type="text" placeholder="CEO, fondateur, directeur…" required={true} autoComplete="organization-title" />
               </div>
               <div className="field">
                 <label htmlFor="email">Email professionnel *</label>
