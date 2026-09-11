@@ -53,7 +53,10 @@ const STYLES = `/* polices auto-hébergées : aucune requête externe, aucune d�
   --maxw:1180px;
 }.bnlp *,.bnlp *::before,.bnlp *::after{box-sizing:border-box}.bnlp{-webkit-text-size-adjust:100%;scroll-behavior:smooth}.bnlp{
   margin:0;background:var(--ink);color:var(--text);
-  font-family:var(--f-body);font-size:17px;line-height:1.65;font-weight:350;
+  /* 400 et non 350 : sur fond très sombre les traits fins « bavent » à l'écran
+     du téléphone et le texte paraît flou. Le gain de lisibilité vaut la très
+     légère perte de finesse typographique. */
+  font-family:var(--f-body);font-size:17px;line-height:1.65;font-weight:400;
   overflow-x:hidden;-webkit-font-smoothing:antialiased;
 }.bnlp img,.bnlp iframe{max-width:100%;display:block}.bnlp a{color:inherit;text-decoration:none}.bnlp :focus-visible{outline:2px solid var(--red-lite);outline-offset:3px;border-radius:2px}.bnlp .grain{
   position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;
@@ -119,7 +122,33 @@ const STYLES = `/* polices auto-hébergées : aucune requête externe, aucune d�
   transform:scaleY(0);transform-origin:top;transition:transform .45s cubic-bezier(.2,.7,.3,1);
 }.bnlp .lane:hover::before{transform:scaleY(1)}.bnlp .lane:hover{padding-left:18px}.bnlp .lane .n{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;color:var(--red-lite);padding-top:7px}.bnlp .lane h3{margin-bottom:10px}.bnlp .lane p{color:var(--muted);font-size:15.5px;line-height:1.7}.bnlp .lane>div{min-width:0}.bnlp .lane .chips{display:flex;flex-wrap:wrap;gap:7px 22px;margin-top:14px;color:var(--text);font-size:14.5px;line-height:1.4}.bnlp .lane .chips span{white-space:nowrap;display:inline-flex;align-items:center;gap:9px}.bnlp .lane .chips span::before{content:"";width:5px;height:5px;background:var(--red);flex:none}/* ---------- déroulé ---------- */
 .bnlp .flow{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line-strong)}.bnlp .flow div{padding:28px clamp(18px,2vw,30px) 0 0;position:relative}.bnlp .flow div+div{padding-left:clamp(18px,2vw,30px);border-left:1px solid var(--line)}.bnlp .flow div::before{content:"";position:absolute;top:-4px;left:0;width:7px;height:7px;background:var(--red);border-radius:50%}.bnlp .flow div+div::before{left:clamp(18px,2vw,30px)}.bnlp .flow time{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--red-lite);display:block;margin-bottom:12px}.bnlp .flow h3{font-size:21px;margin-bottom:9px}.bnlp .flow p{color:var(--muted);font-size:15px;line-height:1.65}/* ---------- livrables ---------- */
-.bnlp .deliv{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}.bnlp .deliv .card{grid-column:span 2}.bnlp .deliv .card:nth-child(4),.bnlp .deliv .card:nth-child(5){grid-column:span 3}.bnlp .card{background:var(--ink);padding:clamp(24px,2.6vw,32px);display:flex;flex-direction:column;gap:12px;transition:background .35s}.bnlp .card:hover{background:var(--surface)}.bnlp .card .tag{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.2em;color:var(--red-lite);text-transform:uppercase}.bnlp .card h3{font-size:21px}.bnlp .card p{color:var(--muted);font-size:14.5px;line-height:1.6}/* ---------- réalisations ---------- */
+.bnlp .deliv{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}.bnlp .deliv .card{grid-column:span 2}.bnlp .deliv .card:nth-child(4),.bnlp .deliv .card:nth-child(5){grid-column:span 3}.bnlp .card{background:var(--ink);padding:clamp(24px,2.6vw,32px);display:flex;flex-direction:column;gap:12px;transition:background .35s}
+/* ---------- preuve : nos propres chiffres ----------
+   Les seuls résultats qu'on peut prouver aujourd'hui sont les nôtres. On le dit
+   explicitement plutôt que de laisser croire qu'il s'agit de chiffres clients :
+   un dirigeant repère la nuance en deux secondes, et la repérer tout seul coûte
+   plus cher que de l'avoir annoncée.
+   ---------------------------------------------------------------------- */
+/* Deux chiffres côte à côte : la portée d'un côté, le budget publicitaire de
+   l'autre. C'est le contraste qui raconte l'histoire, pas le gros chiffre seul. */
+.bnlp .proof-hero{display:grid;grid-template-columns:1.3fr 1fr;gap:1px;
+  background:var(--line-strong);border:1px solid var(--line-strong);
+  margin-bottom:clamp(26px,3.2vw,42px)}
+.bnlp .proof-hero > div{background:linear-gradient(175deg,var(--surface),var(--ink) 72%);
+  padding:clamp(26px,3.4vw,46px);display:flex;flex-direction:column}
+.bnlp .proof-hero .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--red-lite)}
+.bnlp .proof-hero .n{font-family:var(--f-display);font-weight:500;font-size:clamp(52px,9vw,118px);line-height:.88;margin-top:8px}
+.bnlp .proof-hero .sub{color:var(--muted);font-size:15px;line-height:1.65;margin-top:auto;padding-top:18px;border-top:1px solid var(--line);max-width:60ch}
+.bnlp .proof-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(10px,1.3vw,18px)}
+.bnlp .pv{display:flex;flex-direction:column;gap:9px}
+.bnlp .pv img{width:100%;max-width:100%;aspect-ratio:9/16;object-fit:cover;display:block;border:1px solid var(--line)}
+.bnlp .pv b{font-family:var(--f-display);font-weight:500;font-size:clamp(21px,2.2vw,30px);line-height:1}
+.bnlp .pv span{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.bnlp .proof-note{margin-top:clamp(26px,3vw,38px);font-size:15px;line-height:1.75;color:var(--muted);max-width:72ch}
+/* Mention de consentement : remplace la case à cocher. Le visiteur n'a plus de
+   clic à faire, mais l'information reste affichée avant l'envoi. */
+.bnlp .fnotice{grid-column:1/-1;font-size:12.5px;line-height:1.6;color:var(--muted);margin:2px 0 0}
+.bnlp .fnotice a{color:var(--red-lite);text-decoration:underline;text-underline-offset:2px}.bnlp .card:hover{background:var(--surface)}.bnlp .card .tag{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.2em;color:var(--red-lite);text-transform:uppercase}.bnlp .card h3{font-size:21px}.bnlp .card p{color:var(--muted);font-size:14.5px;line-height:1.6}/* ---------- réalisations ---------- */
 .bnlp .work{overflow:hidden;padding-block:clamp(72px,10vw,120px)}.bnlp .marquee{position:relative;width:100%;overflow:hidden;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
   mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);}.bnlp .marquee+.marquee{margin-top:20px}.bnlp .track{display:flex;gap:20px;width:max-content;animation:bnlp-slide 52s linear infinite}.bnlp .track.rev{animation-direction:reverse;animation-duration:64s}.bnlp .marquee:hover .track{animation-play-state:paused}/* survoler une vidéo fige les deux bandes, pas seulement la sienne */
@@ -194,6 +223,7 @@ const STYLES = `/* polices auto-hébergées : aucune requête externe, aucune d�
   color:var(--red-lite);font-family:var(--f-mono);font-size:22px;line-height:1}.bnlp .faq details[open] summary::after{content:"\\2013"}.bnlp .faq details>div{padding:0 46px 26px 0;color:var(--muted);font-size:15.5px;line-height:1.75;max-width:78ch}.bnlp .faq details>div p+p{margin-top:12px}/* ---------- liens légaux ---------- */
 .bnlp .foot-links{display:flex;gap:20px;flex-wrap:wrap}.bnlp .foot-links a:hover{color:var(--red-lite)}/* ---------- responsive ---------- */
 @media (max-width:1000px){
+  .bnlp .proof-grid{grid-template-columns:repeat(3,1fr)}
   .bnlp .mech-grid,.bnlp .split,.bnlp .cgrid{grid-template-columns:1fr}
   .bnlp .you-panel{position:static}
   .bnlp .flow{grid-template-columns:1fr}
@@ -209,7 +239,7 @@ const STYLES = `/* polices auto-hébergées : aucune requête externe, aucune d�
   .bnlp .deliv .card,.bnlp .deliv .card:nth-child(4){grid-column:span 1}
   .bnlp .deliv .card:nth-child(5){grid-column:1/-1}
 }
-@media (max-width:660px){.bnlp{font-size:16px}.bnlp .fgrid{grid-template-columns:1fr}.bnlp .deliv{grid-template-columns:1fr}.bnlp .deliv .card,.bnlp .deliv .card:nth-child(4),.bnlp .deliv .card:nth-child(5){grid-column:1/-1}.bnlp .lane{grid-template-columns:1fr;gap:8px}.bnlp .lane .n{padding-top:0}.bnlp .link{grid-template-columns:auto 1fr;row-gap:6px}.bnlp .link em{grid-column:2}.bnlp .nav .btn{display:none}.bnlp .hero{padding-top:100px}
+@media (max-width:660px){.bnlp{font-size:16px}.bnlp .proof-grid{grid-template-columns:repeat(2,1fr)}.bnlp .proof-hero{grid-template-columns:1fr}.bnlp .fgrid{grid-template-columns:1fr}.bnlp .deliv{grid-template-columns:1fr}.bnlp .deliv .card,.bnlp .deliv .card:nth-child(4),.bnlp .deliv .card:nth-child(5){grid-column:1/-1}.bnlp .lane{grid-template-columns:1fr;gap:8px}.bnlp .lane .n{padding-top:0}.bnlp .link{grid-template-columns:auto 1fr;row-gap:6px}.bnlp .link em{grid-column:2}.bnlp .nav .btn{display:none}.bnlp .hero{padding-top:100px}
 }
 /* ---------- bouton WhatsApp global du site ----------
    Le layout de boldnetdigital.com monte un bouton WhatsApp flottant sur toutes
@@ -687,23 +717,26 @@ export default function CoachConsultantPage() {
         e.preventDefault();
         msg.className = 'msg';
         if (!form.checkValidity()) {
-          show('err', 'Merci de compléter les champs obligatoires (nom, activité, email, WhatsApp et consentement).');
+          show('err', 'Merci de compléter les champs obligatoires : nom, email et WhatsApp.');
           form.reportValidity();
           return;
         }
         const data = new FormData(form);
         data.append('source', 'Landing VSL');
         data.append('date', new Date().toLocaleString('fr-FR'));
+        /* La case à cocher a été retirée du formulaire : le consentement est
+           désormais recueilli par la mention affichée au-dessus du bouton.
+           On continue d'alimenter la colonne « Consentement » du Sheet pour
+           garder une trace datée de ce qui a été présenté au visiteur. */
+        data.append('consent', 'Mention affichée au-dessus du bouton d\'envoi');
         Object.keys(TRAFFIC).forEach(function(k){ data.append(k, TRAFFIC[k]); });
 
         if (!CONFIG.sheetEndpoint) {
           const txt = 'Bonjour Boldnet 👋%0A%0ADemande d\'appel stratégie :%0A' +
             '• Nom : ' + data.get('nom') + '%0A' +
-            '• Activité : ' + data.get('entreprise') + '%0A' +
             '• Email : ' + data.get('email') + '%0A' +
             '• WhatsApp : ' + data.get('telephone') + '%0A' +
-            '• Objectif : ' + data.get('objectif') + '%0A' +
-            '• Message : ' + (data.get('message') || '—');
+            '• Objectif : ' + data.get('objectif');
           window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + txt, '_blank', 'noopener');
           trackLead('formulaire-whatsapp');
           show('ok', 'Votre demande est prête dans WhatsApp — il ne reste qu\'à l\'envoyer.');
@@ -929,6 +962,59 @@ export default function CoachConsultantPage() {
       </section>
 
 
+      <section className="sec" id="preuve">
+        <div className="wrap">
+          <div className="sec-head rv" style={{maxWidth: "820px"}}>
+            <span className="slate">La méthode, testée sur nous</span>
+            <h2>On ne vend pas une méthode<br />qu'on n'a pas utilisée.</h2>
+            <p className="lede">Avant de produire du contenu pour des dirigeants, on l'a produit pour nous&nbsp;: même studio, même méthode. Des millions de vues sans un dirham de publicité — et les demandes entrantes qui vont avec. L'objectif n'a jamais été la portée, mais ce qu'elle ramène.</p>
+          </div>
+          <div className="proof-hero rv">
+            <div>
+              {/* Chiffre à ajuster si le total réel est supérieur : « 2M+ », « 3M+ »…
+                  Garder le pluriel « millions » cohérent avec ce qui est affiché ici. */}
+              <span className="k">Vues organiques</span>
+              <span className="n">+3M</span>
+              <span className="sub">Sur l'ensemble des contenus produits dans notre studio — script, tournage, montage, sous-titres, publication. Les cinq vidéos ci-dessous n'en sont qu'un échantillon.</span>
+            </div>
+            <div>
+              <span className="k">Investis en publicité</span>
+              <span className="n">0&nbsp;DH</span>
+              <span className="sub">Aucune de ces vues n'a été achetée. C'est la portée organique seule.</span>
+            </div>
+          </div>
+          <span className="slate rv" style={{marginBottom: "18px", display: "flex"}}>Cinq exemples parmi d'autres</span>
+          <div className="proof-grid rv">
+            <figure className="pv">
+              <img src="/preuves/preuve-711k.jpg" alt="Vidéo Boldnet Digital — 711 000 vues" loading="lazy" width={450} height={800} />
+              <b>711K</b>
+              <span>Vues</span>
+            </figure>
+            <figure className="pv">
+              <img src="/preuves/preuve-152k.jpg" alt="Vidéo Boldnet Digital — 152 000 vues" loading="lazy" width={450} height={800} />
+              <b>152K</b>
+              <span>Vues</span>
+            </figure>
+            <figure className="pv">
+              <img src="/preuves/preuve-80k.jpg" alt="Vidéo Boldnet Digital — 80 500 vues" loading="lazy" width={450} height={800} />
+              <b>80,5K</b>
+              <span>Vues</span>
+            </figure>
+            <figure className="pv">
+              <img src="/preuves/preuve-29k.jpg" alt="Vidéo Boldnet Digital — 29 200 vues" loading="lazy" width={450} height={800} />
+              <b>29,2K</b>
+              <span>Vues</span>
+            </figure>
+            <figure className="pv">
+              <img src="/preuves/preuve-23k.jpg" alt="Vidéo Boldnet Digital — 23 000 vues" loading="lazy" width={450} height={800} />
+              <b>23K</b>
+              <span>Vues</span>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+
 
       <section className="sec" id="formule" style={{paddingTop: "0"}}>
         <div className="wrap">
@@ -1022,10 +1108,6 @@ export default function CoachConsultantPage() {
                 <input id="nom" name="nom" type="text" placeholder="Youssef Benali" required={true} autoComplete="name" />
               </div>
               <div className="field">
-                <label htmlFor="entreprise">Votre activité *</label>
-                <input id="entreprise" name="entreprise" type="text" placeholder="CEO, fondateur, directeur…" required={true} autoComplete="organization-title" />
-              </div>
-              <div className="field">
                 <label htmlFor="email">Email professionnel *</label>
                 <input id="email" name="email" type="email" placeholder="vous@votredomaine.ma" required={true} autoComplete="email" />
               </div>
@@ -1043,14 +1125,7 @@ export default function CoachConsultantPage() {
                   <option value="Lancer une nouvelle offre">Lancer une nouvelle offre</option>
                 </select>
               </div>
-              <div className="field full">
-                <label htmlFor="message">Où en êtes-vous aujourd'hui&nbsp;?</label>
-                <textarea id="message" name="message" placeholder="Ex : j'ai posté pendant 2 mois, puis j'ai arrêté faute de temps. Mes clients viennent surtout de recommandations."></textarea>
-              </div>
-              <label className="consent" htmlFor="consent">
-                <input id="consent" name="consent" type="checkbox" required={true} />
-                <span>J'accepte d'être recontacté par Boldnet Digital au sujet de ma demande.</span>
-              </label>
+              <p className="fnotice">En envoyant ce formulaire, vous acceptez d'être recontacté par Boldnet Digital au sujet de votre demande. Vos données ne sont ni revendues ni partagées. <a href="/confidentialite.html" target="_blank" rel="noopener">Politique de confidentialité</a>.</p>
               <div className="msg" id="formMsg" role="status" aria-live="polite"></div>
               <div className="factions">
                 <button className="btn btn-primary" type="submit" id="submitBtn">Réserver mon appel de 30 min</button>
